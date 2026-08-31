@@ -344,6 +344,49 @@ aside{
 .editModeBanner b{font-size:9px}
 .editModeBanner span{font-size:8px;color:#ccc}
 
+
+/* =========================================================
+   MERGE PREMIUM V10
+   ========================================================= */
+.compareControls{
+ display:flex;gap:10px;align-items:end;flex-wrap:wrap;
+ background:#fff;border:1px solid var(--line2);border-radius:14px;
+ padding:14px 16px;margin-bottom:14px
+}
+.compareControls label{display:grid;gap:5px;font-size:7px;text-transform:uppercase;letter-spacing:.07em;color:#777;font-weight:800}
+.compareControls select{min-width:180px}
+.compareHero{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:14px}
+.compareMetric{background:#fff;border:1px solid var(--line2);border-radius:12px;padding:14px;cursor:pointer}
+.compareMetric small{display:block;font-size:7px;text-transform:uppercase;color:#888;letter-spacing:.07em;font-weight:800}
+.compareMetric strong{display:block;font-size:18px;margin-top:5px;color:#111}
+.compareMetric span{display:block;font-size:7.5px;color:#888;margin-top:4px}
+.compareCharts{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.compareDonut{height:255px;position:relative}
+.compareTable tr{cursor:pointer}
+.compareTable tr:hover td{background:#f5f6f7!important}
+.subDrillHeader{
+ display:flex;align-items:center;justify-content:space-between;gap:12px;
+ padding:10px 0;border-bottom:1px solid #eee;margin-bottom:8px
+}
+.subDrillHeader b{font-size:9px;color:#222}
+.subDrillHeader span{font-size:8px;color:#777}
+.rowSelectWrap{display:flex;align-items:center;gap:7px}
+.selectionBar{z-index:50}
+.selectionBar .selectionTotal{font-size:13px;color:#fff;font-weight:800;margin-right:8px}
+.quickActions{
+ display:flex;gap:7px;flex-wrap:wrap;margin:10px 0 14px
+}
+.quickActions button{
+ border:1px solid #dfe2e5;background:#fff;border-radius:8px;padding:8px 10px;font-size:8px
+}
+.quickActions button:hover{border-color:#999;background:#fafafa}
+.clickableCanvas{cursor:pointer}
+.adminCard .adminActions{gap:7px}
+@media(max-width:1000px){
+ .compareHero{grid-template-columns:1fr 1fr}
+ .compareCharts{grid-template-columns:1fr}
+}
+
 </style>
 </head>
 <body>
@@ -354,6 +397,7 @@ aside{
     <div class="section">Diretoria</div>
     <button class="active" data-view="executive">Visão Executiva</button>
     <button data-view="report">Relatório Gerencial</button>
+    <button data-view="monthcompare">Comparativo Mensal</button>
     <div class="section">Controle</div>
     <button data-view="comparison">Previsto x Realizado</button>
     <button data-view="differences">Análise de Diferenças</button>
@@ -385,7 +429,7 @@ aside{
 <button id="closeMonthBtn">Salvar fechamento</button>
 <button class="primary" id="adminBtn">ADM</button>
 <button id="printBtn">Imprimir / PDF</button>
-      <button class="primary" id="syncBtn">Salvar</button>
+      
       <input id="forecastFile" class="hidden" type="file" accept=".xlsx,.xls,.csv">
       <input id="actualFile" class="hidden" type="file" accept=".xlsx,.xls,.csv">
     </div>
@@ -412,6 +456,7 @@ migrateState();
 let db=null, session=null;
 
 let selectedRows=new Set();
+let compareMonths={m1:null,m2:null};
 let undoStack=[];
 function audit(action,details,before=null,after=null){const r=rec();r.auditLog??=[];r.auditLog.unshift({at:new Date().toISOString(),action,details,before:before?deep(before):null,after:after?deep(after):null});if(r.auditLog.length>300)r.auditLog=r.auditLog.slice(0,300)}
 function pushUndo(label){undoStack.push({label,state:deep(state)});if(undoStack.length>30)undoStack.shift()}
@@ -760,6 +805,249 @@ function tableRows(rows,cols){
   if(!rows.length)return'<div class="empty">Nenhum lançamento neste recorte.</div>';
   return `<div class="tableWrap"><table><thead><tr><th class="selectCell"><input type="checkbox" class="rowCheck checkAllVisible"></th>${cols.map(c=>`<th class="${c.num?'num':''}">${esc(c.label)}</th>`).join('')}<th>Ações</th></tr></thead><tbody>${rows.map(r=>`<tr class="clickrow ${selectedRows.has(r.id)?'selectedRow':''}" data-row="${esc(r.id)}"><td class="selectCell"><input type="checkbox" class="rowCheck rowSelect" data-select="${esc(r.id)}" ${selectedRows.has(r.id)?'checked':''}></td>${cols.map(c=>`<td class="${c.num?'num':''}">${c.render(r)}</td>`).join('')}<td><button class="rowActionBtn" data-edit="${esc(r.id)}">Editar</button></td></tr>`).join('')}</tbody></table></div>`;
 }
+
+function bindSelectionControls(){
+  document.querySelectorAll('.rowSelect').forEach(cb=>{
+    cb.onclick=e=>{
+      e.stopPropagation();
+      const id=cb.dataset.select;
+      if(cb.checked) selectedRows.add(id); else selectedRows.delete(id);
+      cb.closest('tr')?.classList.toggle('selectedRow',cb.checked);
+      renderSelectionBar();
+    };
+  });
+
+  document.querySelectorAll('.checkAllVisible').forEach(master=>{
+    master.onclick=e=>{
+      e.stopPropagation();
+      const table=master.closest('table');
+      const boxes=table?[...table.querySelectorAll('.rowSelect')]:[];
+      boxes.forEach(cb=>{
+        cb.checked=master.checked;
+        if(master.checked)selectedRows.add(cb.dataset.select);else selectedRows.delete(cb.dataset.select);
+        cb.closest('tr')?.classList.toggle('selectedRow',master.checked);
+      });
+      renderSelectionBar();
+    };
+  });
+
+  document.querySelectorAll('[data-edit]').forEach(btn=>{
+    btn.onclick=e=>{
+      e.stopPropagation();
+      openRow(btn.dataset.edit);
+    };
+  });
+}
+
+
+function bindInteractive(A){
+  // filters
+  $('#applyFilters')?.addEventListener('click',render);
+  $('#clearFilters')?.addEventListener('click',()=>{
+    ['fq','fs','fg','fc'].forEach(id=>{
+      const el=$('#'+id); if(!el)return;
+      if(el.tagName==='SELECT')el.value='all'; else el.value='';
+    });
+    render();
+  });
+
+  // launch rows
+  $$('[data-row]').forEach(el=>el.onclick=e=>{
+    if(e.target.closest('.rowSelect')||e.target.closest('[data-edit]'))return;
+    openRow(el.dataset.row);
+  });
+
+  // categories -> subcategories -> launches
+  $$('[data-cat]').forEach(el=>el.onclick=e=>{
+    if(e.target.closest('.rowSelect')||e.target.closest('[data-edit]'))return;
+    openCategoryDrill(el.dataset.cat);
+  });
+
+  // weeks -> categories -> launches
+  $$('[data-week]').forEach(el=>el.onclick=e=>{
+    if(e.target.closest('.rowSelect')||e.target.closest('[data-edit]'))return;
+    openWeekDrill(Number(el.dataset.week));
+  });
+
+  // management groups
+  $$('[data-group]').forEach(el=>el.onclick=()=>{
+    const name=el.dataset.group;
+    const list=[...A.f,...A.a].filter(r=>{ensureClassification(r);return r.managementGroup===name});
+    openRows('Grupo gerencial · '+name,list);
+  });
+
+  // FOPAG blocks
+  $$('[data-fopag]').forEach(el=>el.onclick=()=>{
+    const f=fopagData(A).find(x=>x.type===el.dataset.fopag);
+    if(f)openRows('FOPAG · '+f.name,[...f.forecast,...f.actual]);
+  });
+
+  // executive cards
+  $$('[data-open]').forEach(el=>el.onclick=()=>{
+    const type=el.dataset.open;
+    if(type==='forecast')openRows('Todas as previsões',A.f);
+    else if(type==='actual')openRows('Todos os pagamentos realizados',A.a);
+    else if(type==='pending')openRows('Previsões pendentes',A.pending);
+    else if(type==='unexpected')openRows('Pagamentos não previstos',A.unexpected);
+    else if(type==='difference'){
+      const list=[...A.f,...A.a].sort((a,b)=>b.amount-a.amount);
+      openRows('Composição da diferença',list);
+    }else if(type==='groups'){
+      const gs=groupRows(A);
+      $('#modalTitle').textContent='Grupos gerenciais';
+      $('#modalSub').textContent='Clique em um grupo para ver todos os lançamentos.';
+      $('#modalBody').innerHTML=`<div class="drillTable"><table><thead><tr><th>Grupo</th><th class="num">Previsto</th><th class="num">Pago</th><th class="num">Diferença</th></tr></thead><tbody>${gs.map(g=>`<tr class="drillLink" data-modal-group="${esc(g.name)}"><td><b>${esc(g.name)}</b></td><td class="num">${money(g.forecast)}</td><td class="num">${money(g.actual)}</td><td class="num">${money(g.diff)}</td></tr>`).join('')}</tbody></table></div>`;
+      $('#modal').classList.add('open');
+      $$('[data-modal-group]').forEach(x=>x.onclick=()=>{
+        const name=x.dataset.modalGroup;
+        openRows('Grupo gerencial · '+name,[...A.f,...A.a].filter(r=>{ensureClassification(r);return r.managementGroup===name}));
+      });
+    }
+  });
+
+  // base/rules administrative shortcuts
+  $('#baseEditForecast')?.addEventListener('click',()=>openEditableList('forecast'));
+  $('#baseEditActual')?.addEventListener('click',()=>openEditableList('actual'));
+  $('#rulesEditForecast')?.addEventListener('click',()=>openEditableList('forecast'));
+  $('#rulesEditActual')?.addEventListener('click',()=>openEditableList('actual'));
+  $('#rulesCatalog')?.addEventListener('click',openCatalog);
+  $('#rulesReclassify')?.addEventListener('click',()=>{
+    pushUndo('reclassificar lançamentos');
+    rows().forEach(r=>ensureClassification(r,true));
+    audit('Reclassificação','Grupo gerencial e subcategoria recalculados.');
+    saveState('Lançamentos reclassificados.');
+  });
+
+  bindSelectionControls();
+}
+
+
+function analyticsForMonth(month){
+  const select=$('#month');
+  const previous=select.value;
+  if(!state[month])return null;
+  select.value=month;
+  const A=analytics();
+  select.value=previous;
+  return A;
+}
+function monthOptions(selected){
+  const months=Object.keys(state).filter(m=>/^\d{4}-\d{2}$/.test(m)).sort();
+  return months.map(m=>`<option value="${m}" ${m===selected?'selected':''}>${esc(monthText(m))}</option>`).join('');
+}
+function categoryComparison(m1,m2){
+  const A1=analyticsForMonth(m1),A2=analyticsForMonth(m2);
+  if(!A1||!A2)return[];
+  const c1=byCategory(A1),c2=byCategory(A2),names=[...new Set([...c1.map(x=>x.name),...c2.map(x=>x.name)])];
+  return names.map(name=>{
+    const a=c1.find(x=>x.name===name)||{forecast:0,actual:0};
+    const b=c2.find(x=>x.name===name)||{forecast:0,actual:0};
+    return {name,p1:a.forecast,r1:a.actual,p2:b.forecast,r2:b.actual,change:b.actual-a.actual};
+  }).sort((a,b)=>Math.abs(b.change)-Math.abs(a.change));
+}
+function monthComparisonHTML(){
+  const months=Object.keys(state).filter(m=>/^\d{4}-\d{2}$/.test(m)).sort();
+  if(!months.length)return'<div class="empty">Nenhuma competência disponível.</div>';
+  if(!compareMonths.m1||!state[compareMonths.m1])compareMonths.m1=months[Math.max(0,months.length-2)]||months[0];
+  if(!compareMonths.m2||!state[compareMonths.m2])compareMonths.m2=months[months.length-1];
+  const m1=compareMonths.m1,m2=compareMonths.m2,A1=analyticsForMonth(m1),A2=analyticsForMonth(m2);
+  if(!A1||!A2)return'<div class="empty">Selecione duas competências com dados.</div>';
+  const rows=categoryComparison(m1,m2);
+  const dActual=A2.aTotal-A1.aTotal,dForecast=A2.fTotal-A1.fTotal;
+  const dDiff=A2.diff-A1.diff;
+
+  return `
+    <div class="compareControls noPrint">
+      <label>Competência 1<select id="cmpM1">${monthOptions(m1)}</select></label>
+      <label>Competência 2<select id="cmpM2">${monthOptions(m2)}</select></label>
+      <button class="btn primary" id="applyCompare">Comparar</button>
+    </div>
+
+    <section class="executiveHeader">
+      <div class="executiveHeaderTop"><div>
+        <span class="eyebrow">COMPARATIVO DE COMPETÊNCIAS</span>
+        <h2>${esc(monthText(m1))} x ${esc(monthText(m2))}</h2>
+        <p>Compare orçamento, realizado, desvios, não previstos e categorias. Clique em qualquer categoria para abrir a composição nos dois meses.</p>
+      </div></div>
+    </section>
+
+    <div class="compareHero">
+      <div class="compareMetric"><small>Realizado ${esc(monthText(m1))}</small><strong>${money(A1.aTotal)}</strong><span>Previsto ${money(A1.fTotal)}</span></div>
+      <div class="compareMetric"><small>Realizado ${esc(monthText(m2))}</small><strong>${money(A2.aTotal)}</strong><span>Previsto ${money(A2.fTotal)}</span></div>
+      <div class="compareMetric"><small>Variação do realizado</small><strong class="${dActual>0?'positive':'negative'}">${money(dActual)}</strong><span>${A1.aTotal?pct(dActual/A1.aTotal*100):'Sem base'}</span></div>
+      <div class="compareMetric"><small>Variação do previsto</small><strong>${money(dForecast)}</strong><span>Orçamento entre competências</span></div>
+      <div class="compareMetric"><small>Variação do desvio</small><strong class="${dDiff>0?'positive':'negative'}">${money(dDiff)}</strong><span>Desvio atual ${money(A2.diff)}</span></div>
+    </div>
+
+    <div class="compareCharts">
+      ${premiumCard('Execução · '+monthText(m1),`<div class="compareDonut"><canvas id="cmpDonut1" class="clickableCanvas"></canvas><div class="donutCenter"><div><small>Execução</small><strong>${pct(A1.fTotal?A1.aTotal/A1.fTotal*100:0)}</strong></div></div></div>`,'')}
+      ${premiumCard('Execução · '+monthText(m2),`<div class="compareDonut"><canvas id="cmpDonut2" class="clickableCanvas"></canvas><div class="donutCenter"><div><small>Execução</small><strong>${pct(A2.fTotal?A2.aTotal/A2.fTotal*100:0)}</strong></div></div></div>`,'')}
+    </div>
+
+    ${card('Comparação por categoria',`<div class="tableWrap compareTable"><table><thead><tr>
+      <th>Categoria</th>
+      <th class="num">Previsto ${esc(monthText(m1))}</th>
+      <th class="num">Pago ${esc(monthText(m1))}</th>
+      <th class="num">Previsto ${esc(monthText(m2))}</th>
+      <th class="num">Pago ${esc(monthText(m2))}</th>
+      <th class="num">Variação pago</th>
+    </tr></thead><tbody>${rows.map(x=>`<tr data-cmp-cat="${esc(x.name)}"><td><b>${esc(x.name)}</b></td><td class="num">${money(x.p1)}</td><td class="num">${money(x.r1)}</td><td class="num">${money(x.p2)}</td><td class="num">${money(x.r2)}</td><td class="num ${x.change>0?'positive':'negative'}">${money(x.change)}</td></tr>`).join('')}</tbody></table></div>`,'Clique para abrir subcategorias e lançamentos dos dois meses')}
+  `;
+}
+function drawMonthComparison(){
+  const m1=compareMonths.m1,m2=compareMonths.m2,A1=analyticsForMonth(m1),A2=analyticsForMonth(m2);
+  if(!A1||!A2)return;
+  const draw=(id,A)=>{
+    const el=$('#'+id);if(!el)return;
+    const executed=Math.min(A.aTotal,A.fTotal),remain=Math.max(A.fTotal-A.aTotal,0),over=Math.max(A.aTotal-A.fTotal,0);
+    charts.push(new Chart(el,{type:'doughnut',data:{labels:['Realizado','Saldo previsto','Acima'],datasets:[{data:[executed,remain,over],backgroundColor:['#2a9d8f','#e9c46a','#e76f51'],borderWidth:0,spacing:2}]},options:donutOptions('76%')}));
+  };
+  draw('cmpDonut1',A1);draw('cmpDonut2',A2);
+}
+function openComparisonCategory(category,m1,m2){
+  const A1=analyticsForMonth(m1),A2=analyticsForMonth(m2);
+  const r1=[...A1.f,...A1.a].filter(r=>norm(r.category)===norm(category));
+  const r2=[...A2.f,...A2.a].filter(r=>norm(r.category)===norm(category));
+  [...r1,...r2].forEach(r=>ensureClassification(r));
+  const s1=aggregateBy(r1,r=>r.subcategory||'Sem subcategoria');
+  const s2=aggregateBy(r2,r=>r.subcategory||'Sem subcategoria');
+  const names=[...new Set([...s1.map(x=>x.name),...s2.map(x=>x.name)])];
+  const subs=names.map(name=>{
+    const a=s1.find(x=>x.name===name)||{forecast:0,actual:0,rows:[]};
+    const b=s2.find(x=>x.name===name)||{forecast:0,actual:0,rows:[]};
+    return {name,a,b,change:b.actual-a.actual};
+  }).sort((a,b)=>Math.abs(b.change)-Math.abs(a.change));
+
+  $('#modalTitle').textContent='Comparativo · '+category;
+  $('#modalSub').textContent=`${monthText(m1)} x ${monthText(m2)} · clique na subcategoria para ver os lançamentos.`;
+  $('#modalBody').innerHTML=`
+    <div class="drillTable"><table><thead><tr>
+      <th>Subcategoria</th>
+      <th class="num">Pago ${esc(monthText(m1))}</th>
+      <th class="num">Pago ${esc(monthText(m2))}</th>
+      <th class="num">Variação</th>
+    </tr></thead><tbody>${subs.map((x,i)=>`<tr class="drillLink" data-cmp-sub="${i}"><td><b>${esc(x.name)}</b></td><td class="num">${money(x.a.actual)}</td><td class="num">${money(x.b.actual)}</td><td class="num ${x.change>0?'positive':'negative'}">${money(x.change)}</td></tr>`).join('')}</tbody></table></div>
+    <div class="drillGrid">
+      <div><div class="drillSection"><h4>${esc(monthText(m1))}</h4>${tableRows(r1,basicCols())}</div></div>
+      <div><div class="drillSection"><h4>${esc(monthText(m2))}</h4>${tableRows(r2,basicCols())}</div></div>
+    </div>`;
+  $('#modal').classList.add('open');
+  $$('[data-cmp-sub]').forEach(el=>el.onclick=()=>{
+    const x=subs[Number(el.dataset.cmpSub)];
+    const rows=[...x.a.rows,...x.b.rows];
+    openRows(`${category} › ${x.name} · comparação`,rows);
+  });
+  bindSelectionControls();
+}
+function bindMonthComparison(){
+  $('#applyCompare')?.addEventListener('click',()=>{
+    compareMonths.m1=$('#cmpM1').value;
+    compareMonths.m2=$('#cmpM2').value;
+    render();
+  });
+  $$('[data-cmp-cat]').forEach(el=>el.onclick=()=>openComparisonCategory(el.dataset.cmpCat,compareMonths.m1,compareMonths.m2));
+}
+
 function destroyCharts(){charts.forEach(c=>{try{c.destroy()}catch(e){}});charts=[]}
 function render(){
   destroyCharts();
@@ -767,7 +1055,10 @@ function render(){
   const exec=A.fTotal?A.aTotal/A.fTotal*100:0, unpct=A.aTotal?A.unexpectedTotal/A.aTotal*100:0;
   const accuracy=A.fTotal?Math.max(0,100-Math.abs(A.diff)/A.fTotal*100):0;
   let h='';
-  if(view==='executive'){
+  if(view==='monthcompare'){
+    h=monthComparisonHTML();
+    setTimeout(()=>{drawMonthComparison();bindMonthComparison()},0);
+  }else if(view==='executive'){
     const over=[...cats].filter(x=>x.diff>0).sort((a,b)=>b.diff-a.diff);
     const exec=A.fTotal?A.aTotal/A.fTotal*100:0;
     const pendingPct=A.fTotal?A.pendingTotal/A.fTotal*100:0;
@@ -921,14 +1212,14 @@ function render(){
     h=filtersHTML()+`<div class="grid2">${card('Previsto x pago por semana','<div class="chart"><canvas id="weekOnlyChart"></canvas></div>','Visão de caixa')}${card('Resumo semanal',`<div class="tableWrap"><table><thead><tr><th>Semana</th><th class="num">Previsto</th><th class="num">Pago</th><th class="num">Diferença</th><th class="num">Não previsto</th></tr></thead><tbody>${wk.map(w=>`<tr class="clickrow" data-week="${w.week}"><td><b>${w.label}</b></td><td class="num">${money(w.forecast)}</td><td class="num">${money(w.actual)}</td><td class="num ${w.actual-w.forecast>0?'positive':'negative'}">${money(w.actual-w.forecast)}</td><td class="num">${money(w.unexpected)}</td></tr>`).join('')}</tbody></table></div>`,'Clique para detalhar')}</div>`;
     setTimeout(()=>drawWeekOnly(wk),0);
   }else if(view==='categories'){
-    h=filtersHTML()+card('Categorias',`<div class="tableWrap"><table><thead><tr><th>Categoria</th><th class="num">Previsto</th><th class="num">Pago</th><th class="num">Diferença</th><th class="num">Execução</th></tr></thead><tbody>${cats.map(x=>`<tr class="clickrow categoryRow" data-cat="${esc(x.name)}"><td><b>${esc(x.name)}</b></td><td class="num">${money(x.forecast)}</td><td class="num">${money(x.actual)}</td><td class="num ${x.diff>0?'positive':'negative'}">${money(x.diff)}</td><td class="num">${pct(x.execution)}</td></tr>`).join('')}</tbody></table></div>`,'Todas as categorias · sem Top 8');
+    h=filtersHTML()+card('Categorias',`<div class="tableWrap"><table><thead><tr><th>Categoria</th><th class="num">Previsto</th><th class="num">Pago</th><th class="num">Diferença</th><th class="num">Execução</th></tr></thead><tbody>${cats.map(x=>`<tr class="clickrow categoryRow" data-cat="${esc(x.name)}"><td><b>${esc(x.name)}</b></td><td class="num">${money(x.forecast)}</td><td class="num">${money(x.actual)}</td><td class="num ${x.diff>0?'positive':'negative'}">${money(x.diff)}</td><td class="num">${pct(x.execution)}</td></tr>`).join('')}</tbody></table></div>`,'Clique em qualquer categoria para abrir subcategorias, centros de custo, fornecedores e lançamentos');
   }else if(view==='unexpected'){
     h=filtersHTML()+`<div class="kpis"><article class="kpi warn"><small>Total não previsto</small><strong>${money(A.unexpectedTotal)}</strong><span>${A.unexpected.length} pagamentos</span></article><article class="kpi"><small>% do realizado</small><strong>${pct(unpct)}</strong></article></div>`+card('Pagamentos sem previsão vinculada',tableRows(A.unexpected.slice().sort((a,b)=>b.amount-a.amount),basicCols()),'Clique no pagamento para vincular uma previsão ou criar uma');
   }else if(view==='fopag'){
     h=`<div class="reportIntro"><b>Regra FOPAG.</b> Folha/salários + adiantamentos salariais + férias + prestação de serviços. Antecipações de lucros ficam fora. FOPAG Na Praia aparece apenas como bloco interno desta aba, nunca como aba separada.</div>${fopagSummary(fop)}`;
     for(const b of fop)h+=card(b.name,`<div class="grid2"><div>${tableRows(b.forecast,basicCols())}</div><div>${tableRows(b.actual,basicCols())}</div></div>`,`Previsto ${money(b.forecast.reduce((s,x)=>s+x.amount,0))} · Pago ${money(b.actual.reduce((s,x)=>s+x.amount,0))}`);
   }else if(view==='base'){
-    h=filtersHTML()+`<div class="controls noPrint" style="margin-bottom:10px"><button class="btn primary" id="baseNewForecast">Criar previsão</button><button class="btn" id="baseNewActual">Criar pagamento</button><span class="sumHint">Marque vários lançamentos para somar e usar ações em massa.</span></div>`+card('Base única de lançamentos',tableRows(filteredRows(A),[
+    h=filtersHTML()+`<div class="controls noPrint" style="margin-bottom:10px"><button class="btn primary" id="baseEditForecast">Editar previsões</button><button class="btn" id="baseEditActual">Editar pagamentos</button><span class="sumHint">Marque vários lançamentos para somar e usar ações em massa.</span></div>`+card('Base única de lançamentos',tableRows(filteredRows(A),[
       {label:'Origem',render:r=>r.source==='forecast'?'<span class="badge blue">Previsto</span>':'<span class="badge good">Pago</span>'},
       {label:'Grupo',render:r=>{ensureClassification(r);return `<span class="groupChip">${esc(r.managementGroup)}</span>`}},
       {label:'Subcategoria',render:r=>{ensureClassification(r);return esc(r.subcategory)}},
@@ -943,14 +1234,13 @@ function render(){
         <div class="action"><b>Vínculo manual</b><p>Vínculos manuais prevalecem sobre a conciliação automática.</p></div>
         <div class="action"><b>Base única</b><p>Editar, mover, excluir, recategorizar ou alterar valores muda todas as abas imediatamente.</p></div>
       </div>`)}
-      ${card('Cadastros',`<div class="controls"><button class="btn primary" id="rulesCatalog">Gerenciar categorias e centros de custo</button><button class="btn" id="rulesReclassify">Reclassificar lançamentos</button><button class="btn" id="rulesNewForecast">Criar previsão</button><button class="btn" id="rulesNewActual">Criar pagamento</button></div><div style="margin-top:14px;font-size:9px;color:var(--muted);line-height:1.65">Você pode criar uma categoria nova e utilizá-la imediatamente em qualquer previsão ou pagamento, sem alterar código.</div>`)}
+      ${card('Cadastros',`<div class="controls"><button class="btn primary" id="rulesCatalog">Gerenciar categorias e centros de custo</button><button class="btn" id="rulesReclassify">Reclassificar lançamentos</button><button class="btn" id="rulesEditForecast">Editar previsões</button><button class="btn" id="rulesEditActual">Editar pagamentos</button></div><div style="margin-top:14px;font-size:9px;color:var(--muted);line-height:1.65">Você pode criar uma categoria nova e utilizá-la imediatamente em qualquer previsão ou pagamento, sem alterar código.</div>`)}
     </div>`;
   }
   $('#app').innerHTML=h;
   renderMonthHistory();
   if($('#monthStatusSlot'))$('#monthStatusSlot').innerHTML=monthStatusHTML();
   bindInteractive(A);
-  bindSelectionControls();
   renderSelectionBar();
   $('#footer').textContent=`Base atual: Pasta1.xlsx como previsto · Pasta2.xlsx como pagamentos · ${A.f.length} previsões válidas · ${A.a.length} pagamentos válidos`;
 }
@@ -1006,60 +1296,60 @@ function drawReportDonuts(A,groups){
 }
 
 function drawPremiumExecutive(A,cats,groups,wk){
-  const colors=colorPalette(20);
   const execActual=Math.min(A.aTotal,A.fTotal);
   const execRemain=Math.max(A.fTotal-A.aTotal,0);
   const over=Math.max(A.aTotal-A.fTotal,0);
 
   const b=$('#budgetDonut');
-  if(b)charts.push(new Chart(b,{
-    type:'doughnut',
-    data:{labels:['Realizado','Saldo previsto','Acima do orçamento'],datasets:[{
-      data:[execActual,execRemain,over],
-      backgroundColor:['#2a9d8f','#e9c46a','#e76f51'],
-      borderWidth:0,
-      spacing:2
-    }]},
-    options:donutOptions('76%')
-  }));
+  if(b){
+    const chart=new Chart(b,{
+      type:'doughnut',
+      data:{labels:['Realizado','Saldo previsto','Acima do orçamento'],datasets:[{data:[execActual,execRemain,over],backgroundColor:['#2a9d8f','#e9c46a','#e76f51'],borderWidth:0,spacing:2}]},
+      options:{...donutOptions('76%'),onClick:(evt,els)=>{if(!els.length)return;const i=els[0].index;if(i===0)openRows('Pagamentos realizados',A.a);else if(i===1)openRows('Previsões pendentes',A.pending);else openRows('Pagamentos / desvios acima do orçamento',[...A.a].sort((x,y)=>y.amount-x.amount));}}
+    });charts.push(chart)
+  }
 
   const g=$('#groupDonut');
   if(g){
     const d=groups.filter(x=>x.actual>0).slice(0,8);
-    charts.push(new Chart(g,{
+    const chart=new Chart(g,{
       type:'doughnut',
       data:{labels:d.map(x=>x.name),datasets:[{data:d.map(x=>x.actual),backgroundColor:colorPalette(d.length),borderWidth:0,spacing:2}]},
-      options:donutOptions('68%')
-    }))
+      options:{...donutOptions('68%'),onClick:(evt,els)=>{if(!els.length)return;const group=d[els[0].index].name;openRows('Grupo gerencial · '+group,[...A.f,...A.a].filter(r=>{ensureClassification(r);return r.managementGroup===group}))}}
+    });charts.push(chart)
   }
 
   const q=$('#qualityDonut');
   if(q){
     const linked=Math.max(A.aTotal-A.unexpectedTotal,0);
-    charts.push(new Chart(q,{
+    const chart=new Chart(q,{
       type:'doughnut',
       data:{labels:['Dentro da previsão','Não previsto'],datasets:[{data:[linked,A.unexpectedTotal],backgroundColor:['#2a9d8f','#e76f51'],borderWidth:0,spacing:2}]},
-      options:donutOptions('76%')
-    }))
+      options:{...donutOptions('76%'),onClick:(evt,els)=>{if(!els.length)return;if(els[0].index===1)openRows('Pagamentos não previstos',A.unexpected);else openRows('Pagamentos conciliados',A.a.filter(x=>!A.unexpected.some(u=>u.id===x.id)))}}
+    });charts.push(chart)
   }
 
   const c=$('#categoryDonut');
   if(c){
     const d=cats.filter(x=>x.actual>0).slice(0,10);
-    charts.push(new Chart(c,{
+    const chart=new Chart(c,{
       type:'doughnut',
       data:{labels:d.map(x=>x.name),datasets:[{data:d.map(x=>x.actual),backgroundColor:colorPalette(d.length),borderWidth:0,spacing:2}]},
-      options:{...donutOptions('64%'),plugins:{legend:{display:true,position:'right',labels:{boxWidth:8,font:{size:8},usePointStyle:true}},tooltip:{callbacks:{label:(ctx)=>`${ctx.label}: ${money(ctx.raw)}`}}}}
-    }))
+      options:{
+        ...donutOptions('64%'),
+        onClick:(evt,els)=>{if(!els.length)return;openCategoryDrill(d[els[0].index].name)},
+        plugins:{legend:{display:true,position:'right',labels:{boxWidth:8,font:{size:8},usePointStyle:true}},tooltip:{callbacks:{label:(ctx)=>`${ctx.label}: ${money(ctx.raw)}`}}}
+      }
+    });charts.push(chart)
   }
 
   const w=$('#weekDonut');
   if(w){
-    charts.push(new Chart(w,{
+    const chart=new Chart(w,{
       type:'doughnut',
       data:{labels:wk.map(x=>x.label),datasets:[{data:wk.map(x=>x.actual),backgroundColor:colorPalette(wk.length),borderWidth:0,spacing:2}]},
-      options:donutOptions('68%')
-    }))
+      options:{...donutOptions('68%'),onClick:(evt,els)=>{if(!els.length)return;openWeekDrill(wk[els[0].index].week)}}
+    });charts.push(chart)
   }
 }
 
@@ -1123,15 +1413,16 @@ function aggregateBy(list,keyFn){
 }
 function openCategoryDrill(category){
   const A=analytics();
-  const list=[...A.f,...A.a].filter(r=>r.category===category);
+  const list=[...A.f,...A.a].filter(r=>norm(r.category)===norm(category));
+  list.forEach(r=>ensureClassification(r));
   const forecast=list.filter(r=>r.source==='forecast').reduce((s,r)=>s+r.amount,0);
   const actual=list.filter(r=>r.source==='actual').reduce((s,r)=>s+r.amount,0);
-  const subs=aggregateBy(list,r=>r.subcategory);
-  const centers=aggregateBy(list,r=>r.costCenter);
-  const parties=aggregateBy(list,r=>r.party);
+  const subs=aggregateBy(list,r=>r.subcategory||'Sem subcategoria');
+  const centers=aggregateBy(list,r=>r.costCenter||'Não informado');
+  const parties=aggregateBy(list,r=>r.party||'Não informado');
 
   $('#modalTitle').textContent='Categoria · '+category;
-  $('#modalSub').textContent='Abra subcategorias, centros de custo ou fornecedores e desça até cada lançamento.';
+  $('#modalSub').textContent='Clique na subcategoria, centro de custo ou fornecedor para chegar aos lançamentos.';
   $('#modalBody').innerHTML=`
     <div class="drillHero">
       <div class="drillMetric"><small>Previsto</small><strong>${money(forecast)}</strong></div>
@@ -1140,26 +1431,54 @@ function openCategoryDrill(category){
       <div class="drillMetric"><small>Execução</small><strong>${pct(forecast?actual/forecast*100:0)}</strong></div>
       <div class="drillMetric"><small>Lançamentos</small><strong>${list.length}</strong></div>
     </div>
+
     <div class="drillGrid">
-      <div><div class="drillSection"><h4>Subcategorias dentro de ${esc(category)}</h4>
-        <div class="drillTable"><table><thead><tr><th>Subcategoria</th><th class="num">Previsto</th><th class="num">Pago</th><th class="num">Dif.</th></tr></thead><tbody>
-        ${subs.map(x=>`<tr class="drillLink" data-sub="${esc(x.name)}"><td><b>${esc(x.name)}</b></td><td class="num">${money(x.forecast)}</td><td class="num">${money(x.actual)}</td><td class="num">${money(x.diff)}</td></tr>`).join('')}
-        </tbody></table></div></div></div>
-      <div><div class="drillSection"><h4>Centros de custo</h4>
-        <div class="drillTable"><table><thead><tr><th>Centro</th><th class="num">Previsto</th><th class="num">Pago</th></tr></thead><tbody>
-        ${centers.map(x=>`<tr class="drillLink" data-ccdrill="${esc(x.name)}"><td><b>${esc(x.name)}</b></td><td class="num">${money(x.forecast)}</td><td class="num">${money(x.actual)}</td></tr>`).join('')}
-        </tbody></table></div></div></div>
+      <div>
+        <div class="drillSection"><h4>Subcategorias dentro de ${esc(category)}</h4>
+          <div class="drillTable"><table><thead><tr><th>Subcategoria</th><th class="num">Previsto</th><th class="num">Pago</th><th class="num">Dif.</th><th class="num">Itens</th></tr></thead><tbody>
+          ${subs.map((x,i)=>`<tr class="drillLink" data-sub-index="${i}"><td><b>${esc(x.name)}</b></td><td class="num">${money(x.forecast)}</td><td class="num">${money(x.actual)}</td><td class="num">${money(x.diff)}</td><td class="num">${x.count}</td></tr>`).join('')}
+          </tbody></table></div>
+        </div>
+      </div>
+      <div>
+        <div class="drillSection"><h4>Centros de custo</h4>
+          <div class="drillTable"><table><thead><tr><th>Centro</th><th class="num">Previsto</th><th class="num">Pago</th></tr></thead><tbody>
+          ${centers.map((x,i)=>`<tr class="drillLink" data-cc-index="${i}"><td><b>${esc(x.name)}</b></td><td class="num">${money(x.forecast)}</td><td class="num">${money(x.actual)}</td></tr>`).join('')}
+          </tbody></table></div>
+        </div>
+      </div>
     </div>
-    <div class="drillSection"><h4>Todos os lançamentos da categoria</h4>${tableRows(list,basicCols())}</div>`;
+
+    <div class="drillSection"><h4>Fornecedores / colaboradores da categoria</h4>
+      <div class="drillTable"><table><thead><tr><th>Nome</th><th class="num">Previsto</th><th class="num">Pago</th><th class="num">Itens</th></tr></thead><tbody>
+      ${parties.slice(0,40).map((x,i)=>`<tr class="drillLink" data-party-index="${i}"><td><b>${esc(x.name)}</b></td><td class="num">${money(x.forecast)}</td><td class="num">${money(x.actual)}</td><td class="num">${x.count}</td></tr>`).join('')}
+      </tbody></table></div>
+    </div>
+
+    <div class="drillSection"><h4>Todos os lançamentos dentro de ${esc(category)}</h4>${tableRows(list,basicCols())}</div>`;
+
   $('#modal').classList.add('open');
-  $$('[data-sub]').forEach(el=>el.onclick=()=>openRows(`${category} · ${el.dataset.sub}`,list.filter(r=>r.subcategory===el.dataset.sub)));
-  $$('[data-ccdrill]').forEach(el=>el.onclick=()=>openRows(`${category} · ${el.dataset.ccdrill}`,list.filter(r=>r.costCenter===el.dataset.ccdrill)));
+  $$('[data-sub-index]').forEach(el=>el.onclick=()=>{
+    const x=subs[Number(el.dataset.subIndex)];
+    openRows(`${category} › ${x.name}`,x.rows);
+  });
+  $$('[data-cc-index]').forEach(el=>el.onclick=()=>{
+    const x=centers[Number(el.dataset.ccIndex)];
+    openRows(`${category} › Centro de custo: ${x.name}`,x.rows);
+  });
+  $$('[data-party-index]').forEach(el=>el.onclick=()=>{
+    const x=parties[Number(el.dataset.partyIndex)];
+    openRows(`${category} › ${x.name}`,x.rows);
+  });
+  $$('[data-row]').forEach(el=>el.onclick=e=>{
+    if(e.target.closest('.rowSelect')||e.target.closest('[data-edit]'))return;
+    openRow(el.dataset.row);
+  });
   bindSelectionControls();
 }
 function openWeekDrill(week){
-  const A=analytics(),R=A.R;
+  const A=analytics();
   const f=A.f.filter(r=>weekOf(r.date)==week),a=A.a.filter(r=>weekOf(r.date)==week);
-  const ids=new Set(a.map(r=>r.id));
   const unexpected=A.unexpected.filter(r=>weekOf(r.date)==week);
   const forecastTotal=f.reduce((s,r)=>s+r.amount,0),actualTotal=a.reduce((s,r)=>s+r.amount,0);
   const diff=actualTotal-forecastTotal;
@@ -1169,7 +1488,7 @@ function openWeekDrill(week){
   const cats=aggregateBy([...f,...a],r=>r.category);
 
   $('#modalTitle').textContent=`Semana ${week} · Previsto x Realizado`;
-  $('#modalSub').textContent='Detalhamento financeiro completo da semana.';
+  $('#modalSub').textContent='Clique em uma categoria para abrir as subcategorias e os lançamentos da própria semana.';
   $('#modalBody').innerHTML=`
     <div class="drillHero">
       <div class="drillMetric"><small>Previsto</small><strong>${money(forecastTotal)}</strong></div>
@@ -1178,21 +1497,69 @@ function openWeekDrill(week){
       <div class="drillMetric"><small>Execução</small><strong>${pct(execution)}</strong></div>
       <div class="drillMetric"><small>Não previsto</small><strong>${money(unexpected.reduce((s,r)=>s+r.amount,0))}</strong></div>
     </div>
+
     <div class="drillGrid">
-      <div><div class="drillSection"><h4>Categorias da semana</h4>
-        <div class="drillTable"><table><thead><tr><th>Categoria</th><th class="num">Previsto</th><th class="num">Pago</th><th class="num">Dif.</th></tr></thead><tbody>
-        ${cats.map(x=>`<tr class="drillLink" data-week-cat="${esc(x.name)}"><td><b>${esc(x.name)}</b></td><td class="num">${money(x.forecast)}</td><td class="num">${money(x.actual)}</td><td class="num">${money(x.diff)}</td></tr>`).join('')}
-        </tbody></table></div></div></div>
-      <div><div class="drillSection"><h4>Fechamento da semana</h4>
-        <div class="reportTextBlock ${diff>0?'risk':'good'}"><h4>Leitura</h4><p>${diff>0?`A semana ficou ${money(diff)} acima do previsto.`:`A semana ficou ${money(Math.abs(diff))} abaixo do previsto.`} Existem ${pending.length} previsões ainda pendentes, somando ${money(pendingTotal)}, e ${unexpected.length} pagamentos sem previsão vinculada.</p></div>
-      </div></div>
+      <div>
+        <div class="drillSection"><h4>Categorias da semana</h4>
+          <div class="drillTable"><table><thead><tr><th>Categoria</th><th class="num">Previsto</th><th class="num">Pago</th><th class="num">Dif.</th></tr></thead><tbody>
+          ${cats.map((x,i)=>`<tr class="drillLink" data-week-cat-index="${i}"><td><b>${esc(x.name)}</b></td><td class="num">${money(x.forecast)}</td><td class="num">${money(x.actual)}</td><td class="num">${money(x.diff)}</td></tr>`).join('')}
+          </tbody></table></div>
+        </div>
+      </div>
+      <div>
+        <div class="drillSection"><h4>Fechamento da semana</h4>
+          <div class="reportTextBlock ${diff>0?'risk':'good'}">
+            <h4>Leitura</h4>
+            <p>${diff>0?`A semana ficou ${money(diff)} acima do previsto.`:`A semana ficou ${money(Math.abs(diff))} abaixo do previsto.`} Existem ${pending.length} previsões pendentes, somando ${money(pendingTotal)}, e ${unexpected.length} pagamentos sem previsão vinculada.</p>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="drillSection"><h4>Pagamentos previstos da semana</h4>${tableRows(f,basicCols())}</div>
-    <div class="drillSection"><h4>Pagamentos realizados da semana</h4>${tableRows(a,basicCols())}</div>
+
+    <div class="drillSection"><h4>Previstos da semana</h4>${tableRows(f,basicCols())}</div>
+    <div class="drillSection"><h4>Realizados da semana</h4>${tableRows(a,basicCols())}</div>
     <div class="drillSection"><h4>Não previstos da semana</h4>${tableRows(unexpected,basicCols())}</div>`;
+
   $('#modal').classList.add('open');
-  $$('[data-week-cat]').forEach(el=>el.onclick=()=>openCategoryDrill(el.dataset.weekCat));
-  $$('[data-row]').forEach(el=>el.onclick=e=>{if(e.target.closest('.rowSelect')||e.target.closest('[data-edit]'))return;openRow(el.dataset.row)});
+
+  $$('[data-week-cat-index]').forEach(el=>el.onclick=()=>{
+    const cat=cats[Number(el.dataset.weekCatIndex)];
+    const rows=cat.rows;
+    rows.forEach(r=>ensureClassification(r));
+    const subs=aggregateBy(rows,r=>r.subcategory||'Sem subcategoria');
+
+    $('#modalTitle').textContent=`Semana ${week} › ${cat.name}`;
+    $('#modalSub').textContent='Subcategorias e lançamentos restritos à semana.';
+    $('#modalBody').innerHTML=`
+      <div class="quickActions"><button id="backWeek">← Voltar para semana ${week}</button></div>
+      <div class="drillHero">
+        <div class="drillMetric"><small>Previsto</small><strong>${money(cat.forecast)}</strong></div>
+        <div class="drillMetric"><small>Pago</small><strong>${money(cat.actual)}</strong></div>
+        <div class="drillMetric"><small>Diferença</small><strong>${money(cat.diff)}</strong></div>
+        <div class="drillMetric"><small>Itens</small><strong>${cat.count}</strong></div>
+      </div>
+      <div class="drillSection"><h4>Subcategorias</h4>
+        <div class="drillTable"><table><thead><tr><th>Subcategoria</th><th class="num">Previsto</th><th class="num">Pago</th><th class="num">Dif.</th></tr></thead><tbody>
+        ${subs.map((s,i)=>`<tr class="drillLink" data-week-sub="${i}"><td><b>${esc(s.name)}</b></td><td class="num">${money(s.forecast)}</td><td class="num">${money(s.actual)}</td><td class="num">${money(s.diff)}</td></tr>`).join('')}
+        </tbody></table></div>
+      </div>
+      <div class="drillSection"><h4>Lançamentos da categoria na semana</h4>${tableRows(rows,basicCols())}</div>`;
+    $('#backWeek').onclick=()=>openWeekDrill(week);
+    $$('[data-week-sub]').forEach(x=>x.onclick=()=>{
+      const s=subs[Number(x.dataset.weekSub)];
+      openRows(`Semana ${week} › ${cat.name} › ${s.name}`,s.rows);
+    });
+    $$('[data-row]').forEach(el=>el.onclick=e=>{
+      if(e.target.closest('.rowSelect')||e.target.closest('[data-edit]'))return;
+      openRow(el.dataset.row);
+    });
+    bindSelectionControls();
+  });
+
+  $$('[data-row]').forEach(el=>el.onclick=e=>{
+    if(e.target.closest('.rowSelect')||e.target.closest('[data-edit]'))return;
+    openRow(el.dataset.row);
+  });
   bindSelectionControls();
 }
 
@@ -1331,49 +1698,60 @@ async function openAdminPanel(){
     const {data}=await db?.auth?.getUser?.()||{};
     currentUser=data?.user||null;
   }catch(e){}
-  const m=$('#month').value;
-  const r=monthRecord(m);
+  const m=$('#month').value,r=monthRecord(m);
+  const months=Object.keys(state).filter(x=>/^\d{4}-\d{2}$/.test(x)).sort().reverse();
 
   $('#modalTitle').textContent='ADM';
-  $('#modalSub').textContent='Controle de acesso, competências e fechamento mensal.';
+  $('#modalSub').textContent='Um único painel para administrar dados, competências, fechamento e cadastros.';
   $('#modalBody').innerHTML=`
     <div class="adminPanel">
       <div class="adminCard">
         <h4>Acesso administrativo</h4>
-        <p>${currentUser?`Administrador conectado como <b>${esc(currentUser.email||'usuário Supabase')}</b>.`:'Entre com seu usuário administrador para gerenciar o painel.'}</p>
+        <p>${currentUser?`Administrador conectado como <b>${esc(currentUser.email||'administrador')}</b>.`:'Entre com seu usuário administrador.'}</p>
         ${!currentUser?`<div class="adminGrid" style="margin-top:10px"><label>E-mail<input id="admEmail" type="email"></label><label>Senha<input id="admPass" type="password"></label></div>`:''}
-        <div class="adminActions">${!currentUser?`<button class="primary" id="admLogin">Entrar</button>`:`<button id="admLogout">Sair do ADM</button>`}</div>
+        <div class="adminActions">${!currentUser?`<button class="primary" id="admLogin">Entrar</button>`:`<button id="admLogout">Sair</button>`}</div>
       </div>
 
       <div class="adminCard">
         <h4>Competência atual · ${esc(monthText(m))}</h4>
-        <p>Status: <b>${r.closedAt?'Fechada':'Aberta'}</b>${r.closedAt?` · fechada em ${new Date(r.closedAt).toLocaleString('pt-BR')}`:''}.</p>
+        <p>Status: <b>${r.closedAt?'Fechada':'Aberta'}</b>${r.closedAt?` · fechamento salvo em ${new Date(r.closedAt).toLocaleString('pt-BR')}`:''}.</p>
         <div class="adminActions">
           <button class="primary" id="admSaveMonth">Salvar competência</button>
           ${r.closedAt?`<button id="admReopen">Reabrir competência</button>`:`<button id="admCloseMonth">Salvar fechamento</button>`}
+          <button id="admEditForecast">Editar previsões</button>
+          <button id="admEditActual">Editar pagamentos</button>
         </div>
       </div>
 
       <div class="adminCard">
-        <h4>Competências e histórico</h4>
-        <p>Agosto, setembro, outubro, novembro, dezembro e demais meses ficam salvos separadamente. Trocar de competência não apaga os meses anteriores.</p>
+        <h4>Classificação e conciliação</h4>
+        <p>Gerencie categorias, centros de custo, vínculos e classificações sem alterar código.</p>
         <div class="adminActions">
-          <button id="admLoadHistory">Atualizar histórico</button>
-          <button id="admGoMonth">Ir para outra competência</button>
+          <button id="admCatalog">Categorias e centros de custo</button>
+          <button id="admBulk">Editar selecionados</button>
+          <button id="admAudit">Histórico de alterações</button>
         </div>
+      </div>
+
+      <div class="adminCard">
+        <h4>Histórico de competências</h4>
+        <p>${months.length?months.map(monthText).join(' · '):'Nenhuma competência disponível.'}</p>
+        <div class="adminActions"><button id="admLoadHistory">Atualizar histórico</button></div>
       </div>
     </div>`;
   $('#modal').classList.add('open');
+
   $('#admLogin')?.addEventListener('click',adminSignIn);
   $('#admLogout')?.addEventListener('click',adminSignOut);
   $('#admSaveMonth')?.addEventListener('click',()=>saveMonthToSupabase(false));
   $('#admCloseMonth')?.addEventListener('click',()=>saveMonthToSupabase(true));
   $('#admReopen')?.addEventListener('click',reopenMonth);
+  $('#admEditForecast')?.addEventListener('click',()=>openEditableList('forecast'));
+  $('#admEditActual')?.addEventListener('click',()=>openEditableList('actual'));
+  $('#admCatalog')?.addEventListener('click',openCatalog);
+  $('#admBulk')?.addEventListener('click',()=>selectedRows.size?openBulkEdit():toast('Selecione lançamentos primeiro.'));
+  $('#admAudit')?.addEventListener('click',openAuditLog);
   $('#admLoadHistory')?.addEventListener('click',async()=>{await loadHistoricalMonthsFromSupabase();openAdminPanel()});
-  $('#admGoMonth')?.addEventListener('click',()=>{
-    $('#modal').classList.remove('open');
-    $('#month')?.focus();
-  });
 }
 
 function openCatalog(){
@@ -1422,9 +1800,12 @@ async function loadHistoricalMonthsFromSupabase(){
     for(const row of data){
       const m=String(row.competence||'').slice(0,7);
       if(!/^\d{4}-\d{2}$/.test(m))continue;
-      if(!state[m]){
+      {
         const meta=row.metadata||{};
-        state[m]=normalizeMonthRecord({
+        const local=state[m];
+        const remoteUpdated=row.updated_at?new Date(row.updated_at).getTime():0;
+        const localUpdated=local?.updatedAt?new Date(local.updatedAt).getTime():0;
+        if(!local || remoteUpdated>=localUpdated)state[m]=normalizeMonthRecord({
           forecast:row.forecast||[],
           actual:row.actual||[],
           links:meta.links||{},
@@ -1495,18 +1876,18 @@ async function saveSupabase(){
    const {data:{session:s}}=await db.auth.getSession();session=s;
    if(!session){const email=prompt('E-mail do administrador:');const password=prompt('Senha:');if(!email||!password)return;const res=await db.auth.signInWithPassword({email,password});if(res.error)throw res.error;session=res.data.session}
    const m=$('#month').value,r=rec();
-   const payload={competence:m,forecast:r.forecast,actual:r.actual,metadata:{links:r.links||{},catalog:r.catalog||{},auditLog:r.auditLog||[],dashboard_version:'premium-operacional-v5'},updated_at:new Date().toISOString(),updated_by:session.user.id};
+   const payload={competence:m,forecast:r.forecast,actual:r.actual,metadata:{links:r.links||{},catalog:r.catalog||{},auditLog:r.auditLog||[],dashboard_version:'premium-merge-v10'},updated_at:new Date().toISOString(),updated_by:session.user.id};
    const {error}=await db.from('financial_months').upsert(payload,{onConflict:'competence'});if(error)throw error;toast('Competência salva no Supabase.');
  }catch(e){toast('Erro Supabase: '+e.message)}
 }
 function exportJSON(){const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='previsto-realizado-danese.json';a.click();URL.revokeObjectURL(a.href)}
-$$('#nav button[data-view]').forEach(b=>b.onclick=()=>{$$('#nav button[data-view]').forEach(x=>x.classList.remove('active'));b.classList.add('active');view=b.dataset.view;$('#pageTitle').textContent=b.textContent;$('#pageSub').textContent=view==='executive'?'Posição financeira consolidada para diretoria':view==='report'?'Fechamento gerencial e pontos de decisão':'Controle financeiro detalhado';render()});
+$$('#nav button[data-view]').forEach(b=>b.onclick=()=>{$$('#nav button[data-view]').forEach(x=>x.classList.remove('active'));b.classList.add('active');view=b.dataset.view;$('#pageTitle').textContent=b.textContent;$('#pageSub').textContent=view==='executive'?'Posição financeira consolidada para diretoria':view==='report'?'Fechamento gerencial e pontos de decisão':view==='monthcompare'?'Comparação entre competências':'Controle financeiro detalhado';render()});
 $('#month').onchange=()=>{selectedRows.clear();render()};$('#closeModal').onclick=()=>$('#modal').classList.remove('open');$('#modal').onclick=e=>{if(e.target===$('#modal'))$('#modal').classList.remove('open')};
 $('#undoBtn').onclick=undoLast;
  $('#editForecastBtn')?.addEventListener('click',()=>openEditableList('forecast'));
  $('#editActualBtn')?.addEventListener('click',()=>openEditableList('actual'));
  $('#closeMonthBtn')?.addEventListener('click',()=>saveMonthToSupabase(true));
- $('#adminBtn')?.addEventListener('click',openAdminPanel);$('#auditBtn').onclick=openAuditLog;$('#printBtn').onclick=()=>window.print();$('#syncBtn').onclick=saveSupabase;
+ $('#adminBtn')?.addEventListener('click',openAdminPanel);$('#auditBtn').onclick=openAuditLog;$('#printBtn').onclick=()=>window.print();
 populateMonths();render();setTimeout(loadHistoricalMonthsFromSupabase,250);
 </script>
 </body>
