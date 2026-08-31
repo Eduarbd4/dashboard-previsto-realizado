@@ -9,15 +9,15 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *{box-sizing:border-box}body{margin:0;background:#eef3f7;color:#163047;font-family:Inter,Manrope,Arial,sans-serif;font-size:13px}
-:root{--navy:#0c2b45;--navy2:#174d72;--blue:#2475a7;--blue2:#dbeaf4;--green:#23765b;--greenbg:#e8f4ef;--amber:#a97218;--amberbg:#fff4df;--red:#a74040;--redbg:#fbecec;--ink:#163047;--muted:#6e8191;--line:#d8e2ea;--white:#fff;--shadow:0 12px 30px rgba(15,43,69,.07)}
+:root{--navy:#090909;--navy2:#171717;--blue:#222222;--blue2:#f1f1f1;--green:#23765b;--greenbg:#e8f4ef;--amber:#a97218;--amberbg:#fff4df;--red:#a74040;--redbg:#fbecec;--ink:#163047;--muted:#6e8191;--line:#d8e2ea;--white:#fff;--shadow:0 12px 30px rgba(15,43,69,.07)}
 button,input,select,textarea{font:inherit}button{cursor:pointer}
 .shell{display:grid;grid-template-columns:245px 1fr;min-height:100vh}
-aside{background:linear-gradient(180deg,#0b2943,#103c5d);color:white;padding:22px 14px;position:sticky;top:0;height:100vh;overflow:auto}
+aside{background:linear-gradient(180deg,#050505,#151515);color:white;padding:22px 14px;position:sticky;top:0;height:100vh;overflow:auto}
 .brand{padding:7px 11px 22px;border-bottom:1px solid rgba(255,255,255,.12);margin-bottom:14px}.brand strong{font-size:18px;display:block}.brand small{display:block;color:#b7cbdb;margin-top:5px;font-size:10px}
 .nav{display:grid;gap:5px}.nav button{background:transparent;border:0;color:#cbd9e4;text-align:left;padding:10px 12px;border-radius:9px;font-size:11px;font-weight:700}.nav button:hover,.nav button.active{background:rgba(255,255,255,.12);color:#fff}.nav .section{font-size:8px;text-transform:uppercase;letter-spacing:.14em;color:#7fa2bb;padding:16px 12px 6px;font-weight:800}
 .sideBottom{margin-top:24px;padding:14px 10px;border-top:1px solid rgba(255,255,255,.12);display:grid;gap:8px}.sideBottom button{border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#fff;border-radius:8px;padding:9px;font-size:9px}
 main{min-width:0}.topbar{height:72px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 25px;position:sticky;top:0;z-index:20}.pageTitle h1{margin:0;font-size:17px}.pageTitle p{margin:4px 0 0;color:var(--muted);font-size:9px}.toolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.toolbar select,.toolbar button{border:1px solid var(--line);background:#fff;border-radius:8px;padding:8px 10px;color:var(--ink);font-size:9px}.toolbar .primary{background:var(--navy2);color:#fff;border-color:var(--navy2)}.content{padding:22px;max-width:1700px;margin:auto}
-.hero{background:linear-gradient(135deg,#0d3150,#1b5f89);color:#fff;border-radius:18px;padding:27px 29px;box-shadow:0 20px 45px rgba(12,43,69,.22);margin-bottom:15px;position:relative;overflow:hidden}.hero:after{content:"";position:absolute;width:280px;height:280px;border-radius:50%;background:rgba(255,255,255,.05);right:-90px;top:-100px}.hero .eyebrow{font-size:8px;font-weight:800;letter-spacing:.17em;color:#bdd1e1}.hero h2{font-size:26px;margin:8px 0 7px}.hero p{font-size:10px;color:#dbe7ef;line-height:1.65;margin:0;max-width:930px}.heroMeta{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:20px;padding-top:17px;border-top:1px solid rgba(255,255,255,.16)}.heroMeta small{display:block;color:#b6cada;font-size:7px;text-transform:uppercase;letter-spacing:.08em}.heroMeta b{display:block;margin-top:4px;font-size:13px}
+.hero{background:linear-gradient(135deg,#050505,#181818);color:#fff;border-radius:18px;padding:27px 29px;box-shadow:0 20px 45px rgba(12,43,69,.22);margin-bottom:15px;position:relative;overflow:hidden}.hero:after{content:"";position:absolute;width:280px;height:280px;border-radius:50%;background:rgba(255,255,255,.05);right:-90px;top:-100px}.hero .eyebrow{font-size:8px;font-weight:800;letter-spacing:.17em;color:#bdd1e1}.hero h2{font-size:26px;margin:8px 0 7px}.hero p{font-size:10px;color:#dbe7ef;line-height:1.65;margin:0;max-width:930px}.heroMeta{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:20px;padding-top:17px;border-top:1px solid rgba(255,255,255,.16)}.heroMeta small{display:block;color:#b6cada;font-size:7px;text-transform:uppercase;letter-spacing:.08em}.heroMeta b{display:block;margin-top:4px;font-size:13px}
 .kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:11px;margin-bottom:14px}.kpi{background:#fff;border:1px solid var(--line);border-radius:13px;padding:14px 15px;box-shadow:var(--shadow);border-top:3px solid var(--blue);cursor:pointer}.kpi.good{border-top-color:var(--green)}.kpi.warn{border-top-color:var(--amber)}.kpi.risk{border-top-color:var(--red)}.kpi small{font-size:7px;text-transform:uppercase;letter-spacing:.075em;color:var(--muted);font-weight:800}.kpi strong{display:block;font-size:18px;margin-top:7px;color:var(--ink)}.kpi span{display:block;font-size:8px;color:var(--muted);margin-top:4px;line-height:1.45}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:14px}.card{background:#fff;border:1px solid var(--line);border-radius:13px;box-shadow:var(--shadow);overflow:hidden}.cardHead{display:flex;align-items:center;justify-content:space-between;padding:13px 15px;background:#f8fafc;border-bottom:1px solid var(--line)}.cardHead h3{margin:0;font-size:10px}.cardHead small{color:var(--muted);font-size:8px}.cardBody{padding:14px}.chart{height:285px}.tableWrap{overflow:auto;max-height:440px}table{width:100%;border-collapse:collapse}th,td{padding:9px 10px;border-bottom:1px solid #e8edf1;text-align:left;font-size:8.5px;vertical-align:middle}th{position:sticky;top:0;background:#eaf1f6;color:#36566f;text-transform:uppercase;letter-spacing:.05em;font-size:7px;z-index:2}.num{text-align:right;white-space:nowrap}.positive{color:var(--red);font-weight:800}.negative{color:var(--green);font-weight:800}.clickrow{cursor:pointer}.clickrow:hover td{background:#f1f6fa}.badge{display:inline-flex;padding:4px 7px;border-radius:999px;font-size:7px;font-weight:800;background:#e8eef3;color:#496478}.badge.good{background:var(--greenbg);color:var(--green)}.badge.warn{background:var(--amberbg);color:var(--amber)}.badge.risk{background:var(--redbg);color:var(--red)}.badge.blue{background:#e5f0f7;color:#23658d}
 .actionList{display:grid;gap:8px}.action{border-left:4px solid var(--blue);background:#f8fafc;border-radius:9px;padding:11px 12px}.action.warn{border-left-color:var(--amber)}.action.risk{border-left-color:var(--red)}.action.good{border-left-color:var(--green)}.action b{font-size:9px}.action p{font-size:8.5px;color:var(--muted);line-height:1.5;margin:4px 0 0}
@@ -31,6 +31,40 @@ main{min-width:0}.topbar{height:72px;background:#fff;border-bottom:1px solid var
 @media(max-width:1200px){.kpis{grid-template-columns:repeat(3,1fr)}.grid2,.grid3{grid-template-columns:1fr}.heroMeta{grid-template-columns:1fr 1fr}}
 @media(max-width:800px){.shell{grid-template-columns:1fr}aside{position:relative;height:auto}.nav{grid-template-columns:1fr 1fr}.topbar{height:auto;padding:13px;align-items:flex-start;gap:12px}.content{padding:12px}.kpis{grid-template-columns:1fr 1fr}.formGrid,.catalogGrid{grid-template-columns:1fr}.formGrid .full{grid-column:auto}}
 @media print{aside,.topbar,.filterbar,.noPrint{display:none!important}.shell{display:block}.content{padding:0}.card,.hero,.kpi{box-shadow:none;break-inside:avoid}.tableWrap{max-height:none;overflow:visible}}
+
+.reportNarrative{display:grid;gap:11px}
+.reportTextBlock{background:#fff;border:1px solid var(--line);border-radius:11px;padding:14px 15px;line-height:1.75;font-size:9.2px;color:#536b7d}
+.reportTextBlock h4{margin:0 0 6px;color:#17334f;font-size:10px}
+.reportTextBlock p{margin:0}
+.reportTextBlock strong{color:#17334f}
+.reportTextBlock.risk{border-left:4px solid var(--red)}
+.reportTextBlock.warn{border-left:4px solid var(--amber)}
+.reportTextBlock.good{border-left:4px solid var(--green)}
+.reportTextBlock.info{border-left:4px solid var(--blue)}
+.execConclusion{background:linear-gradient(180deg,#f8fbfd,#eef4f8);border:1px solid #d8e2ea;border-radius:12px;padding:15px 16px}
+.execConclusion h4{margin:0 0 8px;font-size:10px;color:#17334f}
+.execConclusion ul{margin:0;padding-left:18px;color:#536b7d;font-size:9px;line-height:1.75}
+.execConclusion li+li{margin-top:4px}
+
+
+/* Tema executivo preto + gráficos coloridos */
+body{background:#f3f3f3;color:#151515}
+.topbar{background:#fff}
+.brand small{color:#bcbcbc}
+.nav button{color:#cfcfcf}
+.nav button:hover,.nav button.active{background:#2a2a2a;color:#fff}
+.nav .section{color:#808080}
+.hero .eyebrow{color:#c9c9c9}
+.hero p{color:#e4e4e4}
+.heroMeta small{color:#bdbdbd}
+.cardHead{background:#fafafa}
+.kpi{border-top-color:#111}
+.kpi.good{border-top-color:#2e8b57}.kpi.warn{border-top-color:#d28a16}.kpi.risk{border-top-color:#bb3f3f}
+.chartLegend{font-size:8px;color:#777;margin-top:5px}
+.groupChip{display:inline-flex;padding:4px 7px;border-radius:999px;background:#eeeeee;color:#202020;font-size:7px;font-weight:800}
+.subtle{font-size:8px;color:#757575}
+.classificationNote{padding:12px 14px;border:1px solid #ddd;border-left:4px solid #111;border-radius:9px;background:#fafafa;font-size:9px;line-height:1.65;color:#555}
+
 </style>
 </head>
 <body>
@@ -90,6 +124,7 @@ const SUPABASE_URL="https://tohgvkvkvajqxhtvbija.supabase.co";
 const SUPABASE_ANON_KEY="sb_publishable_ZLue4j1oo6ULkFIWVhkwNQ_iLkQHgah";
 const STORAGE_KEY='danese_previsto_realizado_bank_v1';
 let state=loadState(), view='executive', charts=[];
+migrateState();
 let db=null, session=null;
 if(window.supabase && SUPABASE_URL && SUPABASE_ANON_KEY){
   try{db=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY)}catch(e){}
@@ -119,6 +154,96 @@ function vacation(r){return /\bFERIAS\b/.test(text(r))}
 function service(r){return /\bPRESTAC(?:AO|OES)\b.*\bSERVIC/.test(text(r))||/\bSERVICOS PRESTADOS\b/.test(text(r))||norm(r.category).includes('PAGAMENTO PRESTACAO DE SERVICO')}
 function profitAdvance(r){return /\b(ANTECIPACAO|ADIANTAMENTO)\b.*\bLUCRO/.test(text(r))}
 function fopagSalary(r){const t=text(r);if(bankFee(r)||salaryAdvance(r)||vacation(r)||service(r)||profitAdvance(r))return false;return /\bFOPAG\b/.test(t)||/\bFOLHA\b/.test(t)||/\bSALARIO\b/.test(t)||norm(r.category).includes('2.03.001')}
+
+function managementClassification(r){
+  const t=text(r),cat=norm(r.category);
+
+  // Benefícios (não confundir Vale Alimentação com refeição operacional)
+  if(cat.includes('VALE ALIMENTACAO') || /\bCAJU\b.*\bVA\b/.test(t) || /\bVALE ALIMENTACAO\b/.test(t))
+    return {group:'Pessoas e Benefícios',sub:'Vale Alimentação'};
+  if(cat.includes('VALE TRANSPORTE') || /\bVALE TRANSPORTE\b/.test(t) || /\bCAJU\b.*\bVT\b/.test(t))
+    return {group:'Pessoas e Benefícios',sub:'Vale Transporte'};
+  if(cat.includes('PLANO DE SAUDE') || /\bWELLHUB\b|\bCONEXA\b|\bPLANO DE SAUDE\b/.test(t))
+    return {group:'Pessoas e Benefícios',sub:'Saúde e Bem-estar'};
+
+  // Alimentação operacional/reunião/viagem, separada dos benefícios
+  if(/\b(IFOOD|RESTAURANTE|RESTAURANTES|LANCHONETE|ALMOCO|JANTAR|REFEICAO|PIZZA|SUSHI|PADARIA|CAFE DA MANHA|CAFETERIA)\b/.test(t))
+    return {group:'Alimentação',sub:'Refeições e Alimentação'};
+
+  if(paymentType(r)==='salaryAdvance') return {group:'Pessoas e FOPAG',sub:'Adiantamentos Salariais'};
+  if(paymentType(r)==='vacation') return {group:'Pessoas e FOPAG',sub:'Férias'};
+  if(paymentType(r)==='fopag') return {group:'Pessoas e FOPAG',sub:'Folha / Salários'};
+  if(cat.includes('FGTS') || /\bFGTS\b|\bINSS\b/.test(t)) return {group:'Pessoas e FOPAG',sub:'Encargos Trabalhistas'};
+  if(cat.includes('COMISSAO') || /\bCOMISSAO\b/.test(t)) return {group:'Pessoas e FOPAG',sub:'Comissões e Premiações'};
+
+  if(cat.includes('ALUGUEL')) return {group:'Ocupação e Estrutura',sub:'Aluguel'};
+  if(cat.includes('CONDOMINIO') || cat.includes('IPTU')) return {group:'Ocupação e Estrutura',sub:'Condomínio / IPTU'};
+  if(cat.includes('ENERGIA')) return {group:'Ocupação e Estrutura',sub:'Energia'};
+  if(cat.includes('AGUA')) return {group:'Ocupação e Estrutura',sub:'Água e Saneamento'};
+  if(cat.includes('MANUTENCAO PREDIAL')) return {group:'Ocupação e Estrutura',sub:'Manutenção Predial'};
+
+  if(cat.includes('FACCAO')) return {group:'Produção e Produto',sub:'Facção / Mão de obra'};
+  if(cat.includes('TECIDO')) return {group:'Produção e Produto',sub:'Tecidos'};
+  if(cat.includes('PRODUTOS PARA REVENDA')) return {group:'Produção e Produto',sub:'Produtos para Revenda'};
+  if(cat.includes('ETIQUETA')) return {group:'Produção e Produto',sub:'Etiquetas e Aviamentos'};
+  if(/\bAVIAMENTO\b|\bEMBALAGEM\b/.test(t)) return {group:'Produção e Produto',sub:'Aviamentos / Embalagens'};
+
+  if(cat.includes('FRETE')) return {group:'Logística',sub:cat.includes('ENTRADA')?'Frete de Entrada':'Frete de Saída'};
+  if(/\bUBER\b|\b99\b|\bTAXI\b|\bTRANSPORTE\b/.test(t)) return {group:'Logística',sub:'Transporte e Mobilidade'};
+
+  if(cat.includes('MARKETING') || cat.includes('SOCIAL MEDIA')) return {group:'Marketing e Comercial',sub:'Marketing / Social Media'};
+  if(cat.includes('VITRINE') || /\bVM\b/.test(t)) return {group:'Marketing e Comercial',sub:'Vitrine / VM'};
+  if(cat.includes('PREMIAC')) return {group:'Marketing e Comercial',sub:'Premiações'};
+
+  if(cat.includes('ICMS') || cat.includes('SIMPLES') || /\bDARF\b|\bIMPOSTO\b|\bTRIBUTO\b/.test(t)) return {group:'Tributos',sub:'Impostos e Tributos'};
+
+  if(cat.includes('SOFTWARE') || /\bSOFTWARE\b|\bLICENCA\b|\bLINX\b/.test(t)) return {group:'Tecnologia',sub:'Software e Licenças'};
+  if(cat.includes('TELEFONIA') || /\bINTERNET\b|\bTELEFONIA\b/.test(t)) return {group:'Tecnologia',sub:'Telefonia e Internet'};
+
+  if(paymentType(r)==='service' || cat.includes('PRESTACAO DE SERVICO')) return {group:'Serviços Profissionais',sub:'Prestação de Serviços'};
+  if(cat.includes('ASSESSORIA')) return {group:'Serviços Profissionais',sub:'Assessoria'};
+  if(cat.includes('CONSULTORIA')) return {group:'Serviços Profissionais',sub:'Consultoria'};
+
+  if(paymentType(r)==='bankFee' || cat.includes('TARIFA')) return {group:'Financeiro',sub:'Tarifas Bancárias'};
+  if(cat.includes('EMPRESTIMO')) return {group:'Financeiro',sub:'Empréstimos'};
+  if(paymentType(r)==='profitAdvance') return {group:'Financeiro',sub:'Antecipação de Lucros'};
+
+  return {group:'Outras Despesas',sub:r.category||'Sem subcategoria'};
+}
+function ensureClassification(r,force=false){
+  const c=managementClassification(r);
+  if(force || !r.managementGroup) r.managementGroup=c.group;
+  if(force || !r.subcategory) r.subcategory=c.sub;
+  return r;
+}
+function migrateState(){
+  for(const m of Object.keys(state||{})){
+    const R=state[m];
+    for(const r of [...(R.forecast||[]),...(R.actual||[])])ensureClassification(r,false);
+  }
+  try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state))}catch(e){}
+}
+function groupRows(A){
+  const m={};
+  for(const r of A.f){
+    ensureClassification(r);
+    const k=r.managementGroup||'Outras Despesas';
+    m[k]??={name:k,forecast:0,actual:0,rows:[]};
+    m[k].forecast+=r.amount;m[k].rows.push(r);
+  }
+  for(const r of A.a){
+    ensureClassification(r);
+    const k=r.managementGroup||'Outras Despesas';
+    m[k]??={name:k,forecast:0,actual:0,rows:[]};
+    m[k].actual+=r.amount;m[k].rows.push(r);
+  }
+  return Object.values(m).map(x=>({...x,diff:x.actual-x.forecast,execution:x.forecast?x.actual/x.forecast*100:0})).sort((a,b)=>b.actual-a.actual);
+}
+function colorPalette(n){
+  const c=['#e63946','#457b9d','#2a9d8f','#f4a261','#6d597a','#e9c46a','#577590','#43aa8b','#f94144','#90be6d','#277da1','#f8961e','#8d5a97','#4d908e'];
+  return Array.from({length:n},(_,i)=>c[i%c.length]);
+}
+
 function paymentType(r){
   if(r.manualType && r.manualType!=='automatic')return r.manualType;
   if(bankFee(r))return'bankFee';
@@ -210,6 +335,64 @@ function fopagData(A){
   blocks.push({name:'FOPAG Na Praia',type:'napraia',forecast:npForecast,actual:npActual});
   return blocks;
 }
+
+function reportNarrative(A,cats,vendors,wk,fop){
+  const exec=A.fTotal?A.aTotal/A.fTotal*100:0;
+  const accuracy=A.fTotal?Math.max(0,100-Math.abs(A.diff)/A.fTotal*100):0;
+  const unpct=A.aTotal?A.unexpectedTotal/A.aTotal*100:0;
+  const topOver=[...cats].filter(x=>x.diff>0).sort((a,b)=>b.diff-a.diff);
+  const topUnder=[...cats].filter(x=>x.diff<0).sort((a,b)=>a.diff-b.diff);
+  const spendGroups=groupRows(A);
+  const largestGroup=spendGroups[0];
+  const top5pct=0;
+  const worstWeek=[...wk].sort((a,b)=>(b.actual-b.forecast)-(a.actual-a.forecast))[0];
+
+  const fopagForecast=fop.reduce((s,b)=>s+b.forecast.reduce((t,x)=>t+x.amount,0),0);
+  const fopagActual=fop.reduce((s,b)=>s+b.actual.reduce((t,x)=>t+x.amount,0),0);
+  const fopagDiff=fopagActual-fopagForecast;
+
+  let budgetText='';
+  if(A.diff>0){
+    budgetText=`O mês encerrou com <strong>${money(A.aTotal)}</strong> pagos contra <strong>${money(A.fTotal)}</strong> previstos, gerando um desvio desfavorável de <strong>${money(A.diff)}</strong>. A execução atingiu <strong>${pct(exec)}</strong> do orçamento.`;
+    if(topOver.length){
+      budgetText+=` A principal pressão veio de <strong>${esc(topOver[0].name)}</strong>, com gasto ${money(topOver[0].diff)} acima do planejado.`;
+    }
+  }else{
+    budgetText=`O mês apresenta <strong>${money(A.aTotal)}</strong> pagos frente a <strong>${money(A.fTotal)}</strong> previstos. O realizado está <strong>${money(Math.abs(A.diff))}</strong> abaixo do orçamento, com execução de <strong>${pct(exec)}</strong>.`;
+    if(A.pendingTotal>0){
+      budgetText+=` Entretanto, ainda existem <strong>${money(A.pendingTotal)}</strong> em previsões sem pagamento integral, por isso a diferença favorável ainda não deve ser interpretada integralmente como economia.`;
+    }
+  }
+
+  const predictText = A.unexpectedTotal>0
+    ? `Foram identificados <strong>${A.unexpected.length} pagamentos sem previsão vinculada</strong>, totalizando <strong>${money(A.unexpectedTotal)}</strong>, equivalentes a <strong>${pct(unpct)}</strong> do realizado. Esses itens reduzem a previsibilidade do caixa e devem ser classificados entre despesas pontuais, erros de vinculação e gastos que precisam passar a integrar o orçamento dos próximos meses.`
+    : `Não foram identificados pagamentos fora da previsão no recorte atual. Isso melhora a previsibilidade do caixa e indica boa aderência entre orçamento e execução.`;
+
+  const pendingText = A.pendingTotal>0
+    ? `Existem <strong>${A.pending.length} previsões com saldo ainda não realizado</strong>, somando <strong>${money(A.pendingTotal)}</strong>. Antes do fechamento definitivo, é necessário confirmar se esses valores ainda serão pagos, foram cancelados, mudaram de competência ou precisam ser ajustados no orçamento.`
+    : `Não existem previsões relevantes pendentes de pagamento no recorte atual. O fechamento está mais próximo de refletir a posição final da competência.`;
+
+  const supplierText = largestGroup
+    ? `O maior grupo gerencial de despesas no período foi <strong>${esc(largestGroup.name)}</strong>, com <strong>${money(largestGroup.actual)}</strong> realizados. A classificação gerencial separa Alimentação, Pessoas/FOPAG, Produção, Logística, Ocupação, Tecnologia, Tributos e demais grupos para tornar a leitura do caixa mais clara.`
+    : `Não há dados suficientes para análise da composição dos gastos.`;
+
+  const fopagText = `A FOPAG consolidada apresenta <strong>${money(fopagForecast)}</strong> previstos e <strong>${money(fopagActual)}</strong> pagos, com diferença de <strong>${money(fopagDiff)}</strong>. O controle mantém separados folha/salários, adiantamentos salariais, férias, prestação de serviços e o bloco interno de FOPAG Na Praia. A previsão de “Adiantamentos Salariais Colaboradores” funciona como orçamento agrupador e recebe os pagamentos individuais vinculados a ela.`;
+
+  const weeklyText = worstWeek
+    ? `A maior pressão semanal ocorreu na <strong>${esc(worstWeek.label)}</strong>, quando o realizado superou o previsto em <strong>${money(worstWeek.actual-worstWeek.forecast)}</strong>. Essa semana deve ser usada como referência para investigar concentração de vencimentos, antecipações ou pagamentos não previstos.`
+    : `Não há dados suficientes para identificar uma semana de maior pressão de caixa.`;
+
+  const conclusion = [];
+  if(A.diff>0) conclusion.push(`Revisar as categorias que ultrapassaram o orçamento, começando por ${topOver[0]?.name||'maior desvio identificado'}.`);
+  if(A.unexpected.length) conclusion.push(`Justificar e classificar os ${A.unexpected.length} pagamentos não previstos; os recorrentes devem entrar no orçamento futuro.`);
+  if(A.pending.length) conclusion.push(`Validar os ${A.pending.length} compromissos previstos ainda pendentes antes de considerar saldo orçamentário como economia.`);
+  if(largestGroup) conclusion.push(`Acompanhar ${largestGroup.name}, atualmente o maior grupo gerencial de desembolso da competência.`);
+  conclusion.push(`Manter o acompanhamento de FOPAG separado por componente para evitar distorções entre folha, adiantamentos, férias e serviços.`);
+  if(accuracy<90) conclusion.push(`A aderência ao planejamento está em ${pct(accuracy)}; é recomendável revisar premissas de orçamento para a próxima competência.`);
+
+  return {budgetText,predictText,pendingText,supplierText,fopagText,weeklyText,conclusion,accuracy,exec,unpct,topOver,topUnder,top5pct};
+}
+
 function card(title,body,sub=''){return `<section class="card"><div class="cardHead"><div><h3>${esc(title)}</h3>${sub?`<small>${esc(sub)}</small>`:''}</div></div><div class="cardBody">${body}</div></section>`}
 function tableRows(rows,cols){
   if(!rows.length)return'<div class="empty">Nenhum lançamento neste recorte.</div>';
@@ -218,47 +401,116 @@ function tableRows(rows,cols){
 function destroyCharts(){charts.forEach(c=>{try{c.destroy()}catch(e){}});charts=[]}
 function render(){
   destroyCharts();
-  const A=analytics(), cats=byCategory(A), vendors=bySupplier(A), wk=weeks(A), fop=fopagData(A);
+  const A=analytics(), cats=byCategory(A), groups=groupRows(A), vendors=bySupplier(A), wk=weeks(A), fop=fopagData(A);
   const exec=A.fTotal?A.aTotal/A.fTotal*100:0, unpct=A.aTotal?A.unexpectedTotal/A.aTotal*100:0;
   const accuracy=A.fTotal?Math.max(0,100-Math.abs(A.diff)/A.fTotal*100):0;
   let h='';
   if(view==='executive'){
     const topOver=[...cats].filter(x=>x.diff>0).sort((a,b)=>b.diff-a.diff)[0];
-    const top5=vendors.slice(0,5).reduce((s,x)=>s+x.value,0),top5pct=A.aTotal?top5/A.aTotal*100:0;
-    h=`<section class="hero"><span class="eyebrow">DANE-SE · FINANCIAL CONTROL</span><h2>${esc(monthText($('#month').value))}</h2><p>${A.diff>0?`O realizado está ${money(A.diff)} acima do orçamento.`:`O realizado está ${money(Math.abs(A.diff))} abaixo do orçamento.`} A leitura abaixo destaca previsibilidade, compromissos pendentes, concentração e principais pressões do mês.</p><div class="heroMeta"><div><small>Orçamento</small><b>${money(A.fTotal)}</b></div><div><small>Realizado</small><b>${money(A.aTotal)}</b></div><div><small>Execução</small><b>${pct(exec)}</b></div><div><small>Aderência</small><b>${pct(accuracy)}</b></div></div></section>
+    const largestGroup=groups[0];
+    h=`<section class="hero"><span class="eyebrow">DANE-SE · FINANCIAL CONTROL</span><h2>${esc(monthText($('#month').value))}</h2><p>${A.diff>0?`O realizado está ${money(A.diff)} acima do orçamento.`:`O realizado está ${money(Math.abs(A.diff))} abaixo do orçamento.`} A leitura abaixo mostra o que aconteceu no mês, onde o orçamento desviou, o que ainda está pendente e quais pontos precisam de decisão.</p><div class="heroMeta"><div><small>Orçamento</small><b>${money(A.fTotal)}</b></div><div><small>Realizado</small><b>${money(A.aTotal)}</b></div><div><small>Execução</small><b>${pct(exec)}</b></div><div><small>Aderência</small><b>${pct(accuracy)}</b></div></div></section>
     <div class="kpis">
       <article class="kpi" data-open="forecast"><small>Previsto</small><strong>${money(A.fTotal)}</strong><span>${A.f.length} lançamentos</span></article>
       <article class="kpi good" data-open="actual"><small>Pago</small><strong>${money(A.aTotal)}</strong><span>${A.a.length} pagamentos</span></article>
       <article class="kpi ${A.diff>0?'risk':'good'}" data-open="difference"><small>Desvio</small><strong>${money(A.diff)}</strong><span>${A.diff>0?'Acima do orçamento':'Abaixo do orçamento'}</span></article>
       <article class="kpi ${unpct>5?'warn':'good'}" data-open="unexpected"><small>Não previstos</small><strong>${money(A.unexpectedTotal)}</strong><span>${pct(unpct)} do realizado</span></article>
       <article class="kpi ${A.pendingTotal>0?'warn':'good'}" data-open="pending"><small>Previsto pendente</small><strong>${money(A.pendingTotal)}</strong><span>Ainda sem pagamento</span></article>
-      <article class="kpi" data-open="suppliers"><small>Concentração Top 5</small><strong>${pct(top5pct)}</strong><span>Dos pagamentos</span></article>
+      <article class="kpi" data-open="groups"><small>Maior grupo de despesas</small><strong>${largestGroup?money(largestGroup.actual):money(0)}</strong><span>${largestGroup?esc(largestGroup.name):'Sem dados'}</span></article>
     </div>
     <div class="grid3">
       <div class="action ${topOver?'risk':'good'}"><b>Maior pressão orçamentária</b><p>${topOver?`${esc(topOver.name)} · ${money(topOver.diff)} acima do previsto`:'Nenhuma categoria acima do previsto.'}</p></div>
       <div class="action ${A.unexpected.length?'warn':'good'}"><b>Previsibilidade</b><p>${A.unexpected.length} pagamentos não previstos somando ${money(A.unexpectedTotal)}.</p></div>
       <div class="action ${A.pending.length?'warn':'good'}"><b>Fechamento</b><p>${A.pending.length} previsões ainda possuem saldo pendente de ${money(A.pendingTotal)}.</p></div>
     </div>
-    <div class="grid2">${card('Execução semanal','<div class="chart"><canvas id="weekChart"></canvas></div>','Previsto, pago e não previsto')}${card('Desvios por categoria','<div class="chart"><canvas id="catChart"></canvas></div>','Categorias com maior impacto')}</div>
-    <div class="grid2">${card('Maiores categorias',`<div class="tableWrap"><table><thead><tr><th>Categoria</th><th class="num">Previsto</th><th class="num">Pago</th><th class="num">Diferença</th><th class="num">Execução</th></tr></thead><tbody>${cats.slice(0,12).map(x=>`<tr class="clickrow" data-cat="${esc(x.name)}"><td><b>${esc(x.name)}</b></td><td class="num">${money(x.forecast)}</td><td class="num">${money(x.actual)}</td><td class="num ${x.diff>0?'positive':'negative'}">${money(x.diff)}</td><td class="num">${pct(x.execution)}</td></tr>`).join('')}</tbody></table></div>`,'Clique para detalhar')}${card('Maiores fornecedores',`<div class="tableWrap"><table><thead><tr><th>Fornecedor</th><th class="num">Pagamentos</th><th class="num">Valor</th><th class="num">Participação</th></tr></thead><tbody>${vendors.slice(0,12).map(v=>`<tr class="clickrow" data-vendor="${esc(v.name)}"><td><b>${esc(v.name)}</b></td><td class="num">${v.rows.length}</td><td class="num">${money(v.value)}</td><td class="num">${pct(A.aTotal?v.value/A.aTotal*100:0)}</td></tr>`).join('')}</tbody></table></div>`,'Concentração de desembolsos')}</div>`;
-    setTimeout(()=>drawExecutive(A,cats,wk),0);
+    <div class="grid2">${card('Execução semanal','<div class="chart"><canvas id="weekChart"></canvas></div>','Previsto, pago e não previsto')}${card('Previsto x realizado por categoria','<div class="chart"><canvas id="catChart"></canvas></div>','Gráfico vertical e colorido')}</div>
+    <div class="grid2">${card('Composição dos gastos por grupo','<div class="chart"><canvas id="groupChart"></canvas></div>','Alimentação, Pessoas, Produção, Logística, Tecnologia e demais grupos')}${card('Categorias com maior impacto',`<div class="tableWrap"><table><thead><tr><th>Categoria</th><th>Grupo</th><th class="num">Previsto</th><th class="num">Pago</th><th class="num">Diferença</th></tr></thead><tbody>${cats.slice(0,16).map(x=>{const sample=x.rows[0],g=sample?.managementGroup||managementClassification(sample||{}).group;return`<tr class="clickrow" data-cat="${esc(x.name)}"><td><b>${esc(x.name)}</b></td><td><span class="groupChip">${esc(g)}</span></td><td class="num">${money(x.forecast)}</td><td class="num">${money(x.actual)}</td><td class="num ${x.diff>0?'positive':'negative'}">${money(x.diff)}</td></tr>`}).join('')}</tbody></table></div>`,'Clique para abrir os lançamentos')}</div>`;
+    setTimeout(()=>drawExecutive(A,cats,groups,wk),0);
   }else if(view==='report'){
-    const topOver=[...cats].filter(x=>x.diff>0).sort((a,b)=>b.diff-a.diff).slice(0,5);
-    h=`<section class="hero"><span class="eyebrow">RELATÓRIO GERENCIAL · FECHAMENTO FINANCEIRO</span><h2>${esc(monthText($('#month').value))}</h2><p>Relatório de diretoria com posição orçamentária, exceções, compromissos, FOPAG e pontos de decisão.</p><div class="heroMeta"><div><small>Previsto</small><b>${money(A.fTotal)}</b></div><div><small>Pago</small><b>${money(A.aTotal)}</b></div><div><small>Desvio</small><b>${money(A.diff)}</b></div><div><small>Não previsto</small><b>${money(A.unexpectedTotal)}</b></div></div></section>
-    <div class="reportIntro"><b>Leitura executiva.</b> ${A.diff>0?`A competência apresenta estouro consolidado de ${money(A.diff)}.`:`A competência está ${money(Math.abs(A.diff))} abaixo do orçamento consolidado.`} A aderência ao plano é ${pct(accuracy)}. Os pagamentos não previstos representam ${pct(unpct)} do desembolso e há ${money(A.pendingTotal)} de previsões ainda sem pagamento integral.</div>
+    const N=reportNarrative(A,cats,vendors,wk,fop);
+    const topOver=N.topOver;
+    h=`<section class="hero">
+      <span class="eyebrow">RELATÓRIO GERENCIAL · FECHAMENTO FINANCEIRO</span>
+      <h2>${esc(monthText($('#month').value))}</h2>
+      <p>Leitura financeira preparada para diretoria. O objetivo desta página é explicar o que aconteceu no mês, onde o orçamento desviou, quais pontos afetam o caixa e o que precisa de decisão.</p>
+      <div class="heroMeta">
+        <div><small>Previsto</small><b>${money(A.fTotal)}</b></div>
+        <div><small>Pago</small><b>${money(A.aTotal)}</b></div>
+        <div><small>Desvio</small><b>${money(A.diff)}</b></div>
+        <div><small>Aderência ao plano</small><b>${pct(N.accuracy)}</b></div>
+      </div>
+    </section>
+
+    <div class="sectionTitle"><h3>1. Resumo executivo</h3><span>Leitura do mês em linguagem gerencial</span></div>
+    <div class="reportNarrative">
+      <div class="reportTextBlock ${A.diff>0?'risk':'good'}"><h4>Posição orçamentária</h4><p>${N.budgetText}</p></div>
+      <div class="reportTextBlock ${A.unexpected.length?'warn':'good'}"><h4>Qualidade da previsão</h4><p>${N.predictText}</p></div>
+      <div class="reportTextBlock ${A.pending.length?'warn':'good'}"><h4>Compromissos ainda em aberto</h4><p>${N.pendingText}</p></div>
+    </div>
+
+    <div class="sectionTitle"><h3>2. O que mais pressionou o orçamento</h3><span>Desvios que merecem explicação</span></div>
     <div class="grid2">
-      ${card('Pontos que exigem decisão',`<div class="actionList">
-        <div class="action ${topOver.length?'risk':'good'}"><b>Orçamento</b><p>${topOver.length?`Revisar ${topOver.length} maiores categorias acima do previsto. A principal é ${esc(topOver[0].name)} (${money(topOver[0].diff)}).`:'Sem estouros relevantes por categoria.'}</p></div>
-        <div class="action ${A.unexpected.length?'warn':'good'}"><b>Não previstos</b><p>${A.unexpected.length} pagamentos precisam de justificativa, recategorização ou inclusão futura no orçamento.</p></div>
-        <div class="action ${A.pending.length?'warn':'good'}"><b>Compromissos pendentes</b><p>Confirmar ${A.pending.length} previsões com saldo ainda não realizado antes do fechamento.</p></div>
-        <div class="action"><b>Concentração</b><p>Os 5 maiores fornecedores concentram ${pct(A.aTotal?vendors.slice(0,5).reduce((s,x)=>s+x.value,0)/A.aTotal*100:0)} do desembolso.</p></div>
-      </div>`,'Recomendação do analista')}
-      ${card('Execução semanal',`<div class="tableWrap"><table><thead><tr><th>Semana</th><th class="num">Previsto</th><th class="num">Pago</th><th class="num">Diferença</th><th class="num">Não previsto</th></tr></thead><tbody>${wk.map(w=>`<tr class="clickrow" data-week="${w.week}"><td><b>${w.label}</b></td><td class="num">${money(w.forecast)}</td><td class="num">${money(w.actual)}</td><td class="num ${w.actual-w.forecast>0?'positive':'negative'}">${money(w.actual-w.forecast)}</td><td class="num">${money(w.unexpected)}</td></tr>`).join('')}</tbody></table></div>`,'Pressão de caixa')}</div>
+      ${card('Maiores desvios por categoria',`<div class="tableWrap"><table>
+        <thead><tr><th>Categoria</th><th class="num">Previsto</th><th class="num">Pago</th><th class="num">Desvio</th><th class="num">Execução</th></tr></thead>
+        <tbody>${cats.slice().sort((a,b)=>Math.abs(b.diff)-Math.abs(a.diff)).slice(0,12).map(x=>`<tr class="clickrow" data-cat="${esc(x.name)}"><td><b>${esc(x.name)}</b></td><td class="num">${money(x.forecast)}</td><td class="num">${money(x.actual)}</td><td class="num ${x.diff>0?'positive':'negative'}">${money(x.diff)}</td><td class="num">${pct(x.execution)}</td></tr>`).join('')}</tbody>
+      </table></div>`,'Clique na categoria para abrir os lançamentos')}
+      ${card('Leitura do analista',`<div class="reportNarrative">
+        <div class="reportTextBlock ${topOver.length?'risk':'good'}"><h4>Maior desvio desfavorável</h4><p>${topOver.length?`A categoria <strong>${esc(topOver[0].name)}</strong> apresentou o maior estouro, com <strong>${money(topOver[0].diff)}</strong> acima do previsto. É o primeiro ponto que deve ser explicado ao gestor.`:'Nenhuma categoria está acima do orçamento no recorte atual.'}</p></div>
+        <div class="reportTextBlock info"><h4>Interpretação</h4><p>Um desvio positivo não significa necessariamente erro. Ele pode decorrer de pagamento antecipado, mudança de competência, gasto extraordinário ou orçamento subestimado. O objetivo é identificar a causa e decidir se o valor deve ser corrigido no mês atual ou incorporado às próximas previsões.</p></div>
+      </div>`,'Análise qualitativa')}
+    </div>
+
+    <div class="sectionTitle"><h3>3. Previsibilidade do caixa</h3><span>Pagamentos fora do orçamento e compromissos pendentes</span></div>
     <div class="grid2">
-      ${card('Maiores desvios por categoria',`<div class="tableWrap"><table><thead><tr><th>Categoria</th><th class="num">Previsto</th><th class="num">Pago</th><th class="num">Desvio</th></tr></thead><tbody>${cats.slice().sort((a,b)=>Math.abs(b.diff)-Math.abs(a.diff)).slice(0,12).map(x=>`<tr class="clickrow" data-cat="${esc(x.name)}"><td><b>${esc(x.name)}</b></td><td class="num">${money(x.forecast)}</td><td class="num">${money(x.actual)}</td><td class="num ${x.diff>0?'positive':'negative'}">${money(x.diff)}</td></tr>`).join('')}</tbody></table></div>`,'Materialidade')}
-      ${card('Fornecedores prioritários',`<div class="tableWrap"><table><thead><tr><th>Fornecedor</th><th class="num">Pago</th><th class="num">Participação</th></tr></thead><tbody>${vendors.slice(0,12).map(v=>`<tr class="clickrow" data-vendor="${esc(v.name)}"><td><b>${esc(v.name)}</b></td><td class="num">${money(v.value)}</td><td class="num">${pct(A.aTotal?v.value/A.aTotal*100:0)}</td></tr>`).join('')}</tbody></table></div>`,'Concentração')}</div>
+      ${card('Pagamentos não previstos prioritários',tableRows(A.unexpected.slice().sort((a,b)=>b.amount-a.amount).slice(0,20),basicCols()),`${A.unexpected.length} itens · ${money(A.unexpectedTotal)}`)}
+      ${card('Compromissos previstos ainda pendentes',tableRows(A.pending.slice().sort((a,b)=>b.remaining-a.remaining).slice(0,20),[
+        {label:'Data',render:r=>dateText(r.date)},
+        {label:'Fornecedor',render:r=>esc(r.party)},
+        {label:'Descrição',render:r=>esc(r.description)},
+        {label:'Categoria',render:r=>esc(r.category)},
+        {label:'Previsto',num:true,render:r=>money(r.amount)},
+        {label:'Já pago',num:true,render:r=>money(r.paid)},
+        {label:'Saldo',num:true,render:r=>`<b>${money(r.remaining)}</b>`}
+      ]),`${A.pending.length} itens · saldo ${money(A.pendingTotal)}`)}
+    </div>
+    <div class="reportNarrative">
+      <div class="reportTextBlock ${A.unexpected.length?'warn':'good'}"><h4>Interpretação dos não previstos</h4><p>${N.predictText}</p></div>
+      <div class="reportTextBlock ${A.pending.length?'warn':'good'}"><h4>Interpretação dos pendentes</h4><p>${N.pendingText}</p></div>
+    </div>
+
+    <div class="sectionTitle"><h3>4. Composição dos gastos</h3><span>Leitura gerencial dos lançamentos</span></div>
+    <div class="grid2">
+      ${card('Grupos gerenciais',`<div class="tableWrap"><table>
+        <thead><tr><th>Grupo</th><th class="num">Previsto</th><th class="num">Pago</th><th class="num">Desvio</th></tr></thead>
+        <tbody>${groups.map(g=>`<tr class="clickrow" data-group="${esc(g.name)}"><td><b>${esc(g.name)}</b></td><td class="num">${money(g.forecast)}</td><td class="num">${money(g.actual)}</td><td class="num ${g.diff>0?'positive':'negative'}">${money(g.diff)}</td></tr>`).join('')}</tbody>
+      </table></div>`,'Alimentação e demais despesas separadas')}
+      ${card('Leitura da composição',`<div class="reportNarrative">
+        <div class="reportTextBlock info"><h4>Como os lançamentos foram separados</h4><p>${N.supplierText}</p></div>
+        <div class="reportTextBlock info"><h4>Por que isso melhora o relatório</h4><p>A categoria contábil original continua preservada, mas cada lançamento também recebe um <strong>grupo gerencial</strong> e uma <strong>subcategoria</strong>. Assim, por exemplo, Vale Alimentação permanece em Pessoas e Benefícios, enquanto refeições operacionais entram em Alimentação. Você pode alterar qualquer uma dessas classificações diretamente na Base de Lançamentos.</p></div>
+      </div>`,'Classificação editável')}
+    </div>
+
+    <div class="sectionTitle"><h3>5. FOPAG</h3><span>Folha, adiantamentos, férias e serviços</span></div>
     ${fopagSummary(fop)}
-    ${card('Pagamentos não previstos prioritários',tableRows(A.unexpected.slice().sort((a,b)=>b.amount-a.amount).slice(0,20),basicCols()),'Itens para justificativa / orçamento futuro')}`;
+    <div class="reportNarrative">
+      <div class="reportTextBlock ${fop.reduce((s,b)=>s+b.actual.reduce((t,x)=>t+x.amount,0),0)>fop.reduce((s,b)=>s+b.forecast.reduce((t,x)=>t+x.amount,0),0)?'warn':'info'}">
+        <h4>Leitura de FOPAG</h4><p>${N.fopagText}</p>
+      </div>
+    </div>
+
+    <div class="sectionTitle"><h3>6. Pressão semanal de caixa</h3><span>Quando os desembolsos se concentraram</span></div>
+    <div class="grid2">
+      ${card('Execução semanal',`<div class="tableWrap"><table>
+        <thead><tr><th>Semana</th><th class="num">Previsto</th><th class="num">Pago</th><th class="num">Diferença</th><th class="num">Não previsto</th></tr></thead>
+        <tbody>${wk.map(w=>`<tr class="clickrow" data-week="${w.week}"><td><b>${w.label}</b></td><td class="num">${money(w.forecast)}</td><td class="num">${money(w.actual)}</td><td class="num ${w.actual-w.forecast>0?'positive':'negative'}">${money(w.actual-w.forecast)}</td><td class="num">${money(w.unexpected)}</td></tr>`).join('')}</tbody>
+      </table></div>`,'Visão de liquidez por semana')}
+      ${card('Leitura semanal',`<div class="reportTextBlock info"><h4>Concentração temporal</h4><p>${N.weeklyText}</p></div>`,'Análise da competência')}
+    </div>
+
+    <div class="sectionTitle"><h3>7. Conclusão e recomendações</h3><span>O que eu levaria para a reunião com a diretoria</span></div>
+    <div class="execConclusion">
+      <h4>Recomendações do analista financeiro</h4>
+      <ul>${N.conclusion.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>
+    </div>`;
   }else if(view==='comparison'){
     h=filtersHTML()+`<div class="kpis"><article class="kpi"><small>Previsto</small><strong>${money(A.fTotal)}</strong></article><article class="kpi good"><small>Pago</small><strong>${money(A.aTotal)}</strong></article><article class="kpi ${A.diff>0?'risk':'good'}"><small>Diferença</small><strong>${money(A.diff)}</strong></article><article class="kpi"><small>Execução</small><strong>${pct(exec)}</strong></article><article class="kpi warn"><small>Pendente</small><strong>${money(A.pendingTotal)}</strong></article><article class="kpi warn"><small>Não previsto</small><strong>${money(A.unexpectedTotal)}</strong></article></div>${comparisonTable(A)}`;
   }else if(view==='differences'){
@@ -277,6 +529,8 @@ function render(){
   }else if(view==='base'){
     h=filtersHTML()+`<div class="controls noPrint" style="margin-bottom:10px"><button class="btn primary" id="baseNewForecast">Criar previsão</button><button class="btn" id="baseNewActual">Criar pagamento</button></div>`+card('Base única de lançamentos',tableRows(filteredRows(A),[
       {label:'Origem',render:r=>r.source==='forecast'?'<span class="badge blue">Previsto</span>':'<span class="badge good">Pago</span>'},
+      {label:'Grupo',render:r=>{ensureClassification(r);return `<span class="groupChip">${esc(r.managementGroup)}</span>`}},
+      {label:'Subcategoria',render:r=>{ensureClassification(r);return esc(r.subcategory)}},
       ...basicCols()
     ]),'Editar aqui altera todas as abas');
   }else if(view==='rules'){
@@ -288,7 +542,7 @@ function render(){
         <div class="action"><b>Vínculo manual</b><p>Vínculos manuais prevalecem sobre a conciliação automática.</p></div>
         <div class="action"><b>Base única</b><p>Editar, mover, excluir, recategorizar ou alterar valores muda todas as abas imediatamente.</p></div>
       </div>`)}
-      ${card('Cadastros',`<div class="controls"><button class="btn primary" id="rulesCatalog">Gerenciar categorias e centros de custo</button><button class="btn" id="rulesNewForecast">Criar previsão</button><button class="btn" id="rulesNewActual">Criar pagamento</button></div><div style="margin-top:14px;font-size:9px;color:var(--muted);line-height:1.65">Você pode criar uma categoria nova e utilizá-la imediatamente em qualquer previsão ou pagamento, sem alterar código.</div>`)}
+      ${card('Cadastros',`<div class="controls"><button class="btn primary" id="rulesCatalog">Gerenciar categorias e centros de custo</button><button class="btn" id="rulesReclassify">Reclassificar lançamentos</button><button class="btn" id="rulesNewForecast">Criar previsão</button><button class="btn" id="rulesNewActual">Criar pagamento</button></div><div style="margin-top:14px;font-size:9px;color:var(--muted);line-height:1.65">Você pode criar uma categoria nova e utilizá-la imediatamente em qualquer previsão ou pagamento, sem alterar código.</div>`)}
     </div>`;
   }
   $('#app').innerHTML=h;
@@ -304,12 +558,17 @@ function basicCols(){return[
  {label:'Valor',num:true,render:r=>`<b>${money(r.amount)}</b>`}
 ]}
 function filteredRows(A){
- const q=norm($('#fq')?.value||''),src=$('#fs')?.value||'all',cat=$('#fc')?.value||'all';
- return [...A.f,...A.a].filter(r=>(src==='all'||r.source===src)&&(cat==='all'||r.category===cat)&&(!q||text(r).includes(q))).sort((a,b)=>String(a.date).localeCompare(String(b.date)));
+ const q=norm($('#fq')?.value||''),src=$('#fs')?.value||'all',cat=$('#fc')?.value||'all',grp=$('#fg')?.value||'all';
+ return [...A.f,...A.a].filter(r=>{
+   ensureClassification(r);
+   const search=norm([r.party,r.description,r.category,r.managementGroup,r.subcategory,r.costCenter].join(' '));
+   return (src==='all'||r.source===src)&&(cat==='all'||r.category===cat)&&(grp==='all'||r.managementGroup===grp)&&(!q||search.includes(q));
+ }).sort((a,b)=>String(a.date).localeCompare(String(b.date)));
 }
 function filtersHTML(){
  const cats=[...new Set(rows().map(r=>r.category).filter(Boolean))].sort();
- return `<div class="filterbar noPrint"><input id="fq" placeholder="Buscar fornecedor, descrição, categoria..."><select id="fs"><option value="all">Previsto + pago</option><option value="forecast">Somente previsto</option><option value="actual">Somente pago</option></select><select id="fc"><option value="all">Todas as categorias</option>${cats.map(x=>`<option>${esc(x)}</option>`).join('')}</select><button id="applyFilters">Aplicar</button><button id="clearFilters">Limpar</button></div>`;
+ const groups=[...new Set(rows().map(r=>{ensureClassification(r);return r.managementGroup}).filter(Boolean))].sort();
+ return `<div class="filterbar noPrint"><input id="fq" placeholder="Buscar fornecedor, descrição, categoria, subcategoria..."><select id="fs"><option value="all">Previsto + pago</option><option value="forecast">Somente previsto</option><option value="actual">Somente pago</option></select><select id="fg"><option value="all">Todos os grupos</option>${groups.map(x=>`<option>${esc(x)}</option>`).join('')}</select><select id="fc"><option value="all">Todas as categorias</option>${cats.map(x=>`<option>${esc(x)}</option>`).join('')}</select><button id="applyFilters">Aplicar</button><button id="clearFilters">Limpar</button></div>`;
 }
 function comparisonTable(A){
  return card('Conciliação de previsões',`<div class="tableWrap"><table><thead><tr><th>Previsão</th><th>Categoria</th><th class="num">Previsto</th><th class="num">Pago vinculado</th><th class="num">Saldo / desvio</th><th>Status</th></tr></thead><tbody>${A.planStatus.map(x=>`<tr class="clickrow" data-row="${esc(x.p.id)}"><td><b>${esc(x.p.description)}</b><br><span style="color:var(--muted)">${esc(x.p.party)}</span></td><td>${esc(x.p.category)}</td><td class="num">${money(x.p.amount)}</td><td class="num">${money(x.paid)}</td><td class="num ${x.diff>0?'positive':x.remaining>0?'':'negative'}">${x.diff>0?money(x.diff):money(x.remaining)}</td><td>${x.diff>.01?'<span class="badge risk">Acima</span>':x.remaining>.01?'<span class="badge warn">Pendente</span>':'<span class="badge good">Conciliado</span>'}</td></tr>`).join('')}</tbody></table></div>`,'Uma previsão pode receber vários pagamentos');
@@ -317,22 +576,51 @@ function comparisonTable(A){
 function fopagSummary(blocks){
  return card('Resumo FOPAG',`<div class="tableWrap"><table><thead><tr><th>Componente</th><th class="num">Previsto</th><th class="num">Pago</th><th class="num">Diferença</th><th class="num">Execução</th></tr></thead><tbody>${blocks.map(b=>{const p=b.forecast.reduce((s,x)=>s+x.amount,0),a=b.actual.reduce((s,x)=>s+x.amount,0),d=a-p;return`<tr class="clickrow" data-fopag="${esc(b.type)}"><td><b>${esc(b.name)}</b></td><td class="num">${money(p)}</td><td class="num">${money(a)}</td><td class="num ${d>0?'positive':'negative'}">${money(d)}</td><td class="num">${pct(p?a/p*100:0)}</td></tr>`}).join('')}</tbody></table></div>`,'Clique para abrir os lançamentos');
 }
-function drawExecutive(A,cats,wk){
- const wc=$('#weekChart');if(wc)charts.push(new Chart(wc,{type:'bar',data:{labels:wk.map(x=>'S'+x.week),datasets:[{label:'Previsto',data:wk.map(x=>x.forecast),backgroundColor:'#9fbad0'},{label:'Pago',data:wk.map(x=>x.actual),backgroundColor:'#2475a7'},{label:'Não previsto',data:wk.map(x=>x.unexpected),backgroundColor:'#c58a31'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'}},scales:{x:{grid:{display:false}},y:{grid:{color:'#e6edf2'}}}}}));
- const cc=$('#catChart');if(cc){const d=cats.slice(0,8);charts.push(new Chart(cc,{type:'bar',data:{labels:d.map(x=>x.name.length>22?x.name.slice(0,22)+'…':x.name),datasets:[{label:'Previsto',data:d.map(x=>x.forecast),backgroundColor:'#a8bfd1'},{label:'Pago',data:d.map(x=>x.actual),backgroundColor:'#1e658f'}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'}},scales:{x:{grid:{color:'#e6edf2'}},y:{grid:{display:false}}}}}))}
+function drawExecutive(A,cats,groups,wk){
+ const colors=colorPalette(20);
+ const wc=$('#weekChart');
+ if(wc)charts.push(new Chart(wc,{
+   type:'bar',
+   data:{labels:wk.map(x=>'S'+x.week),datasets:[
+     {label:'Previsto',data:wk.map(x=>x.forecast),backgroundColor:'#457b9d',borderRadius:5},
+     {label:'Pago',data:wk.map(x=>x.actual),backgroundColor:'#2a9d8f',borderRadius:5},
+     {label:'Não previsto',data:wk.map(x=>x.unexpected),backgroundColor:'#f4a261',borderRadius:5}
+   ]},
+   options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'}},scales:{x:{grid:{display:false}},y:{grid:{color:'#e7e7e7'}}}}
+ }));
+ const cc=$('#catChart');
+ if(cc){
+   const d=cats.slice(0,10);
+   charts.push(new Chart(cc,{
+     type:'bar',
+     data:{labels:d.map(x=>x.name.length>18?x.name.slice(0,18)+'…':x.name),datasets:[
+       {label:'Previsto',data:d.map(x=>x.forecast),backgroundColor:d.map((_,i)=>colors[(i*2)%colors.length]),borderRadius:5},
+       {label:'Pago',data:d.map(x=>x.actual),backgroundColor:d.map((_,i)=>colors[(i*2+1)%colors.length]),borderRadius:5}
+     ]},
+     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'}},scales:{x:{grid:{display:false},ticks:{maxRotation:45,minRotation:0}},y:{grid:{color:'#e7e7e7'}}}}
+   }));
+ }
+ const gc=$('#groupChart');
+ if(gc){
+   const g=groups.slice(0,10);
+   charts.push(new Chart(gc,{
+     type:'bar',
+     data:{labels:g.map(x=>x.name),datasets:[{label:'Pago',data:g.map(x=>x.actual),backgroundColor:colorPalette(g.length),borderRadius:6}]},
+     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{maxRotation:35,minRotation:0}},y:{grid:{color:'#e7e7e7'}}}}
+   }));
+ }
 }
-function drawWeekOnly(wk){const c=$('#weekOnlyChart');if(c)charts.push(new Chart(c,{type:'bar',data:{labels:wk.map(x=>'S'+x.week),datasets:[{label:'Previsto',data:wk.map(x=>x.forecast),backgroundColor:'#a8bfd1'},{label:'Pago',data:wk.map(x=>x.actual),backgroundColor:'#2475a7'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'}}}}))}
-function bindInteractive(A){
- $$('[data-row]').forEach(el=>el.onclick=()=>openRow(el.dataset.row));
- $$('[data-cat]').forEach(el=>el.onclick=()=>openRows('Categoria · '+el.dataset.cat,[...A.f,...A.a].filter(r=>r.category===el.dataset.cat)));
- $$('[data-vendor]').forEach(el=>el.onclick=()=>openRows('Fornecedor · '+el.dataset.vendor,A.a.filter(r=>r.party===el.dataset.vendor)));
- $$('[data-week]').forEach(el=>el.onclick=()=>openRows('Semana '+el.dataset.week,[...A.f,...A.a].filter(r=>weekOf(r.date)==el.dataset.week)));
- $$('[data-fopag]').forEach(el=>{el.onclick=()=>openRows('FOPAG · '+el.dataset.fopag,[...A.f,...A.a].filter(r=>paymentType(r)===el.dataset.fopag))});
- $$('[data-open]').forEach(el=>el.onclick=()=>{const t=el.dataset.open;if(t==='forecast')openRows('Previsões',A.f);if(t==='actual')openRows('Pagamentos',A.a);if(t==='unexpected')openRows('Não previstos',A.unexpected);if(t==='pending')openRows('Previsões pendentes',A.pending);if(t==='suppliers')openRows('Pagamentos dos maiores fornecedores',A.a)});
- $('#applyFilters')?.addEventListener('click',render);
- $('#clearFilters')?.addEventListener('click',()=>{if($('#fq'))$('#fq').value='';if($('#fs'))$('#fs').value='all';if($('#fc'))$('#fc').value='all';render()});
- $('#baseNewForecast')?.addEventListener('click',()=>openNew('forecast'));$('#baseNewActual')?.addEventListener('click',()=>openNew('actual'));
- $('#rulesCatalog')?.addEventListener('click',openCatalog);$('#rulesNewForecast')?.addEventListener('click',()=>openNew('forecast'));$('#rulesNewActual')?.addEventListener('click',()=>openNew('actual'));
+function drawWeekOnly(wk){
+ const c=$('#weekOnlyChart');
+ if(c)charts.push(new Chart(c,{
+   type:'bar',
+   data:{labels:wk.map(x=>'Semana '+x.week),datasets:[
+     {label:'Previsto',data:wk.map(x=>x.forecast),backgroundColor:'#457b9d',borderRadius:5},
+     {label:'Pago',data:wk.map(x=>x.actual),backgroundColor:'#2a9d8f',borderRadius:5},
+     {label:'Não previsto',data:wk.map(x=>x.unexpected),backgroundColor:'#f4a261',borderRadius:5}
+   ]},
+   options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'}},scales:{x:{grid:{display:false}},y:{grid:{color:'#e7e7e7'}}}}
+ }))
 }
 function openRows(title,list){
  $('#modalTitle').textContent=title;$('#modalSub').textContent=`${list.length} lançamento(s) · total ${money(list.reduce((s,x)=>s+(x.remaining??x.amount??0),0))}`;
@@ -354,7 +642,9 @@ function openRow(id){
   <label>Fornecedor / colaborador<input id="eParty" value="${esc(r.party)}"></label>
   <label>Valor<input id="eAmount" value="${esc(r.amount.toLocaleString('pt-BR',{minimumFractionDigits:2}))}"></label>
   <label class="full">Descrição<input id="eDesc" value="${esc(r.description)}"></label>
-  <label>Categoria<input id="eCat" list="catList" value="${esc(r.category)}"><datalist id="catList">${allCategories().map(x=>`<option value="${esc(x)}">`).join('')}</datalist></label>
+  <label>Grupo gerencial<input id="eGroup" value="${esc((ensureClassification(r),r.managementGroup))}"></label>
+  <label>Subcategoria<input id="eSub" value="${esc(r.subcategory)}"></label>
+  <label>Categoria contábil<input id="eCat" list="catList" value="${esc(r.category)}"><datalist id="catList">${allCategories().map(x=>`<option value="${esc(x)}">`).join('')}</datalist></label>
   <label>Centro de custo<input id="eCC" list="ccList" value="${esc(r.costCenter)}"><datalist id="ccList">${allCostCenters().map(x=>`<option value="${esc(x)}">`).join('')}</datalist></label>
   <label>Status<input id="eStatus" value="${esc(r.status||'')}"></label>
   <label>Classificação<select id="eType"><option value="automatic">Automática</option><option value="fopag">Folha / salário</option><option value="salaryAdvance">Adiantamento salarial</option><option value="vacation">Férias</option><option value="service">Prestação de serviços</option><option value="profitAdvance">Antecipação de lucros</option><option value="bankFee">Tarifa bancária</option><option value="other">Outros</option></select></label>
@@ -370,7 +660,7 @@ function openRow(id){
      rec()[newSource==='forecast'?'forecast':'actual'].push(r);r.source=newSource;
      delete rec().links[r.id];Object.keys(rec().links||{}).forEach(aid=>{if(rec().links[aid]===r.id)delete rec().links[aid]});
    }
-   r.date=$('#eDate').value;r.party=$('#eParty').value.trim()||'Não informado';r.amount=num($('#eAmount').value);r.description=$('#eDesc').value.trim()||'Sem descrição';r.category=$('#eCat').value.trim()||'Sem categoria';r.costCenter=$('#eCC').value.trim()||'Não informado';r.status=$('#eStatus').value.trim();r.manualType=$('#eType').value;r.excluded=$('#eExcluded').value==='true';
+   r.date=$('#eDate').value;r.party=$('#eParty').value.trim()||'Não informado';r.amount=num($('#eAmount').value);r.description=$('#eDesc').value.trim()||'Sem descrição';r.managementGroup=$('#eGroup').value.trim()||'Outras Despesas';r.subcategory=$('#eSub').value.trim()||r.managementGroup;r.category=$('#eCat').value.trim()||'Sem categoria';r.costCenter=$('#eCC').value.trim()||'Não informado';r.status=$('#eStatus').value.trim();r.manualType=$('#eType').value;r.excluded=$('#eExcluded').value==='true';
    if(r.source==='actual'){const l=$('#eLink')?.value||'';rec().links??={};if(l)rec().links[r.id]=l;else delete rec().links[r.id]}
    saveState('Lançamento atualizado em todas as abas.');$('#modal').classList.remove('open');
  };
@@ -384,13 +674,15 @@ function openNew(source){
  <label>Data<input id="nDate" type="date" value="${$('#month').value}-01"></label><label>Valor<input id="nAmount" placeholder="0,00"></label>
  <label>Fornecedor / colaborador<input id="nParty"></label><label>Status<input id="nStatus" value="${source==='forecast'?'Previsto':'Quitado'}"></label>
  <label class="full">Descrição<input id="nDesc"></label>
- <label>Categoria<input id="nCat" list="nCats"><datalist id="nCats">${allCategories().map(x=>`<option value="${esc(x)}">`).join('')}</datalist></label>
+ <label>Grupo gerencial<input id="nGroup" placeholder="Ex.: Alimentação"></label>
+ <label>Subcategoria<input id="nSub" placeholder="Ex.: Refeições e Alimentação"></label>
+ <label>Categoria contábil<input id="nCat" list="nCats"><datalist id="nCats">${allCategories().map(x=>`<option value="${esc(x)}">`).join('')}</datalist></label>
  <label>Centro de custo<input id="nCC" list="nCCs"><datalist id="nCCs">${allCostCenters().map(x=>`<option value="${esc(x)}">`).join('')}</datalist></label>
  <label>Classificação<select id="nType"><option value="automatic">Automática</option><option value="fopag">Folha / salário</option><option value="salaryAdvance">Adiantamento salarial</option><option value="vacation">Férias</option><option value="service">Prestação de serviços</option><option value="profitAdvance">Antecipação de lucros</option><option value="bankFee">Tarifa bancária</option><option value="other">Outros</option></select></label>
  ${source==='actual'?`<label>Vincular à previsão<select id="nLink"><option value="">Sem vínculo manual</option>${rec().forecast.filter(x=>!x.excluded).map(p=>`<option value="${p.id}">${esc(`${p.description} · ${money(p.amount)}`)}</option>`).join('')}</select></label>`:''}
  </div><div class="modalActions"><button class="btn primary" id="createRow">Criar lançamento</button></div>`;
  $('#createRow').onclick=()=>{
-   const r={id:uid(source==='forecast'?'F':'A'),source,date:$('#nDate').value,party:$('#nParty').value.trim()||'Não informado',description:$('#nDesc').value.trim()||'Sem descrição',amount:num($('#nAmount').value),category:$('#nCat').value.trim()||'Sem categoria',costCenter:$('#nCC').value.trim()||'Não informado',status:$('#nStatus').value.trim(),paymentMethod:'',bank:'',excluded:false,manualType:$('#nType').value,createdBy:'Dashboard'};
+   const r={id:uid(source==='forecast'?'F':'A'),source,date:$('#nDate').value,party:$('#nParty').value.trim()||'Não informado',description:$('#nDesc').value.trim()||'Sem descrição',amount:num($('#nAmount').value),managementGroup:$('#nGroup').value.trim(),subcategory:$('#nSub').value.trim(),category:$('#nCat').value.trim()||'Sem categoria',costCenter:$('#nCC').value.trim()||'Não informado',status:$('#nStatus').value.trim(),paymentMethod:'',bank:'',excluded:false,manualType:$('#nType').value,createdBy:'Dashboard'};if(!r.managementGroup||!r.subcategory)ensureClassification(r,false);
    rec()[source==='forecast'?'forecast':'actual'].push(r);if(source==='actual'&&$('#nLink')?.value){rec().links??={};rec().links[r.id]=$('#nLink').value}
    saveState('Novo lançamento criado.');$('#modal').classList.remove('open');
  };$('#modal').classList.add('open');
@@ -425,7 +717,7 @@ async function importWorkbook(file,source){
   let date='';if(typeof rawDate==='number'){const d=XLSX.SSF.parse_date_code(rawDate);date=`${d.y}-${String(d.m).padStart(2,'0')}-${String(d.d).padStart(2,'0')}`}else{const m=String(rawDate).match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);date=m?`${m[3]}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}`:String(rawDate).slice(0,10)}
   const category=String(pick(source==='forecast'?['Categoria ','Categoria','Categoria 1']:['Categoria 1','Categoria','Plano de contas']))||'Sem categoria';
   const costCenter=String(pick(source==='forecast'?['Centro de Custo ','Centro de Custo','Centro de Custo 1']:['Centro de Custo 1','Centro de Custo','Centro de custo']))||'Não informado';
-  out.push({id:uid(source==='forecast'?'F':'A'),source,date,party:String(pick(['Nome do fornecedor','Fornecedor','Fornecedor / Cliente','Pessoa']))||'Não informado',description:String(pick(['Descrição','Descricao','Histórico','Historico','Observação']))||'Sem descrição',amount,category,costCenter,status:source==='forecast'?'Previsto':status,paymentMethod:String(pick(['Forma de pagamento']))||'',bank:String(pick(['Conta bancária']))||'',excluded:false,manualType:'automatic',createdBy:file.name})
+  const rr={id:uid(source==='forecast'?'F':'A'),source,date,party:String(pick(['Nome do fornecedor','Fornecedor','Fornecedor / Cliente','Pessoa']))||'Não informado',description:String(pick(['Descrição','Descricao','Histórico','Historico','Observação']))||'Sem descrição',amount,category,costCenter,status:source==='forecast'?'Previsto':status,paymentMethod:String(pick(['Forma de pagamento']))||'',bank:String(pick(['Conta bancária']))||'',excluded:false,manualType:'automatic',createdBy:file.name};ensureClassification(rr,false);out.push(rr)
  }
  const grouped={};out.forEach(r=>{const m=r.date.slice(0,7);if(m)(grouped[m]??=[]).push(r)});
  for(const [m,list] of Object.entries(grouped)){state[m]??={forecast:[],actual:[],links:{},catalog:{categories:[],costCenters:[]}};state[m][source==='forecast'?'forecast':'actual']=list;if(source==='actual')state[m].links={}}
