@@ -292,6 +292,10 @@ aside{
   .execMetric:nth-child(2){border-right:0}
 }
 
+
+.selectionBar{position:sticky;top:68px;z-index:18;display:none;align-items:center;gap:8px;flex-wrap:wrap;background:#111;color:#fff;padding:10px 14px;border-radius:10px;margin-bottom:12px;box-shadow:0 10px 24px rgba(0,0,0,.18)}
+.selectionBar.show{display:flex}.selectionBar strong{font-size:10px}.selectionBar span{font-size:8px;color:#c8c8c8}.selectionBar button{border:1px solid #393939;background:#1b1b1b;color:#fff;border-radius:7px;padding:7px 9px;font-size:8px}.selectionBar button:hover{background:#2a2a2a}.selectionBar .danger{border-color:#733;background:#2a1515}.selectionBar .accent{background:#fff;color:#111;border-color:#fff}.selectCell{width:30px;text-align:center!important}.rowCheck{width:14px;height:14px;accent-color:#111;cursor:pointer}.selectedRow td{background:#f0f2f4!important}.rowActionBtn{border:1px solid #ddd;background:#fff;border-radius:6px;font-size:7px;padding:5px 6px}.bulkGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.bulkGrid label{display:grid;gap:5px;font-size:7px;text-transform:uppercase;letter-spacing:.05em;color:#777;font-weight:800}.bulkGrid input,.bulkGrid select{border:1px solid #ddd;border-radius:8px;padding:9px;font-size:9px}.bulkSummary{padding:12px;border:1px solid #e1e3e6;border-radius:9px;background:#fafafa;margin-bottom:12px}.bulkSummary strong{display:block;font-size:16px;color:#111}.bulkSummary span{font-size:8px;color:#777}.auditRow{padding:10px 0;border-bottom:1px solid #eee;font-size:8px;color:#666}.auditRow b{display:block;color:#222;margin-bottom:3px}.auditRow small{color:#999}.actionTiles{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.actionTile{border:1px solid #e1e3e6;background:#fff;border-radius:9px;padding:12px;text-align:left;cursor:pointer}.actionTile:hover{border-color:#999;background:#fafafa}.actionTile b{display:block;font-size:8.5px;color:#222}.actionTile span{display:block;font-size:7.5px;color:#777;margin-top:4px;line-height:1.4}@media(max-width:900px){.bulkGrid,.actionTiles{grid-template-columns:1fr}.selectionBar{top:0}}
+
 </style>
 </head>
 <body>
@@ -317,7 +321,7 @@ aside{
     <button id="newForecast">Criar previsão</button>
     <button id="newActual">Criar pagamento</button>
     <button id="catalogBtn">Categorias / centros de custo</button>
-    <button id="exportBtn">Exportar base JSON</button>
+    <button id="undoBtn">Desfazer última alteração</button><button id="auditBtn">Histórico de alterações</button><button id="exportBtn">Exportar base JSON</button>
   </div>
 </aside>
 <main>
@@ -333,7 +337,7 @@ aside{
       <input id="actualFile" class="hidden" type="file" accept=".xlsx,.xls,.csv">
     </div>
   </div>
-  <div class="content" id="app"></div>
+  <div class="content"><div class="selectionBar noPrint" id="selectionBar"></div><div id="app"></div></div>
   <div class="foot" id="footer"></div>
 </main>
 </div>
@@ -353,6 +357,16 @@ const STORAGE_KEY='danese_previsto_realizado_bank_v1';
 let state=loadState(), view='executive', charts=[];
 migrateState();
 let db=null, session=null;
+
+let selectedRows=new Set();
+let undoStack=[];
+function audit(action,details,before=null,after=null){const r=rec();r.auditLog??=[];r.auditLog.unshift({at:new Date().toISOString(),action,details,before:before?deep(before):null,after:after?deep(after):null});if(r.auditLog.length>300)r.auditLog=r.auditLog.slice(0,300)}
+function pushUndo(label){undoStack.push({label,state:deep(state)});if(undoStack.length>30)undoStack.shift()}
+function undoLast(){const last=undoStack.pop();if(!last)return toast('Não há alteração para desfazer.');state=deep(last.state);selectedRows.clear();saveState('Alteração desfeita: '+last.label)}
+function selectedList(){return rows().filter(r=>selectedRows.has(r.id))}
+function selectionStats(){const list=selectedList();return{count:list.length,total:list.reduce((s,r)=>s+Number(r.amount||0),0),forecast:list.filter(r=>r.source==='forecast'),actual:list.filter(r=>r.source==='actual')}}
+function renderSelectionBar(){const bar=$('#selectionBar');if(!bar)return;const s=selectionStats();if(!s.count){bar.classList.remove('show');bar.innerHTML='';return}bar.classList.add('show');bar.innerHTML=`<strong>${s.count} selecionado(s)</strong><span>Total ${money(s.total)} · ${s.forecast.length} previsto(s) · ${s.actual.length} pagamento(s)</span><button class="accent" id="selBulkEdit">Editar em massa</button><button id="selLink">Vincular pagamentos</button><button id="selMerge">Mesclar previsões</button><button id="selDuplicate">Duplicar</button><button id="selConvert">Transformar origem</button><button id="selCreateForecast">Criar previsão dos pagamentos</button><button class="danger" id="selDelete">Excluir selecionados</button><button id="selClear">Limpar seleção</button>`;$('#selBulkEdit').onclick=openBulkEdit;$('#selLink').onclick=openBulkLink;$('#selMerge').onclick=mergeSelectedForecasts;$('#selDuplicate').onclick=duplicateSelected;$('#selConvert').onclick=convertSelected;$('#selCreateForecast').onclick=createForecastFromSelectedActuals;$('#selDelete').onclick=deleteSelected;$('#selClear').onclick=()=>{selectedRows.clear();renderSelectionBar();render()}}
+
 if(window.supabase && SUPABASE_URL && SUPABASE_ANON_KEY){
   try{db=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY)}catch(e){}
 }
@@ -631,7 +645,7 @@ function premiumCard(title,body,sub=''){
 function card(title,body,sub=''){return `<section class="card"><div class="cardHead"><div><h3>${esc(title)}</h3>${sub?`<small>${esc(sub)}</small>`:''}</div></div><div class="cardBody">${body}</div></section>`}
 function tableRows(rows,cols){
   if(!rows.length)return'<div class="empty">Nenhum lançamento neste recorte.</div>';
-  return `<div class="tableWrap"><table><thead><tr>${cols.map(c=>`<th class="${c.num?'num':''}">${esc(c.label)}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr class="clickrow" data-row="${esc(r.id)}">${cols.map(c=>`<td class="${c.num?'num':''}">${c.render(r)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+  return `<div class="tableWrap"><table><thead><tr><th class="selectCell"><input type="checkbox" class="rowCheck checkAllVisible"></th>${cols.map(c=>`<th class="${c.num?'num':''}">${esc(c.label)}</th>`).join('')}<th>Ações</th></tr></thead><tbody>${rows.map(r=>`<tr class="clickrow ${selectedRows.has(r.id)?'selectedRow':''}" data-row="${esc(r.id)}"><td class="selectCell"><input type="checkbox" class="rowCheck rowSelect" data-select="${esc(r.id)}" ${selectedRows.has(r.id)?'checked':''}></td>${cols.map(c=>`<td class="${c.num?'num':''}">${c.render(r)}</td>`).join('')}<td><button class="rowActionBtn" data-edit="${esc(r.id)}">Editar</button></td></tr>`).join('')}</tbody></table></div>`;
 }
 function destroyCharts(){charts.forEach(c=>{try{c.destroy()}catch(e){}});charts=[]}
 function render(){
@@ -821,6 +835,7 @@ function render(){
   }
   $('#app').innerHTML=h;
   bindInteractive(A);
+  renderSelectionBar();
   $('#footer').textContent=`Base atual: Pasta1.xlsx como previsto · Pasta2.xlsx como pagamentos · ${A.f.length} previsões válidas · ${A.a.length} pagamentos válidos`;
 }
 function basicCols(){return[
@@ -981,7 +996,7 @@ function drawWeekOnly(wk){
 function openRows(title,list){
  $('#modalTitle').textContent=title;$('#modalSub').textContent=`${list.length} lançamento(s) · total ${money(list.reduce((s,x)=>s+(x.remaining??x.amount??0),0))}`;
  $('#modalBody').innerHTML=tableRows(list,basicCols());$('#modal').classList.add('open');
- $$('[data-row]').forEach(el=>el.onclick=e=>{e.stopPropagation();openRow(el.dataset.row)});
+ $$('[data-row]').forEach(el=>el.onclick=e=>{if(e.target.closest('.rowSelect')||e.target.closest('[data-edit]'))return;e.stopPropagation();openRow(el.dataset.row)});bindSelectionControls();
 }
 function allCategories(){const r=rec();return [...new Set([...rows().map(x=>x.category),...(r.catalog?.categories||[])].filter(Boolean))].sort()}
 function allCostCenters(){const r=rec();return [...new Set([...rows().map(x=>x.costCenter),...(r.catalog?.costCenters||[])].filter(Boolean))].sort()}
@@ -1007,9 +1022,10 @@ function openRow(id){
   ${r.source==='actual'?`<label class="full">Vincular a uma previsão<select id="eLink"><option value="">Conciliação automática / sem vínculo</option>${forecasts.map(p=>`<option value="${p.id}" ${p.id===link?'selected':''}>${esc(`${dateText(p.date)} · ${p.description} · ${money(p.amount)}`)}</option>`).join('')}</select></label>`:''}
   <label>Excluir dos indicadores<select id="eExcluded"><option value="false" ${!r.excluded?'selected':''}>Não</option><option value="true" ${r.excluded?'selected':''}>Sim</option></select></label>
  </div>
- <div class="modalActions"><button class="btn danger left" id="deleteRow">Excluir lançamento</button><button class="btn" id="duplicateRow">Duplicar</button><button class="btn primary" id="saveRow">Salvar e atualizar tudo</button></div>`;
+ <div class="sectionTitle"><h3>Ações avançadas</h3><span>Operações sobre este lançamento</span></div><div class="actionTiles">${r.source==='forecast'?`<button class="actionTile" id="splitRow"><b>Dividir previsão</b><span>Quebrar este valor em vários lançamentos preservando o total.</span></button><button class="actionTile" id="addForecast"><b>Aumentar / reduzir previsto</b><span>Adicionar ou retirar valor do orçamento atual.</span></button>`:''}${r.source==='actual'?`<button class="actionTile" id="createForecastRow"><b>Criar previsão deste pagamento</b><span>Cria uma previsão e já vincula este pagamento.</span></button>`:''}<button class="actionTile" id="convertRow"><b>Transformar origem</b><span>Converter previsto em pagamento ou pagamento em previsto.</span></button></div><div class="modalActions"><button class="btn danger left" id="deleteRow">Excluir lançamento</button><button class="btn" id="duplicateRow">Duplicar</button><button class="btn primary" id="saveRow">Salvar e atualizar tudo</button></div>`;
  $('#eType').value=r.manualType||'automatic';
  $('#saveRow').onclick=()=>{
+   pushUndo('editar lançamento');const before=deep(r);
    const oldSource=r.source,newSource=$('#eSource').value;
    if(oldSource!==newSource){
      rec()[oldSource==='forecast'?'forecast':'actual']=rec()[oldSource==='forecast'?'forecast':'actual'].filter(x=>x.id!==r.id);
@@ -1018,10 +1034,11 @@ function openRow(id){
    }
    r.date=$('#eDate').value;r.party=$('#eParty').value.trim()||'Não informado';r.amount=num($('#eAmount').value);r.description=$('#eDesc').value.trim()||'Sem descrição';r.managementGroup=$('#eGroup').value.trim()||'Outras Despesas';r.subcategory=$('#eSub').value.trim()||r.managementGroup;r.category=$('#eCat').value.trim()||'Sem categoria';r.costCenter=$('#eCC').value.trim()||'Não informado';r.status=$('#eStatus').value.trim();r.manualType=$('#eType').value;r.excluded=$('#eExcluded').value==='true';
    if(r.source==='actual'){const l=$('#eLink')?.value||'';rec().links??={};if(l)rec().links[r.id]=l;else delete rec().links[r.id]}
-   saveState('Lançamento atualizado em todas as abas.');$('#modal').classList.remove('open');
+   audit('Editar lançamento',`Lançamento ${r.id} alterado`,before,r);saveState('Lançamento atualizado em todas as abas.');$('#modal').classList.remove('open');
  };
- $('#deleteRow').onclick=()=>{if(!confirm('Excluir este lançamento?'))return;rec().forecast=rec().forecast.filter(x=>x.id!==r.id);rec().actual=rec().actual.filter(x=>x.id!==r.id);delete rec().links[r.id];Object.keys(rec().links||{}).forEach(aid=>{if(rec().links[aid]===r.id)delete rec().links[aid]});saveState('Lançamento excluído.');$('#modal').classList.remove('open')};
- $('#duplicateRow').onclick=()=>{const c=deep(r);c.id=uid(r.source==='forecast'?'F':'A');c.description+=' · Cópia';rec()[r.source==='forecast'?'forecast':'actual'].push(c);saveState('Lançamento duplicado.');openRow(c.id)};
+ $('#deleteRow').onclick=()=>{if(!confirm('Excluir este lançamento?'))return;pushUndo('excluir lançamento');const before=deep(r);rec().forecast=rec().forecast.filter(x=>x.id!==r.id);rec().actual=rec().actual.filter(x=>x.id!==r.id);delete rec().links[r.id];Object.keys(rec().links||{}).forEach(aid=>{if(rec().links[aid]===r.id)delete rec().links[aid]});audit('Excluir lançamento',`Lançamento ${r.id} excluído`,before,null);saveState('Lançamento excluído.');$('#modal').classList.remove('open')};
+ $('#duplicateRow').onclick=()=>{pushUndo('duplicar lançamento');const c=deep(r);c.id=uid(r.source==='forecast'?'F':'A');c.description+=' · Cópia';rec()[r.source==='forecast'?'forecast':'actual'].push(c);audit('Duplicar lançamento',`Cópia criada de ${r.id}`,r,c);saveState('Lançamento duplicado.');openRow(c.id)};
+ $('#splitRow')?.addEventListener('click',()=>splitForecast(r.id));$('#addForecast')?.addEventListener('click',()=>{const v=prompt('Digite o valor a adicionar. Use número negativo para reduzir:','0');if(v!==null)addValueToForecast(r.id,num(v))});$('#createForecastRow')?.addEventListener('click',()=>{selectedRows.clear();selectedRows.add(r.id);createForecastFromSelectedActuals();$('#modal').classList.remove('open')});$('#convertRow')?.addEventListener('click',()=>{selectedRows.clear();selectedRows.add(r.id);convertSelected();$('#modal').classList.remove('open')});
  $('#modal').classList.add('open');
 }
 function openNew(source){
@@ -1039,10 +1056,21 @@ function openNew(source){
  </div><div class="modalActions"><button class="btn primary" id="createRow">Criar lançamento</button></div>`;
  $('#createRow').onclick=()=>{
    const r={id:uid(source==='forecast'?'F':'A'),source,date:$('#nDate').value,party:$('#nParty').value.trim()||'Não informado',description:$('#nDesc').value.trim()||'Sem descrição',amount:num($('#nAmount').value),managementGroup:$('#nGroup').value.trim(),subcategory:$('#nSub').value.trim(),category:$('#nCat').value.trim()||'Sem categoria',costCenter:$('#nCC').value.trim()||'Não informado',status:$('#nStatus').value.trim(),paymentMethod:'',bank:'',excluded:false,manualType:$('#nType').value,createdBy:'Dashboard'};if(!r.managementGroup||!r.subcategory)ensureClassification(r,false);
-   rec()[source==='forecast'?'forecast':'actual'].push(r);if(source==='actual'&&$('#nLink')?.value){rec().links??={};rec().links[r.id]=$('#nLink').value}
-   saveState('Novo lançamento criado.');$('#modal').classList.remove('open');
+   pushUndo('criar lançamento');rec()[source==='forecast'?'forecast':'actual'].push(r);if(source==='actual'&&$('#nLink')?.value){rec().links??={};rec().links[r.id]=$('#nLink').value}audit('Criar lançamento',`Novo ${source==='forecast'?'previsto':'pagamento'} ${r.id}`,null,r);saveState('Novo lançamento criado.');$('#modal').classList.remove('open');
  };$('#modal').classList.add('open');
 }
+
+function openBulkEdit(){const s=selectionStats();if(!s.count)return;$('#modalTitle').textContent='Editar lançamentos em massa';$('#modalSub').textContent=`${s.count} selecionado(s) · ${money(s.total)}`;const groups=[...new Set(rows().map(r=>{ensureClassification(r);return r.managementGroup}).filter(Boolean))].sort();$('#modalBody').innerHTML=`<div class="bulkSummary"><strong>${money(s.total)}</strong><span>Soma dos lançamentos selecionados</span></div><div class="bulkGrid"><label>Grupo gerencial<select id="bGroup"><option value="">Não alterar</option>${groups.map(x=>`<option>${esc(x)}</option>`).join('')}</select></label><label>Subcategoria<input id="bSub" placeholder="Deixe vazio para não alterar"></label><label>Categoria contábil<select id="bCat"><option value="">Não alterar</option>${allCategories().map(x=>`<option>${esc(x)}</option>`).join('')}</select></label><label>Centro de custo<select id="bCC"><option value="">Não alterar</option>${allCostCenters().map(x=>`<option>${esc(x)}</option>`).join('')}</select></label><label>Status<input id="bStatus" placeholder="Deixe vazio para não alterar"></label><label>Classificação<select id="bType"><option value="">Não alterar</option><option value="automatic">Automática</option><option value="fopag">Folha / salário</option><option value="salaryAdvance">Adiantamento salarial</option><option value="vacation">Férias</option><option value="service">Prestação de serviços</option><option value="profitAdvance">Antecipação de lucros</option><option value="bankFee">Tarifa bancária</option><option value="other">Outros</option></select></label></div><div class="modalActions"><button class="btn primary" id="applyBulk">Aplicar em ${s.count} lançamentos</button></div>`;$('#applyBulk').onclick=()=>{pushUndo('edição em massa');const before=deep(selectedList());selectedList().forEach(r=>{if($('#bGroup').value)r.managementGroup=$('#bGroup').value;if($('#bSub').value.trim())r.subcategory=$('#bSub').value.trim();if($('#bCat').value)r.category=$('#bCat').value;if($('#bCC').value)r.costCenter=$('#bCC').value;if($('#bStatus').value.trim())r.status=$('#bStatus').value.trim();if($('#bType').value)r.manualType=$('#bType').value});audit('Edição em massa',`${s.count} lançamentos alterados`,before,selectedList());saveState('Alterações em massa aplicadas em todas as abas.');$('#modal').classList.remove('open')};$('#modal').classList.add('open')}
+function openBulkLink(){const s=selectionStats();if(!s.actual.length)return toast('Selecione pelo menos um pagamento.');$('#modalTitle').textContent='Vincular pagamentos à previsão';$('#modalSub').textContent=`${s.actual.length} pagamento(s) · ${money(s.actual.reduce((a,r)=>a+r.amount,0))}`;const options=rec().forecast.filter(x=>!x.excluded);$('#modalBody').innerHTML=`<div class="bulkSummary"><strong>${money(s.actual.reduce((a,r)=>a+r.amount,0))}</strong><span>Total dos pagamentos selecionados</span></div><div class="formGrid"><label class="full">Previsão de destino<select id="bulkLinkTarget"><option value="">Selecione...</option>${options.map(p=>`<option value="${p.id}">${esc(`${dateText(p.date)} · ${p.description} · ${money(p.amount)}`)}</option>`).join('')}</select></label></div><div class="modalActions"><button class="btn" id="bulkUnlink">Desvincular</button><button class="btn primary" id="bulkLinkApply">Vincular</button></div>`;$('#bulkLinkApply').onclick=()=>{const pid=$('#bulkLinkTarget').value;if(!pid)return;pushUndo('vínculo em massa');const before=deep(rec().links||{});rec().links??={};s.actual.forEach(a=>rec().links[a.id]=pid);audit('Vínculo em massa',`${s.actual.length} pagamentos vinculados à previsão ${pid}`,before,rec().links);saveState('Pagamentos vinculados.');$('#modal').classList.remove('open')};$('#bulkUnlink').onclick=()=>{pushUndo('desvincular pagamentos');const before=deep(rec().links||{});s.actual.forEach(a=>delete rec().links[a.id]);audit('Desvinculação em massa',`${s.actual.length} pagamentos desvinculados`,before,rec().links);saveState('Pagamentos desvinculados.');$('#modal').classList.remove('open')};$('#modal').classList.add('open')}
+function mergeSelectedForecasts(){const s=selectionStats();if(s.forecast.length<2||s.actual.length)return toast('Selecione apenas duas ou mais previsões.');if(!confirm(`Mesclar ${s.forecast.length} previsões em ${money(s.forecast.reduce((a,r)=>a+r.amount,0))}?`))return;pushUndo('mesclar previsões');const before=deep(s.forecast),base=deep(s.forecast[0]);base.id=uid('F');base.amount=s.forecast.reduce((a,r)=>a+r.amount,0);base.description=`Previsão consolidada · ${s.forecast.length} lançamentos`;base.createdBy='Mesclagem no Dashboard';rec().forecast=rec().forecast.filter(r=>!selectedRows.has(r.id));rec().forecast.push(base);Object.keys(rec().links||{}).forEach(aid=>{if(selectedRows.has(rec().links[aid]))rec().links[aid]=base.id});audit('Mesclar previsões',`${s.forecast.length} previsões consolidadas`,before,[base]);selectedRows.clear();saveState('Previsões mescladas e vínculos preservados.')}
+function duplicateSelected(){const s=selectionStats();if(!s.count)return;pushUndo('duplicar lançamentos');const created=[];selectedList().forEach(r=>{const c=deep(r);c.id=uid(r.source==='forecast'?'F':'A');c.description+=' · Cópia';c.createdBy='Duplicação no Dashboard';rec()[r.source==='forecast'?'forecast':'actual'].push(c);created.push(c)});audit('Duplicar lançamentos',`${created.length} cópias criadas`,null,created);selectedRows.clear();saveState(`${created.length} lançamento(s) duplicado(s).`)}
+function convertSelected(){const s=selectionStats();if(!s.count)return;const target=s.actual.length&&!s.forecast.length?'forecast':s.forecast.length&&!s.actual.length?'actual':prompt('Digite forecast para previsto ou actual para pagamento:');if(!['forecast','actual'].includes(target))return;pushUndo('transformar origem');const before=deep(selectedList()),ids=[...selectedRows];ids.forEach(id=>{const r=rows().find(x=>x.id===id);if(!r||r.source===target)return;rec()[r.source==='forecast'?'forecast':'actual']=rec()[r.source==='forecast'?'forecast':'actual'].filter(x=>x.id!==id);r.source=target;r.status=target==='forecast'?'Previsto':'Quitado';rec()[target==='forecast'?'forecast':'actual'].push(r);delete rec().links[id];Object.keys(rec().links||{}).forEach(aid=>{if(rec().links[aid]===id)delete rec().links[aid]})});audit('Transformar origem',`${ids.length} lançamento(s) transformado(s)`,before,null);selectedRows.clear();saveState('Origem alterada.')}
+function createForecastFromSelectedActuals(){const s=selectionStats();if(!s.actual.length)return toast('Selecione pagamentos.');pushUndo('criar previsão a partir de pagamentos');const amount=s.actual.reduce((a,r)=>a+r.amount,0),first=s.actual[0],f=deep(first);f.id=uid('F');f.source='forecast';f.amount=amount;f.status='Previsto';f.description=`Previsão criada a partir de ${s.actual.length} pagamento(s)`;f.createdBy='Gerada a partir de pagamentos';rec().forecast.push(f);rec().links??={};s.actual.forEach(a=>rec().links[a.id]=f.id);audit('Criar previsão por pagamentos',`${s.actual.length} pagamentos consolidados`,s.actual,[f]);selectedRows.clear();saveState('Previsão criada e pagamentos vinculados.')}
+function deleteSelected(){const s=selectionStats();if(!s.count)return;if(!confirm(`Excluir ${s.count} lançamento(s), total ${money(s.total)}?`))return;pushUndo('excluir selecionados');const before=deep(selectedList()),ids=new Set(selectedRows);rec().forecast=rec().forecast.filter(r=>!ids.has(r.id));rec().actual=rec().actual.filter(r=>!ids.has(r.id));Object.keys(rec().links||{}).forEach(aid=>{if(ids.has(aid)||ids.has(rec().links[aid]))delete rec().links[aid]});audit('Excluir em massa',`${s.count} lançamentos excluídos`,before,null);selectedRows.clear();saveState('Lançamentos excluídos.')}
+function splitForecast(id){const r=rec().forecast.find(x=>x.id===id);if(!r)return;const parts=Number(prompt('Em quantas partes deseja dividir?',2));if(!parts||parts<2||parts>24)return;pushUndo('dividir previsão');const before=deep(r),base=Math.floor((r.amount/parts)*100)/100,arr=[];let used=0;for(let i=1;i<=parts;i++){const c=deep(r);c.id=uid('F');c.amount=i===parts?Math.round((r.amount-used)*100)/100:base;used+=c.amount;c.description=`${r.description} · Parte ${i}/${parts}`;arr.push(c)}rec().forecast=rec().forecast.filter(x=>x.id!==r.id).concat(arr);const linked=Object.keys(rec().links||{}).filter(aid=>rec().links[aid]===r.id);linked.forEach((aid,i)=>rec().links[aid]=arr[i%arr.length].id);audit('Dividir previsão',`Previsão dividida em ${parts} partes`,before,arr);saveState(`Previsão dividida em ${parts} partes.`);$('#modal').classList.remove('open')}
+function addValueToForecast(id,delta){const r=rec().forecast.find(x=>x.id===id);if(!r)return;pushUndo('ajustar valor previsto');const before=deep(r);r.amount=Math.max(0,Math.round((r.amount+delta)*100)/100);audit('Ajustar previsão',`Valor alterado em ${money(delta)}`,before,r);saveState('Valor previsto atualizado.');openRow(id)}
+function openAuditLog(){const log=rec().auditLog||[];$('#modalTitle').textContent='Histórico de alterações';$('#modalSub').textContent='Auditoria da competência atual';$('#modalBody').innerHTML=log.length?log.map(x=>`<div class="auditRow"><b>${esc(x.action)}</b><span>${esc(x.details||'')}</span><small>${new Date(x.at).toLocaleString('pt-BR')}</small></div>`).join(''):'<div class="empty">Nenhuma alteração registrada ainda.</div>';$('#modal').classList.add('open')}
+
 function openCatalog(){
  const cats=allCategories(),ccs=allCostCenters();
  $('#modalTitle').textContent='Categorias e centros de custo';$('#modalSub').textContent='Cadastros editáveis sem alterar código.';
@@ -1085,14 +1113,14 @@ async function saveSupabase(){
    const {data:{session:s}}=await db.auth.getSession();session=s;
    if(!session){const email=prompt('E-mail do administrador:');const password=prompt('Senha:');if(!email||!password)return;const res=await db.auth.signInWithPassword({email,password});if(res.error)throw res.error;session=res.data.session}
    const m=$('#month').value,r=rec();
-   const payload={competence:m,forecast:r.forecast,actual:r.actual,metadata:{links:r.links||{},catalog:r.catalog||{},dashboard_version:'novo-do-zero-v1'},updated_at:new Date().toISOString(),updated_by:session.user.id};
+   const payload={competence:m,forecast:r.forecast,actual:r.actual,metadata:{links:r.links||{},catalog:r.catalog||{},auditLog:r.auditLog||[],dashboard_version:'premium-operacional-v5'},updated_at:new Date().toISOString(),updated_by:session.user.id};
    const {error}=await db.from('financial_months').upsert(payload,{onConflict:'competence'});if(error)throw error;toast('Competência salva no Supabase.');
  }catch(e){toast('Erro Supabase: '+e.message)}
 }
 function exportJSON(){const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='previsto-realizado-danese.json';a.click();URL.revokeObjectURL(a.href)}
 $$('#nav button[data-view]').forEach(b=>b.onclick=()=>{$$('#nav button[data-view]').forEach(x=>x.classList.remove('active'));b.classList.add('active');view=b.dataset.view;$('#pageTitle').textContent=b.textContent;$('#pageSub').textContent=view==='executive'?'Posição financeira consolidada para diretoria':view==='report'?'Fechamento gerencial e pontos de decisão':'Controle financeiro detalhado';render()});
 $('#month').onchange=render;$('#closeModal').onclick=()=>$('#modal').classList.remove('open');$('#modal').onclick=e=>{if(e.target===$('#modal'))$('#modal').classList.remove('open')};
-$('#newForecast').onclick=()=>openNew('forecast');$('#newActual').onclick=()=>openNew('actual');$('#catalogBtn').onclick=openCatalog;$('#exportBtn').onclick=exportJSON;
+$('#undoBtn').onclick=undoLast;$('#auditBtn').onclick=openAuditLog;$('#newForecast').onclick=()=>openNew('forecast');$('#newActual').onclick=()=>openNew('actual');$('#catalogBtn').onclick=openCatalog;$('#exportBtn').onclick=exportJSON;
 $('#importForecast').onclick=()=>$('#forecastFile').click();$('#importActual').onclick=()=>$('#actualFile').click();$('#forecastFile').onchange=e=>e.target.files[0]&&importWorkbook(e.target.files[0],'forecast');$('#actualFile').onchange=e=>e.target.files[0]&&importWorkbook(e.target.files[0],'actual');
 $('#printBtn').onclick=()=>window.print();$('#syncBtn').onclick=saveSupabase;
 populateMonths();render();
