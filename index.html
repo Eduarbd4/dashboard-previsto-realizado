@@ -411,6 +411,10 @@ aside{
 .pendingAuthorityNote{background:#fffdf5;border:1px solid #eadca9;border-radius:10px;padding:10px 12px;margin:0 0 14px;font-size:8px;color:#6d6240}
 .pendingAuthorityNote b{color:#3d3522}
 
+
+.reconcileRule{background:#f0f8f6;border:1px solid #cbe1dc;border-radius:10px;padding:10px 12px;margin-bottom:12px;color:#315f56;font-size:8px}
+.reconcileRule b{color:#123f36}
+
 </style>
 </head>
 <body>
@@ -578,7 +582,13 @@ function rows(){
 }
 function rowKey(r){return r.id}
 function text(r){return norm([r.party,r.description,r.category,r.costCenter].join(' '))}
-function isExcluded(r){return !!r.excluded}
+function isExcluded(r){
+  if(r.excluded)return true;
+  const t=text(r);
+  return r.source==='forecast' &&
+    /\bCARTAO DE CREDITO DANE SE\b/.test(t) &&
+    Number(r.amount||0)>=10000;
+}
 
 function naPraiaPayroll(r){
   const t=text(r);
@@ -599,6 +609,10 @@ function fopagSalary(r){
 
 function managementClassification(r){
   const t=text(r),cat=norm(r.category);
+
+  // Business meaning wins over an incorrect accounting category imported from the source.
+  if(profitAdvance(r)) return {group:'Financeiro',sub:'Antecipação de Lucros'};
+  if(creditCard(r)) return {group:'Financeiro',sub:'Cartão de Crédito'};
 
   // Benefícios (não confundir Vale Alimentação com refeição operacional)
   if(cat.includes('VALE ALIMENTACAO') || /\bCAJU\b.*\bVA\b/.test(t) || /\bVALE ALIMENTACAO\b/.test(t))
@@ -666,6 +680,28 @@ function migrateState(){
   }
   try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state))}catch(e){}
 }
+
+function linkedPlanFor(r,A){
+  if(r.source!=='actual')return null;
+  const pid=A?.R?.links?.[r.id];
+  return pid?(A.R.forecasts||[]).find(p=>p.id===pid)||null:null;
+}
+function reportingCategory(r,A){
+  if(r.source==='actual'){
+    const p=linkedPlanFor(r,A);
+    if(p)return p.category||r.category||'Sem categoria';
+  }
+  return r.category||'Sem categoria';
+}
+function reportingCostCenter(r,A){
+  if(r.source==='actual'){
+    const p=linkedPlanFor(r,A);
+    if(p && (!r.costCenter||norm(r.costCenter)==='SEPARAR POR CENTRO DE CUSTO'||norm(r.costCenter)==='NAO INFORMADO'))
+      return p.costCenter||r.costCenter||'Não informado';
+  }
+  return r.costCenter||'Não informado';
+}
+
 function groupRows(A){
   const m={};
   for(const r of A.f){
@@ -675,8 +711,10 @@ function groupRows(A){
     m[k].forecast+=r.amount;m[k].rows.push(r);
   }
   for(const r of A.a){
-    ensureClassification(r);
-    const k=r.managementGroup||'Outras Despesas';
+    const p=linkedPlanFor(r,A);
+    const effective=p?{...r,category:p.category,costCenter:reportingCostCenter(r,A),description:r.description}:r;
+    const c=managementClassification(effective);
+    const k=c.group||'Outras Despesas';
     m[k]??={name:k,forecast:0,actual:0,rows:[]};
     m[k].actual+=r.amount;m[k].rows.push(r);
   }
@@ -693,11 +731,190 @@ function paymentType(r){
   if(naPraiaPayroll(r))return'naPraiaPayroll';
   if(salaryAdvance(r))return'salaryAdvance';
   if(vacation(r))return'vacation';
-  if(service(r))return'service';
   if(profitAdvance(r))return'profitAdvance';
+  if(creditCard(r))return'creditCard';
+  if(service(r))return'service';
   if(fopagSalary(r))return'fopag';
   return'other';
 }
+
+function creditCard(r){
+  const t=text(r);
+  return /\bCARTAO 1888\b/.test(t) ||
+    (/\bCARTAO DE CREDITO\b/.test(t)&&Number(r.amount||0)<10000);
+}
+function businessFamily(r){
+  const t=text(r),cat=norm(r.category),cc=norm(r.costCenter);
+  if(bankFee(r))return'bankFee';
+  if(naPraiaPayroll(r))return'naPraiaPayroll';
+  if(salaryAdvance(r))return'salaryAdvance';
+  if(profitAdvance(r))return'profitAdvance';
+  if(creditCard(r))return'creditCard';
+  if(fopagSalary(r))return'fopag';
+  if(vacation(r))return'vacation';
+  if(/\b13 SALARIO\b|\bDECIMO TERCEIRO\b/.test(t))return'thirteenth';
+  if(/\bFGTS\b/.test(t)||cat.includes('FGTS'))return'fgts';
+  if(/\bDARF PREVIDENCIARIO\b|\bINSS\b/.test(t)||cat.includes('INSS'))return'inss';
+  if(/\bNEOENERGIA\b|\bENERGIA ELETRICA\b/.test(t)||cat.includes('ENERGIA'))return'energy';
+  if(cat.includes('TELEFONIA')||/\b(INTERNET|TELECOM|VIVO|OI)\b/.test(t))return'internet';
+  if(cat.includes('ALUGUEL')||/\bALUGUEL\b|\bREPASSE DE VENDAS\b/.test(t))return'rent';
+  if(/\b(PRONAMPE|FAMPE|FGI|EMPRESTIMO)\b/.test(t)||cat.includes('EMPREST'))return'loan';
+  if(/\b(LINX|VNDA|ZORYA|OTO CRM|CRMBONUS|GIVER)\b/.test(t)||cat.includes('SOFTWARE'))return'software';
+  if(service(r))return'service';
+  if(cat.includes('ASSESSORIA')||/\bCONTABILIDADE ARBRENT\b/.test(t))return'assessoria';
+  if(cat.includes('CONSULTORIA'))return'consultoria';
+  if(cat.includes('PRODUTOS PARA REVENDA')||/\b(REVER|LINUS)\b/.test(t))return'resale';
+  if(cat.includes('FACCAO'))return'faccao';
+  if(cat.includes('TECIDO'))return'tecido';
+  if(cat.includes('ETIQUETA'))return'etiqueta';
+  if(cat.includes('FRETE'))return'frete';
+  if(cat.includes('VITRINE'))return'vitrine';
+  if(cat.includes('MARKETING')||cat.includes('SOCIAL MEDIA'))return'marketing';
+  if(cat.includes('ALIMENTACAO'))return'benefitFood';
+  return'other';
+}
+function locationKey(r){
+  const t=text(r);
+  if(/\bFLAGSHIP\b|\b210 SUL\b/.test(t))return'FLAGSHIP';
+  if(/\bBRASILIA SHOPPING\b|\bBSB SHOPPING\b/.test(t))return'BRASILIA SHOPPING';
+  if(/\bLAGO SUL\b/.test(t))return'LAGO SUL';
+  if(/\bPARK SHOPPING\b|\bPARKSHOPPING\b/.test(t))return'PARK SHOPPING';
+  if(/\bMANE MERCADO\b/.test(t))return'MANE MERCADO';
+  if(/\bE COMMERCE\b|\bECOMMERCE\b|\bSITE\b/.test(t))return'E COMMERCE';
+  if(/\bMARCA\b/.test(t))return'MARCA';
+  if(/\bPRIVATE LABEL\b/.test(t))return'PRIVATE LABEL';
+  if(/\bNA PRAIA\b/.test(t))return'NA PRAIA';
+  return norm(r.costCenter||'');
+}
+function containsAll(hay,words){
+  const h=norm(hay);return words.every(w=>h.includes(norm(w)));
+}
+function forecastBy(forecasts,predicate){
+  return forecasts.find(predicate)||null;
+}
+function closestForecast(actual,list){
+  if(!list.length)return null;
+  return [...list].sort((x,y)=>{
+    const dx=Math.abs(Number(x.amount||0)-Number(actual.amount||0));
+    const dy=Math.abs(Number(y.amount||0)-Number(actual.amount||0));
+    return dx-dy;
+  })[0];
+}
+function forcedBusinessMatch(a,forecasts){
+  const t=text(a),fam=businessFamily(a),loc=locationKey(a);
+
+  // FOPAG JULHO: every "FOPAG 07/26" payment belongs to the single July payroll forecast.
+  if(fam==='fopag'&&/\bFOPAG 07 26\b/.test(t))
+    return forecastBy(forecasts,p=>businessFamily(p)==='fopag'&&/\bFOPAG JULHO 2026\b/.test(text(p)));
+
+  // NA PRAIA: each weekly payroll payment goes to the weekly NA PRAIA forecast closest by date.
+  if(fam==='naPraiaPayroll'){
+    const list=forecasts.filter(p=>businessFamily(p)==='naPraiaPayroll');
+    if(list.length){
+      const ad=a.date?new Date(a.date+'T12:00:00'):null;
+      return [...list].sort((x,y)=>{
+        const xd=x.date&&ad?Math.abs(new Date(x.date+'T12:00:00')-ad):999999999;
+        const yd=y.date&&ad?Math.abs(new Date(y.date+'T12:00:00')-ad):999999999;
+        return xd-yd;
+      })[0];
+    }
+  }
+
+  // Salary advances: many payments -> one forecast.
+  if(fam==='salaryAdvance')
+    return forecastBy(forecasts,p=>businessFamily(p)==='salaryAdvance');
+
+  // Profit advances must follow the person, not the imported accounting category.
+  if(fam==='profitAdvance'){
+    if(/\bDANIEL MOREIRA\b/.test(t))
+      return forecastBy(forecasts,p=>businessFamily(p)==='profitAdvance'&&/\bDANIEL MOREIRA\b/.test(text(p)));
+    if(/\bMARCELLE RESENDE\b/.test(t))
+      return forecastBy(forecasts,p=>businessFamily(p)==='profitAdvance'&&/\bMARCELLE RESENDE\b/.test(text(p)));
+  }
+
+  // Card 1888 -> the R$1k card forecast; never the R$40k placeholder.
+  if(fam==='creditCard')
+    return forecastBy(forecasts,p=>businessFamily(p)==='creditCard'&&Number(p.amount||0)<10000);
+
+  // Internet / telephone: store is more important than carrier.
+  if(fam==='internet'){
+    if(/\bFLAGSHIP\b/.test(t))
+      return forecastBy(forecasts,p=>businessFamily(p)==='internet'&&/\bFLAGSHIP\b/.test(text(p)));
+    const list=forecasts.filter(p=>businessFamily(p)==='internet'&&locationKey(p)===loc);
+    if(list.length)return closestForecast(a,list);
+  }
+
+  // Energy and rent: center/store is the governing key.
+  if(fam==='energy'){
+    const list=forecasts.filter(p=>businessFamily(p)==='energy'&&locationKey(p)===loc);
+    if(list.length)return closestForecast(a,list);
+  }
+  if(fam==='rent'){
+    const list=forecasts.filter(p=>businessFamily(p)==='rent'&&locationKey(p)===loc);
+    if(list.length)return closestForecast(a,list);
+  }
+
+  // Loans by contract.
+  if(fam==='loan'){
+    for(const key of ['PRONAMPE','FAMPE','FGI 1 5M','FGI 680K']){
+      if(norm(t).includes(key)){
+        const p=forecastBy(forecasts,x=>businessFamily(x)==='loan'&&text(x).includes(key));
+        if(p)return p;
+      }
+    }
+  }
+
+  // Software by brand and, for LINX, by store.
+  if(fam==='software'){
+    for(const key of ['LINX','VNDA','ZORYA','OTO CRM','CRMBONUS','GIVER']){
+      if(text(a).includes(key)){
+        let list=forecasts.filter(p=>businessFamily(p)==='software'&&text(p).includes(key));
+        if(key==='LINX'&&loc)list=list.filter(p=>locationKey(p)===loc);
+        if(list.length)return closestForecast(a,list);
+      }
+    }
+  }
+
+  // FGTS by store/center; INSS is a single grouped forecast.
+  if(fam==='fgts'){
+    const list=forecasts.filter(p=>businessFamily(p)==='fgts'&&locationKey(p)===loc);
+    if(list.length)return closestForecast(a,list);
+  }
+  if(fam==='inss')
+    return forecastBy(forecasts,p=>businessFamily(p)==='inss');
+
+  // Services / assessoria / consultoria by person or business-name tokens.
+  if(['service','assessoria','consultoria'].includes(fam)){
+    const list=forecasts.filter(p=>businessFamily(p)===fam);
+    let best=null,bestScore=0;
+    for(const p of list){
+      const s=tokenScore(a.description,p.description)*10+
+        (locationKey(a)&&locationKey(a)===locationKey(p)?1:0);
+      if(s>bestScore){best=p;bestScore=s}
+    }
+    if(bestScore>=3)return best;
+  }
+
+  // Production/product recurring descriptions: category + strong description similarity.
+  if(['faccao','tecido','etiqueta','resale','frete','vitrine','marketing'].includes(fam)){
+    const list=forecasts.filter(p=>businessFamily(p)===fam);
+    let best=null,bestScore=0;
+    for(const p of list){
+      const s=tokenScore(a.description,p.description)*10+
+        (locationKey(a)&&locationKey(a)===locationKey(p)?1.5:0)+
+        (Math.abs(Number(a.amount||0)-Number(p.amount||0))<.02?4:0);
+      if(s>bestScore){best=p;bestScore=s}
+    }
+    if(bestScore>=4.2)return best;
+  }
+
+  // Exact accounting category + exact amount is considered a deterministic match.
+  const exact=forecasts.filter(p=>norm(p.category)===norm(a.category)&&Math.abs(Number(p.amount||0)-Number(a.amount||0))<.02);
+  if(exact.length===1)return exact[0];
+
+  return null;
+}
+
 function tokens(s){return [...new Set(norm(s).split(/[^A-Z0-9]+/).filter(x=>x.length>2 && !['PREVISAO','PAGAMENTO','PARCELA','DANese','LTDA'].includes(x)))].slice(0,20)}
 function tokenScore(a,b){const A=tokens(a),B=new Set(tokens(b));if(!A.length)return 0;return A.filter(x=>B.has(x)).length/A.length}
 function isGroupedPlan(p){
@@ -722,56 +939,62 @@ function reconcile(){
   const links={},reasons={},scores={};
 
   for(const a of actuals){
+    // Explicit user/manual link always wins.
     if(r.links?.[a.id] && forecasts.some(p=>p.id===r.links[a.id])){
       links[a.id]=r.links[a.id];reasons[a.id]='Vínculo manual';scores[a.id]=100;continue;
     }
 
-    const tp=paymentType(a);
-    if(tp==='bankFee'){reasons[a.id]='Tarifa bancária sem previsão vinculada';continue}
+    const fam=businessFamily(a);
+    if(fam==='bankFee'){
+      reasons[a.id]='Tarifa bancária · não previsto confirmado';continue;
+    }
 
-    // Grouped families are strict:
-    // FOPAG -> only FOPAG
-    // Na Praia -> only Na Praia
-    // Salary advances -> only salary advances
+    // Business rules before fuzzy matching.
+    const forced=forcedBusinessMatch(a,forecasts);
+    if(forced){
+      links[a.id]=forced.id;
+      reasons[a.id]='Vínculo financeiro validado';
+      scores[a.id]=99;
+      continue;
+    }
+
+    const tp=paymentType(a);
+
+    // Grouped families.
     if(['salaryAdvance','fopag','naPraiaPayroll'].includes(tp)){
       const group=forecasts.filter(p=>paymentType(p)===tp&&isGroupedPlan(p));
       if(group.length){
-        let best=group[0],bestScore=-1;
-        for(const p of group){
-          const s=scoreMatch(a,p);
-          if(s>bestScore){best=p;bestScore=s}
-        }
+        const best=closestForecast(a,group);
         links[a.id]=best.id;
-        reasons[a.id]=tp==='naPraiaPayroll'?'Na Praia · Semana / contratos intermitentes':
-          tp==='fopag'?'FOPAG 07/26 / folha normal':'Adiantamentos salariais';
-        scores[a.id]=bestScore;
+        reasons[a.id]=tp==='naPraiaPayroll'?'NA PRAIA · semana correspondente':
+          tp==='fopag'?'FOPAG 07/26 · folha normal':'Adiantamentos salariais';
+        scores[a.id]=98;
         continue;
       }
     }
 
+    // Exhaustive fallback inside a compatible financial family.
     let best=null,bestScore=0,secondScore=0;
     for(const p of forecasts){
-      const pt=paymentType(p);
+      const af=businessFamily(a),pf=businessFamily(p);
+      if(af!=='other'&&pf!=='other'&&af!==pf)continue;
+      if(af==='naPraiaPayroll'&&pf!=='naPraiaPayroll')continue;
+      if(pf==='naPraiaPayroll'&&af!=='naPraiaPayroll')continue;
+      if(af==='fopag'&&pf!=='fopag')continue;
+      if(pf==='fopag'&&af!=='fopag')continue;
 
-      // Never cross Na Praia and FOPAG
-      if(tp==='naPraiaPayroll'&&pt!=='naPraiaPayroll')continue;
-      if(pt==='naPraiaPayroll'&&tp!=='naPraiaPayroll')continue;
-      if(tp==='fopag'&&pt!=='fopag')continue;
-      if(pt==='fopag'&&tp!=='fopag')continue;
-      if(tp==='salaryAdvance'&&pt!=='salaryAdvance')continue;
-      if(pt==='salaryAdvance'&&tp!=='salaryAdvance')continue;
+      let s=scoreMatch(a,p);
+      if(af===pf&&af!=='other')s+=2;
+      if(locationKey(a)&&locationKey(a)===locationKey(p))s+=2;
 
-      if(tp!=='other'&&pt!=='other'&&pt!==tp)continue;
-
-      const s=scoreMatch(a,p);
       if(s>bestScore){secondScore=bestScore;best=p;bestScore=s}
       else if(s>secondScore)secondScore=s;
     }
 
-    if(best && bestScore>=4.2 && (bestScore-secondScore>=.4 || bestScore>=7)){
-      links[a.id]=best.id;reasons[a.id]='Conciliação automática reforçada';scores[a.id]=bestScore;
+    if(best && bestScore>=5 && (bestScore-secondScore>=.25 || bestScore>=8)){
+      links[a.id]=best.id;reasons[a.id]='Conciliação automática por descrição/categoria/centro';scores[a.id]=bestScore;
     }else{
-      reasons[a.id]='Sem previsão compatível';
+      reasons[a.id]='Não previsto confirmado / sem previsão compatível';
     }
   }
 
@@ -847,10 +1070,19 @@ function analytics(){
   return value;
 }
 function byCategory(A){
-  const m={};
-  for(const r of A.f){const k=r.category||'Sem categoria';m[k]??={name:k,forecast:0,actual:0,rows:[]};m[k].forecast+=r.amount;m[k].rows.push(r)}
-  for(const r of A.a){const k=r.category||'Sem categoria';m[k]??={name:k,forecast:0,actual:0,rows:[]};m[k].actual+=r.amount;m[k].rows.push(r)}
-  return Object.values(m).map(x=>({...x,diff:x.actual-x.forecast,execution:x.forecast?x.actual/x.forecast*100:0})).sort((x,y)=>y.actual-x.actual)
+  const map={};
+  for(const r of A.f){
+    const k=reportingCategory(r,A);
+    map[k]??={name:k,forecast:0,actual:0,rows:[]};
+    map[k].forecast+=Number(r.amount||0);map[k].rows.push(r);
+  }
+  for(const r of A.a){
+    const k=reportingCategory(r,A);
+    map[k]??={name:k,forecast:0,actual:0,rows:[]};
+    map[k].actual+=Number(r.amount||0);map[k].rows.push(r);
+  }
+  return Object.values(map).map(x=>({...x,diff:x.actual-x.forecast,execution:x.forecast?x.actual/x.forecast*100:0}))
+    .sort((a,b)=>b.actual-a.actual);
 }
 function bySupplier(A){
   const m={};for(const r of A.a){const k=r.party||'Não informado';m[k]??={name:k,value:0,rows:[]};m[k].value+=r.amount;m[k].rows.push(r)}
@@ -1699,16 +1931,22 @@ function aggregateBy(list,keyFn){
 }
 function openCategoryDrill(category){
   const A=analytics();
-  const list=[...A.f,...A.a].filter(r=>norm(r.category)===norm(category));
+  const list=[...A.f,...A.a].filter(r=>norm(reportingCategory(r,A))===norm(category));
   list.forEach(r=>ensureClassification(r));
   const forecast=list.filter(r=>r.source==='forecast').reduce((s,r)=>s+r.amount,0);
   const actual=list.filter(r=>r.source==='actual').reduce((s,r)=>s+r.amount,0);
-  const subs=aggregateBy(list,r=>r.subcategory||'Sem subcategoria');
-  const centers=aggregateBy(list,r=>r.costCenter||'Não informado');
+  const subs=aggregateBy(list,r=>{
+    if(r.source==='actual'){
+      const p=linkedPlanFor(r,A);
+      if(p){ensureClassification(p);return p.subcategory||managementClassification(p).sub}
+    }
+    return r.subcategory||'Sem subcategoria';
+  });
+  const centers=aggregateBy(list,r=>reportingCostCenter(r,A));
   const parties=aggregateBy(list,r=>r.party||'Não informado');
 
   $('#modalTitle').textContent='Categoria · '+category;
-  $('#modalSub').textContent='Clique na subcategoria, centro de custo ou fornecedor para chegar aos lançamentos.';
+  $('#modalSub').textContent='Pagamentos vinculados usam a categoria financeira da previsão correspondente.';
   $('#modalBody').innerHTML=`
     <div class="drillHero">
       <div class="drillMetric"><small>Previsto</small><strong>${money(forecast)}</strong></div>
@@ -1717,49 +1955,24 @@ function openCategoryDrill(category){
       <div class="drillMetric"><small>Execução</small><strong>${pct(forecast?actual/forecast*100:0)}</strong></div>
       <div class="drillMetric"><small>Lançamentos</small><strong>${list.length}</strong></div>
     </div>
-
     <div class="drillGrid">
-      <div>
-        <div class="drillSection"><h4>Subcategorias dentro de ${esc(category)}</h4>
-          <div class="drillTable"><table><thead><tr><th>Subcategoria</th><th class="num">Previsto</th><th class="num">Pago</th><th class="num">Dif.</th><th class="num">Itens</th></tr></thead><tbody>
-          ${subs.map((x,i)=>`<tr class="drillLink" data-sub-index="${i}"><td><b>${esc(x.name)}</b></td><td class="num">${money(x.forecast)}</td><td class="num">${money(x.actual)}</td><td class="num">${money(x.diff)}</td><td class="num">${x.count}</td></tr>`).join('')}
-          </tbody></table></div>
-        </div>
-      </div>
-      <div>
-        <div class="drillSection"><h4>Centros de custo</h4>
-          <div class="drillTable"><table><thead><tr><th>Centro</th><th class="num">Previsto</th><th class="num">Pago</th></tr></thead><tbody>
-          ${centers.map((x,i)=>`<tr class="drillLink" data-cc-index="${i}"><td><b>${esc(x.name)}</b></td><td class="num">${money(x.forecast)}</td><td class="num">${money(x.actual)}</td></tr>`).join('')}
-          </tbody></table></div>
-        </div>
-      </div>
+      <div><div class="drillSection"><h4>Subcategorias</h4><div class="drillTable"><table><thead><tr><th>Subcategoria</th><th class="num">Previsto</th><th class="num">Pago</th><th class="num">Dif.</th></tr></thead><tbody>
+      ${subs.map((x,i)=>`<tr class="drillLink" data-sub-index="${i}"><td><b>${esc(x.name)}</b></td><td class="num">${money(x.forecast)}</td><td class="num">${money(x.actual)}</td><td class="num">${money(x.diff)}</td></tr>`).join('')}
+      </tbody></table></div></div></div>
+      <div><div class="drillSection"><h4>Centros de custo</h4><div class="drillTable"><table><thead><tr><th>Centro</th><th class="num">Previsto</th><th class="num">Pago</th></tr></thead><tbody>
+      ${centers.map((x,i)=>`<tr class="drillLink" data-cc-index="${i}"><td><b>${esc(x.name)}</b></td><td class="num">${money(x.forecast)}</td><td class="num">${money(x.actual)}</td></tr>`).join('')}
+      </tbody></table></div></div></div>
     </div>
-
-    <div class="drillSection"><h4>Fornecedores / colaboradores da categoria</h4>
-      <div class="drillTable"><table><thead><tr><th>Nome</th><th class="num">Previsto</th><th class="num">Pago</th><th class="num">Itens</th></tr></thead><tbody>
-      ${parties.slice(0,40).map((x,i)=>`<tr class="drillLink" data-party-index="${i}"><td><b>${esc(x.name)}</b></td><td class="num">${money(x.forecast)}</td><td class="num">${money(x.actual)}</td><td class="num">${x.count}</td></tr>`).join('')}
-      </tbody></table></div>
-    </div>
-
-    <div class="drillSection"><h4>Todos os lançamentos dentro de ${esc(category)}</h4>${tableRows(list,basicCols())}</div>`;
+    <div class="drillSection"><h4>Fornecedores / colaboradores</h4><div class="drillTable"><table><thead><tr><th>Nome</th><th class="num">Previsto</th><th class="num">Pago</th><th class="num">Itens</th></tr></thead><tbody>
+      ${parties.slice(0,50).map((x,i)=>`<tr class="drillLink" data-party-index="${i}"><td><b>${esc(x.name)}</b></td><td class="num">${money(x.forecast)}</td><td class="num">${money(x.actual)}</td><td class="num">${x.count}</td></tr>`).join('')}
+    </tbody></table></div></div>
+    <div class="drillSection"><h4>Todos os lançamentos</h4>${tableRows(list,basicCols())}</div>`;
 
   $('#modal').classList.add('open');
-  $$('[data-sub-index]').forEach(el=>el.onclick=()=>{
-    const x=subs[Number(el.dataset.subIndex)];
-    openRows(`${category} › ${x.name}`,x.rows);
-  });
-  $$('[data-cc-index]').forEach(el=>el.onclick=()=>{
-    const x=centers[Number(el.dataset.ccIndex)];
-    openRows(`${category} › Centro de custo: ${x.name}`,x.rows);
-  });
-  $$('[data-party-index]').forEach(el=>el.onclick=()=>{
-    const x=parties[Number(el.dataset.partyIndex)];
-    openRows(`${category} › ${x.name}`,x.rows);
-  });
-  $$('[data-row]').forEach(el=>el.onclick=e=>{
-    if(e.target.closest('.rowSelect')||e.target.closest('[data-edit]'))return;
-    openRow(el.dataset.row);
-  });
+  $$('[data-sub-index]').forEach(el=>el.onclick=()=>{const x=subs[Number(el.dataset.subIndex)];openRows(`${category} › ${x.name}`,x.rows)});
+  $$('[data-cc-index]').forEach(el=>el.onclick=()=>{const x=centers[Number(el.dataset.ccIndex)];openRows(`${category} › ${x.name}`,x.rows)});
+  $$('[data-party-index]').forEach(el=>el.onclick=()=>{const x=parties[Number(el.dataset.partyIndex)];openRows(`${category} › ${x.name}`,x.rows)});
+  $$('[data-row]').forEach(el=>el.onclick=e=>{if(e.target.closest('.rowSelect')||e.target.closest('[data-edit]'))return;openRow(el.dataset.row)});
   bindSelectionControls();
 }
 function openWeekDrill(week){
@@ -1978,6 +2191,30 @@ async function adminSignOut(){
   try{await db?.auth?.signOut()}catch(e){}
   session=null;toast('ADM desconectado.');openAdminPanel();
 }
+
+function reconciliationAuditHTML(){
+  const A=analytics(),linked=Object.keys(A.R.links).length;
+  const bank=A.a.filter(r=>businessFamily(r)==='bankFee');
+  const unlinked=A.a.filter(r=>!A.R.links[r.id]&&businessFamily(r)!=='bankFee');
+  const open=A.o||[];
+  return `<div class="drillHero">
+    <div class="drillMetric"><small>Pagamentos</small><strong>${A.a.length}</strong></div>
+    <div class="drillMetric"><small>Vinculados</small><strong>${linked}</strong></div>
+    <div class="drillMetric"><small>Sem previsão compatível</small><strong>${unlinked.length}</strong></div>
+    <div class="drillMetric"><small>Tarifas bancárias</small><strong>${bank.length}</strong></div>
+    <div class="drillMetric"><small>Em aberto oficial</small><strong>${open.length}</strong></div>
+  </div>
+  <div class="drillSection"><h4>Pagamentos ainda sem previsão compatível</h4>${tableRows(unlinked,basicCols())}</div>`;
+}
+function openReconciliationAudit(){
+  $('#modalTitle').textContent='Auditoria de conciliação';
+  $('#modalSub').textContent='Tudo que foi pago é procurado primeiro na previsão. A lista abaixo contém apenas o que não encontrou previsão financeiramente compatível.';
+  $('#modalBody').innerHTML=reconciliationAuditHTML();
+  $('#modal').classList.add('open');
+  $$('[data-row]').forEach(el=>el.onclick=e=>{if(e.target.closest('.rowSelect')||e.target.closest('[data-edit]'))return;openRow(el.dataset.row)});
+  bindSelectionControls();
+}
+
 async function openAdminPanel(){
   let currentUser=null;
   try{
@@ -2025,7 +2262,7 @@ async function openAdminPanel(){
         <div class="adminActions">
           <button id="admCatalog">Categorias e centros de custo</button>
           <button id="admBulk">Editar selecionados</button>
-          <button id="admAudit">Histórico de alterações</button>
+          <button id="admAudit">Histórico de alterações</button><button id="admReconcileAudit">Auditar conciliação</button>
         </div>
       </div>
 
@@ -2050,6 +2287,7 @@ async function openAdminPanel(){
   $('#admCatalog')?.addEventListener('click',openCatalog);
   $('#admBulk')?.addEventListener('click',()=>selectedRows.size?openBulkEdit():toast('Selecione lançamentos primeiro.'));
   $('#admAudit')?.addEventListener('click',openAuditLog);
+  $('#admReconcileAudit')?.addEventListener('click',openReconciliationAudit);
   $('#admLoadHistory')?.addEventListener('click',async()=>{await loadHistoricalMonthsFromSupabase();openAdminPanel()});
 }
 
@@ -2199,7 +2437,7 @@ async function saveSupabase(){
    const m=$('#month').value,r=rec();
    const payload={competence:m,forecast:r.forecast,actual:r.actual,metadata:{links:r.links||{},
         openLinks:r.openLinks||{},
-        openLinks:r.openLinks||{},catalog:r.catalog||{},auditLog:r.auditLog||[],dashboard_version:'premium-merge-v10'},updated_at:new Date().toISOString(),updated_by:session.user.id};
+        openLinks:r.openLinks||{},catalog:r.catalog||{},auditLog:r.auditLog||[],dashboard_version:'premium-finance-audit-v14'},updated_at:new Date().toISOString(),updated_by:session.user.id};
    const {error}=await db.from('financial_months').upsert(payload,{onConflict:'competence'});if(error)throw error;toast('Competência salva no Supabase.');
  }catch(e){toast('Erro Supabase: '+e.message)}
 }
