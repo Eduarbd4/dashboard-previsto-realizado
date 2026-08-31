@@ -407,6 +407,10 @@ aside{
 .sourceBadge.open{background:#fff7e8;color:#9a6200;border-color:#f0d29c}
 .openSummary{border-left:3px solid #e9a23b}
 
+
+.pendingAuthorityNote{background:#fffdf5;border:1px solid #eadca9;border-radius:10px;padding:10px 12px;margin:0 0 14px;font-size:8px;color:#6d6240}
+.pendingAuthorityNote b{color:#3d3522}
+
 </style>
 </head>
 <body>
@@ -464,6 +468,7 @@ const SEED={"2026-08":{"forecast":[{"id":"P1-F-2","source":"forecast","date":"20
 const SUPABASE_URL="https://tohgvkvkvajqxhtvbija.supabase.co";
 const SUPABASE_ANON_KEY="sb_publishable_ZLue4j1oo6ULkFIWVhkwNQ_iLkQHgah";
 const STORAGE_KEY='danese_previsto_realizado_bank_v1';
+const AUTHORITATIVE_OPEN_2026_08=[{"id":"open-auth-2026-08-1","source":"open","date":"2026-08-16","party":"Não informado","description":"PREVISÃO - Impostos Flagship - DAR ICMS","amount":0.01,"paidAmount":0.0,"category":"2.06.003 ICMS ST sobre Vendas","costCenter":"Flagship","status":"Atrasado","excluded":false,"manualType":"automatic","raw":{}},{"id":"open-auth-2026-08-2","source":"open","date":"2026-08-16","party":"Não informado","description":"Impostos Brasília Shopping - DAR ICMS","amount":15642.14,"paidAmount":0.0,"category":"2.06.003 ICMS ST sobre Vendas","costCenter":"Brasília Shopping","status":"Atrasado","excluded":false,"manualType":"automatic","raw":{}},{"id":"open-auth-2026-08-3","source":"open","date":"2026-08-16","party":"Não informado","description":"Impostos Lago Sul - DAR ICMS","amount":5793.84,"paidAmount":0.0,"category":"2.06.003 ICMS ST sobre Vendas","costCenter":"Lago Sul","status":"Atrasado","excluded":false,"manualType":"automatic","raw":{}},{"id":"open-auth-2026-08-4","source":"open","date":"2026-08-16","party":"Não informado","description":"Impostos E-Commerce - DAR ICMS","amount":40512.01,"paidAmount":0.0,"category":"2.06.003 ICMS ST sobre Vendas","costCenter":"E-Commerce","status":"Atrasado","excluded":false,"manualType":"automatic","raw":{}},{"id":"open-auth-2026-08-5","source":"open","date":"2026-08-16","party":"Não informado","description":"Impostos Mané Mercado - DAR ICMS","amount":2308.25,"paidAmount":0.0,"category":"2.06.003 ICMS ST sobre Vendas","costCenter":"E-Commerce","status":"Atrasado","excluded":false,"manualType":"automatic","raw":{}},{"id":"open-auth-2026-08-6","source":"open","date":"2026-08-16","party":"Não informado","description":"Impostos ParkShopping - DAR ICMS","amount":6039.1,"paidAmount":0.0,"category":"2.06.003 ICMS ST sobre Vendas","costCenter":"E-Commerce","status":"Atrasado","excluded":false,"manualType":"automatic","raw":{}},{"id":"open-auth-2026-08-7","source":"open","date":"2026-08-30","party":"Linx Sistemas","description":"LINX - Licença Mensal Microvix - Flagship","amount":1128.7,"paidAmount":0.0,"category":"2.10.001 Licença de Uso de Software","costCenter":"Flagship","status":"Atrasado","excluded":false,"manualType":"automatic","raw":{}},{"id":"open-auth-2026-08-8","source":"open","date":"2026-08-30","party":"Linx Sistemas","description":"LINX - Licença Mensal Microvix - Brasília Shopping","amount":931.34,"paidAmount":0.0,"category":"2.10.001 Licença de Uso de Software","costCenter":"Brasília Shopping","status":"Atrasado","excluded":false,"manualType":"automatic","raw":{}},{"id":"open-auth-2026-08-9","source":"open","date":"2026-08-30","party":"Linx Sistemas","description":"LINX - Licença Mensal Microvix - Lago Sul FALTA NF","amount":973.02,"paidAmount":0.0,"category":"2.10.001 Licença de Uso de Software","costCenter":"Lago Sul","status":"Atrasado","excluded":false,"manualType":"automatic","raw":{}},{"id":"open-auth-2026-08-10","source":"open","date":"2026-08-30","party":"Linx Sistemas","description":"LINX - Licença Mensal Microvix + API Site - E-commerce | Não terá NF","amount":915.98,"paidAmount":0.0,"category":"2.10.001 Licença de Uso de Software","costCenter":"E-Commerce","status":"Atrasado","excluded":false,"manualType":"automatic","raw":{}},{"id":"open-auth-2026-08-11","source":"open","date":"2026-08-30","party":"Linx Sistemas","description":"LINX - Licença Mensal Microvix - ParkShopping FALTA NF","amount":629.18,"paidAmount":0.0,"category":"2.10.001 Licença de Uso de Software","costCenter":"Park Shopping","status":"Atrasado","excluded":false,"manualType":"automatic","raw":{}},{"id":"open-auth-2026-08-12","source":"open","date":"2026-08-30","party":"Linx Sistemas","description":"LINX - Licença Mensal Microvix - Mané Mercado | Não terá NF","amount":604.66,"paidAmount":0.0,"category":"2.10.001 Licença de Uso de Software","costCenter":"Mané Mercado","status":"Atrasado","excluded":false,"manualType":"automatic","raw":{}}];
 let state=loadState(), view='executive', charts=[];
 migrateState();
 let db=null, session=null;
@@ -532,8 +537,10 @@ async function saveMonthToSupabase(forceClose=false){
       forecast:r.forecast||[],
       actual:r.actual||[],
       open:r.open||[],
+      open:r.open||[],
       metadata:{
         links:r.links||{},
+        openLinks:r.openLinks||{},
         openLinks:r.openLinks||{},
         catalog:r.catalog||{},
         auditLog:r.auditLog||[],
@@ -560,17 +567,35 @@ async function reopenMonth(){
   await saveMonthToSupabase(false);
 }
 
-function rec(){const m=$('#month').value;state[m]??={forecast:[],actual:[],links:{},catalog:{categories:[],costCenters:[]}};return state[m]}
-function rows(){const r=rec();return [...r.forecast,...r.actual]}
+function rec(){
+  const m=$('#month').value;
+  state[m]=normalizeMonthRecord(state[m]||emptyMonthRecord());
+  return state[m];
+}
+function rows(){
+  const r=rec();
+  return [...r.forecast,...r.actual,...r.open];
+}
 function rowKey(r){return r.id}
 function text(r){return norm([r.party,r.description,r.category,r.costCenter].join(' '))}
 function isExcluded(r){return !!r.excluded}
+
+function naPraiaPayroll(r){
+  const t=text(r);
+  return /\bNA PRAIA\b/.test(t) &&
+    (/\bSEMANA\b/.test(t)||/\bCONTRATOS? INTERMITENTES?\b/.test(t)||/\bSALARIO\b/.test(t)||/\bCOMISSAO\b/.test(t));
+}
+
 function bankFee(r){const t=text(r);return /\b(TAR|TARIFA|TAXA)\b.*\bPIX\b/.test(t)||/\bPIX\b.*\b(TAR|TARIFA|TAXA)\b/.test(t)||/\bTAR PIX\b/.test(t)}
 function salaryAdvance(r){const t=text(r);if(/\b(13|DECIMO TERCEIRO)\b.*\bSALARI/.test(t))return false;if(/\b(BONUS|LUCRO|LUCROS|FORNECEDOR|VIAGEM|COMPRA)\b/.test(t))return false;return /\bADIANTAMENT(?:O|OS)\b.*\bSALARI/.test(t)||(/\bFOPAG\b/.test(t)&&/\bADIANTAMENT/.test(t)&&/\bSALARI/.test(t))}
 function vacation(r){return /\bFERIAS\b/.test(text(r))}
 function service(r){return /\bPRESTAC(?:AO|OES)\b.*\bSERVIC/.test(text(r))||/\bSERVICOS PRESTADOS\b/.test(text(r))||norm(r.category).includes('PAGAMENTO PRESTACAO DE SERVICO')}
 function profitAdvance(r){return /\b(ANTECIPACAO|ADIANTAMENTO)\b.*\bLUCRO/.test(text(r))}
-function fopagSalary(r){const t=text(r);if(bankFee(r)||salaryAdvance(r)||vacation(r)||service(r)||profitAdvance(r))return false;return /\bFOPAG\b/.test(t)||/\bFOLHA\b/.test(t)||/\bSALARIO\b/.test(t)||norm(r.category).includes('2.03.001')}
+function fopagSalary(r){
+  const t=text(r);
+  if(naPraiaPayroll(r)||bankFee(r)||salaryAdvance(r)||vacation(r)||service(r)||profitAdvance(r))return false;
+  return /\bFOPAG\b/.test(t)||/\bFOLHA\b/.test(t)||(/\bSALARIO\b/.test(t)&&!/\bNA PRAIA\b/.test(t))||norm(r.category).includes('2.03.001');
+}
 
 function managementClassification(r){
   const t=text(r),cat=norm(r.category);
@@ -587,6 +612,7 @@ function managementClassification(r){
   if(/\b(IFOOD|RESTAURANTE|RESTAURANTES|LANCHONETE|ALMOCO|JANTAR|REFEICAO|PIZZA|SUSHI|PADARIA|CAFE DA MANHA|CAFETERIA)\b/.test(t))
     return {group:'Alimentação',sub:'Refeições e Alimentação'};
 
+  if(paymentType(r)==='naPraiaPayroll') return {group:'Na Praia',sub:'Contratos Intermitentes / Semana'};
   if(paymentType(r)==='salaryAdvance') return {group:'Pessoas e FOPAG',sub:'Adiantamentos Salariais'};
   if(paymentType(r)==='vacation') return {group:'Pessoas e FOPAG',sub:'Férias'};
   if(paymentType(r)==='fopag') return {group:'Pessoas e FOPAG',sub:'Folha / Salários'};
@@ -664,6 +690,7 @@ function colorPalette(n){
 function paymentType(r){
   if(r.manualType && r.manualType!=='automatic')return r.manualType;
   if(bankFee(r))return'bankFee';
+  if(naPraiaPayroll(r))return'naPraiaPayroll';
   if(salaryAdvance(r))return'salaryAdvance';
   if(vacation(r))return'vacation';
   if(service(r))return'service';
@@ -673,7 +700,12 @@ function paymentType(r){
 }
 function tokens(s){return [...new Set(norm(s).split(/[^A-Z0-9]+/).filter(x=>x.length>2 && !['PREVISAO','PAGAMENTO','PARCELA','DANese','LTDA'].includes(x)))].slice(0,20)}
 function tokenScore(a,b){const A=tokens(a),B=new Set(tokens(b));if(!A.length)return 0;return A.filter(x=>B.has(x)).length/A.length}
-function isGroupedPlan(p){const t=text(p),tp=paymentType(p);return (tp==='salaryAdvance'&&/\bPREVISAO\b/.test(t))||(tp==='fopag'&&/\bPREVISAO\b/.test(t)&&/\bFOPAG\b/.test(t))}
+function isGroupedPlan(p){
+  const t=text(p),tp=paymentType(p);
+  if(tp==='naPraiaPayroll')return p.source==='forecast'&&/\bPREVISAO\b/.test(t)&&/\bNA PRAIA\b/.test(t);
+  return (tp==='salaryAdvance'&&/\bPREVISAO\b/.test(t))||
+    (tp==='fopag'&&/\bPREVISAO\b/.test(t)&&/\bFOPAG\b/.test(t)&&!/\bNA PRAIA\b/.test(t));
+}
 function scoreMatch(a,p){
   let s=0;
   if(paymentType(a)!=='other' && paymentType(a)===paymentType(p))s+=5;
@@ -686,43 +718,119 @@ function scoreMatch(a,p){
   return s;
 }
 function reconcile(){
-  const r=rec(), forecasts=r.forecast.filter(x=>!isExcluded(x)), actuals=r.actual.filter(x=>!isExcluded(x));
-  const links={}, reasons={};
+  const r=rec(),forecasts=r.forecast.filter(x=>!isExcluded(x)),actuals=r.actual.filter(x=>!isExcluded(x));
+  const links={},reasons={},scores={};
+
   for(const a of actuals){
     if(r.links?.[a.id] && forecasts.some(p=>p.id===r.links[a.id])){
-      links[a.id]=r.links[a.id];reasons[a.id]='Vínculo manual';continue;
+      links[a.id]=r.links[a.id];reasons[a.id]='Vínculo manual';scores[a.id]=100;continue;
     }
+
     const tp=paymentType(a);
     if(tp==='bankFee'){reasons[a.id]='Tarifa bancária sem previsão vinculada';continue}
-    if(tp==='salaryAdvance'||tp==='fopag'){
+
+    // Grouped families are strict:
+    // FOPAG -> only FOPAG
+    // Na Praia -> only Na Praia
+    // Salary advances -> only salary advances
+    if(['salaryAdvance','fopag','naPraiaPayroll'].includes(tp)){
       const group=forecasts.filter(p=>paymentType(p)===tp&&isGroupedPlan(p));
-      if(group.length){links[a.id]=group[0].id;reasons[a.id]='Previsão agrupadora FOPAG';continue}
+      if(group.length){
+        let best=group[0],bestScore=-1;
+        for(const p of group){
+          const s=scoreMatch(a,p);
+          if(s>bestScore){best=p;bestScore=s}
+        }
+        links[a.id]=best.id;
+        reasons[a.id]=tp==='naPraiaPayroll'?'Na Praia · Semana / contratos intermitentes':
+          tp==='fopag'?'FOPAG 07/26 / folha normal':'Adiantamentos salariais';
+        scores[a.id]=bestScore;
+        continue;
+      }
     }
-    let best=null,bestScore=0;
+
+    let best=null,bestScore=0,secondScore=0;
     for(const p of forecasts){
-      if(paymentType(p)!==tp && tp!=='other')continue;
+      const pt=paymentType(p);
+
+      // Never cross Na Praia and FOPAG
+      if(tp==='naPraiaPayroll'&&pt!=='naPraiaPayroll')continue;
+      if(pt==='naPraiaPayroll'&&tp!=='naPraiaPayroll')continue;
+      if(tp==='fopag'&&pt!=='fopag')continue;
+      if(pt==='fopag'&&tp!=='fopag')continue;
+      if(tp==='salaryAdvance'&&pt!=='salaryAdvance')continue;
+      if(pt==='salaryAdvance'&&tp!=='salaryAdvance')continue;
+
+      if(tp!=='other'&&pt!=='other'&&pt!==tp)continue;
+
       const s=scoreMatch(a,p);
-      if(s>bestScore){best=p;bestScore=s}
+      if(s>bestScore){secondScore=bestScore;best=p;bestScore=s}
+      else if(s>secondScore)secondScore=s;
     }
-    if(best && bestScore>=5.4){links[a.id]=best.id;reasons[a.id]='Conciliação automática';}
-    else reasons[a.id]='Sem previsão compatível';
+
+    if(best && bestScore>=4.2 && (bestScore-secondScore>=.4 || bestScore>=7)){
+      links[a.id]=best.id;reasons[a.id]='Conciliação automática reforçada';scores[a.id]=bestScore;
+    }else{
+      reasons[a.id]='Sem previsão compatível';
+    }
   }
+
   const byForecast={};
   for(const [aid,pid] of Object.entries(links))(byForecast[pid]??=[]).push(aid);
-  return {links,reasons,byForecast,forecasts,actuals};
+  return {links,reasons,scores,byForecast,forecasts,actuals};
 }
 function computeAnalytics(){
-  const R=reconcile(), f=R.forecasts,a=R.actuals;
-  const fTotal=f.reduce((s,x)=>s+x.amount,0),aTotal=a.reduce((s,x)=>s+x.amount,0);
-  const unexpected=a.filter(x=>!R.links[x.id]);
-  const pending=[], planStatus=[];
-  for(const p of f){
-    const linked=(R.byForecast[p.id]||[]).map(id=>a.find(x=>x.id===id)).filter(Boolean);
-    const paid=linked.reduce((s,x)=>s+x.amount,0),diff=paid-p.amount,remaining=Math.max(p.amount-paid,0);
-    planStatus.push({p,linked,paid,diff,remaining});
-    if(remaining>.01)pending.push({...p,remaining,paid});
+  const R=reconcile(),f=R.forecasts,a=R.actuals;
+  const fTotal=f.reduce((s,x)=>s+Number(x.amount||0),0);
+  const aTotal=a.reduce((s,x)=>s+Number(x.amount||0),0);
+
+  const linkedActualIds=new Set(Object.keys(R.links));
+  const unexpected=a.filter(x=>!linkedActualIds.has(x.id)&&paymentType(x)!=='bankFee');
+  const unexpectedTotal=unexpected.reduce((s,x)=>s+Number(x.amount||0),0);
+
+  const openSummary=openCommitmentSummary();
+  const hasAuthoritativeOpen=(rec().open||[]).length>0;
+
+  let pending=[];
+  if(hasAuthoritativeOpen){
+    // Only actual open obligations can be pending.
+    // Convert each open item into a pending object and point it to its suggested forecast when available.
+    const matchMap=new Map(openSummary.matches.map(x=>[x.open.id,x]));
+    pending=openSummary.open.map(o=>{
+      const m=matchMap.get(o.id);
+      return {
+        ...o,
+        source:'open',
+        forecastId:m?.forecast?.id||null,
+        forecast:m?.forecast||null,
+        remaining:Number(o.amount||0),
+        pendingReason:m?'Em aberto vinculado à previsão':'Em aberto sem encaixe'
+      };
+    });
+  }else{
+    // Fallback only when no open report was imported.
+    pending=f.map(p=>{
+      const ids=R.byForecast[p.id]||[];
+      const paid=ids.reduce((s,id)=>s+(a.find(x=>x.id===id)?.amount||0),0);
+      return {...p,paid,remaining:Math.max(Number(p.amount||0)-paid,0)};
+    }).filter(x=>x.remaining>.009);
   }
-  return {R,f,a,fTotal,aTotal,diff:aTotal-fTotal,unexpected,unexpectedTotal:unexpected.reduce((s,x)=>s+x.amount,0),pending,pendingTotal:pending.reduce((s,x)=>s+x.remaining,0),planStatus};
+
+  const pendingTotal=pending.reduce((s,x)=>s+Number(x.remaining||x.amount||0),0);
+  const diff=aTotal-fTotal;
+
+  return {
+    f,a,R,
+    fTotal,aTotal,diff,
+    unexpected,unexpectedTotal,
+    pending,pendingTotal,
+    openTotal:openSummary.total,
+    openFitted:openSummary.fitted,
+    openUnmatched:openSummary.unmatched,
+    openMatches:openSummary.matches,
+    openUnmatchedRows:openSummary.unmatched,
+    o:openSummary.open
+  };
 }
 function analytics(){
   const key=($('#month')?.value||'')+'|'+DATA_REV;
@@ -755,16 +863,26 @@ function weeks(A){
   })
 }
 function fopagData(A){
-  const blocks=[
-    {name:'Folha / salários',type:'fopag'},
-    {name:'Adiantamentos salariais',type:'salaryAdvance'},
-    {name:'Férias',type:'vacation'},
-    {name:'Prestação de serviços',type:'service'}
-  ].map(b=>({...b,forecast:A.f.filter(r=>paymentType(r)===b.type),actual:A.a.filter(r=>paymentType(r)===b.type)}));
-  const npForecast=A.f.filter(r=>/\bNA PRAIA\b/.test(text(r))&&['fopag','salaryAdvance','vacation'].includes(paymentType(r)));
-  const npActual=A.a.filter(r=>/\bNA PRAIA\b/.test(text(r))&&['fopag','salaryAdvance','vacation'].includes(paymentType(r)));
-  blocks.push({name:'FOPAG Na Praia',type:'napraia',forecast:npForecast,actual:npActual});
-  return blocks;
+  const normalForecast=A.f.filter(r=>paymentType(r)==='fopag');
+  const normalActual=A.a.filter(r=>paymentType(r)==='fopag');
+  const advanceForecast=A.f.filter(r=>paymentType(r)==='salaryAdvance');
+  const advanceActual=A.a.filter(r=>paymentType(r)==='salaryAdvance');
+  const vacationForecast=A.f.filter(r=>paymentType(r)==='vacation');
+  const vacationActual=A.a.filter(r=>paymentType(r)==='vacation');
+  const serviceForecast=A.f.filter(r=>paymentType(r)==='service');
+  const serviceActual=A.a.filter(r=>paymentType(r)==='service');
+
+  // NA PRAIA MUST BE LAST AND MUST NOT be included in Folha / Salários.
+  const naPraiaForecast=A.f.filter(r=>paymentType(r)==='naPraiaPayroll');
+  const naPraiaActual=A.a.filter(r=>paymentType(r)==='naPraiaPayroll');
+
+  return [
+    {type:'fopag',name:'Folha / Salários',forecast:normalForecast,actual:normalActual},
+    {type:'salaryAdvance',name:'Adiantamentos Salariais',forecast:advanceForecast,actual:advanceActual},
+    {type:'vacation',name:'Férias',forecast:vacationForecast,actual:vacationActual},
+    {type:'service',name:'Prestação de Serviços',forecast:serviceForecast,actual:serviceActual},
+    {type:'naPraiaPayroll',name:'NA PRAIA',forecast:naPraiaForecast,actual:naPraiaActual}
+  ];
 }
 
 function reportNarrative(A,cats,vendors,wk,fop){
@@ -807,7 +925,7 @@ function reportNarrative(A,cats,vendors,wk,fop){
     ? `O maior grupo gerencial de despesas no período foi <strong>${esc(largestGroup.name)}</strong>, com <strong>${money(largestGroup.actual)}</strong> realizados. A classificação gerencial separa Alimentação, Pessoas/FOPAG, Produção, Logística, Ocupação, Tecnologia, Tributos e demais grupos para tornar a leitura do caixa mais clara.`
     : `Não há dados suficientes para análise da composição dos gastos.`;
 
-  const fopagText = `A FOPAG consolidada apresenta <strong>${money(fopagForecast)}</strong> previstos e <strong>${money(fopagActual)}</strong> pagos, com diferença de <strong>${money(fopagDiff)}</strong>. O controle mantém separados folha/salários, adiantamentos salariais, férias, prestação de serviços e o bloco interno de FOPAG Na Praia. A previsão de “Adiantamentos Salariais Colaboradores” funciona como orçamento agrupador e recebe os pagamentos individuais vinculados a ela.`;
+  const fopagText = `A FOPAG consolidada apresenta <strong>${money(fopagForecast)}</strong> previstos e <strong>${money(fopagActual)}</strong> pagos, com diferença de <strong>${money(fopagDiff)}</strong>. O controle mantém separados folha/salários, adiantamentos salariais, férias, prestação de serviços e o bloco interno de NA PRAIA. A previsão de “Adiantamentos Salariais Colaboradores” funciona como orçamento agrupador e recebe os pagamentos individuais vinculados a ela.`;
 
   const weeklyText = worstWeek
     ? `A maior pressão semanal ocorreu na <strong>${esc(worstWeek.label)}</strong>, quando o realizado superou o previsto em <strong>${money(worstWeek.actual-worstWeek.forecast)}</strong>. Essa semana deve ser usada como referência para investigar concentração de vencimentos, antecipações ou pagamentos não previstos.`
@@ -1127,29 +1245,29 @@ function bindMonthComparison(){
 
 
 function openMatchScore(o,p){
+  const ot=paymentType(o),pt=paymentType(p);
+  if(ot==='naPraiaPayroll'&&pt!=='naPraiaPayroll')return -999;
+  if(pt==='naPraiaPayroll'&&ot!=='naPraiaPayroll')return -999;
+  if(ot==='fopag'&&pt!=='fopag')return -999;
+  if(pt==='fopag'&&ot!=='fopag')return -999;
+
   let score=0;
-  const O=norm([o.party,o.description,o.category,o.costCenter].join(' '));
-  const P=norm([p.party,p.description,p.category,p.costCenter].join(' '));
-  if(norm(o.category)&&norm(o.category)===norm(p.category))score+=3;
-  if(norm(o.costCenter)&&norm(o.costCenter)===norm(p.costCenter))score+=1.5;
-  if(norm(o.party)&&norm(o.party)!=='NAO INFORMADO'&&norm(o.party)===norm(p.party))score+=2.5;
+  if(norm(o.category)&&norm(o.category)===norm(p.category))score+=4;
+  if(norm(o.costCenter)&&norm(o.costCenter)===norm(p.costCenter))score+=2;
+  if(norm(o.party)&&norm(o.party)!=='NAO INFORMADO'&&norm(o.party)===norm(p.party))score+=3;
+  score+=tokenScore(o.description,p.description)*5;
 
-  const ot=norm(o.description).split(' ').filter(x=>x.length>3);
-  const pt=new Set(norm(p.description).split(' ').filter(x=>x.length>3));
-  let common=0;ot.forEach(x=>pt.has(x)&&common++);
-  if(ot.length)score+=Math.min(2.5,common/ot.length*2.5);
-
-  const pa=Math.abs(Number(o.amount)||0),pp=Math.abs(Number(p.amount)||0);
-  if(pa&&pp){
-    const ratio=Math.abs(pa-pp)/Math.max(pa,pp);
-    if(ratio<=.01)score+=2;
-    else if(ratio<=.05)score+=1.5;
-    else if(ratio<=.15)score+=.8;
+  const oa=Math.abs(Number(o.amount)||0),pa=Math.abs(Number(p.amount)||0);
+  if(oa&&pa){
+    const ratio=Math.abs(oa-pa)/Math.max(oa,pa);
+    if(ratio<=.01)score+=3;
+    else if(ratio<=.05)score+=2;
+    else if(ratio<=.15)score+=1;
   }
   return score;
 }
 function reconcileOpen(){
-  const r=rec(),plans=r.forecast.filter(x=>!x.excluded),opens=(r.open||[]).filter(x=>!x.excluded);
+  const r=rec(),plans=r.forecast.filter(x=>!isExcluded(x)),opens=(r.open||[]).filter(x=>!isExcluded(x));
   const matches=[],unmatched=[];
   r.openLinks=r.openLinks||{};
 
@@ -1158,14 +1276,20 @@ function reconcileOpen(){
     const manualId=r.openLinks[o.id];
     if(manualId){
       p=plans.find(x=>x.id===manualId)||null;
-      if(p){score=99;manual=true;}
+      if(p){score=100;manual=true}
     }
     if(!p){
-      for(const candidate of plans){
-        const s=openMatchScore(o,candidate);
-        if(s>score){score=s;p=candidate;}
+      const ranked=plans.map(candidate=>({candidate,s:openMatchScore(o,candidate)}))
+        .filter(x=>x.s>-900).sort((a,b)=>b.s-a.s);
+      const best=ranked[0],second=ranked[1];
+      if(best){
+        const sameCategory=norm(o.category)===norm(best.candidate.category);
+        const sameCC=norm(o.costCenter)===norm(best.candidate.costCenter);
+        const clear=!second||best.s-second.s>=.35;
+        if(best.s>=4 && (sameCategory||sameCC||best.s>=6) && clear){
+          p=best.candidate;score=best.s;
+        }
       }
-      if(score<4.5)p=null;
     }
     if(p)matches.push({open:o,forecast:p,score,manual});
     else unmatched.push(o);
@@ -1380,7 +1504,7 @@ function render(){
     h=filtersHTML()+`<div class="kpis"><article class="kpi warn"><small>Total não previsto</small><strong>${money(A.unexpectedTotal)}</strong><span>${A.unexpected.length} pagamentos</span></article><article class="kpi"><small>% do realizado</small><strong>${pct(unpct)}</strong></article></div>`+card('Pagamentos sem previsão vinculada',tableRows(A.unexpected.slice().sort((a,b)=>b.amount-a.amount),basicCols()),'Clique no pagamento para vincular uma previsão ou criar uma');
   }else if(view==='fopag'){
     fop=fopagData(A);
-    h=`<div class="reportIntro"><b>Regra FOPAG.</b> Folha/salários + adiantamentos salariais + férias + prestação de serviços. Antecipações de lucros ficam fora. FOPAG Na Praia aparece apenas como bloco interno desta aba, nunca como aba separada.</div>${fopagSummary(fop)}`;
+    h=`<div class="reportIntro"><b>Regra FOPAG.</b> Folha/salários normais + adiantamentos salariais + férias + prestação de serviços. NA PRAIA fica totalmente separado da Folha / Salários e aparece somente no bloco final desta aba.</div>${fopagSummary(fop)}`;
     for(const b of fop)h+=card(b.name,`<div class="grid2"><div>${tableRows(b.forecast,basicCols())}</div><div>${tableRows(b.actual,basicCols())}</div></div>`,`Previsto ${money(b.forecast.reduce((s,x)=>s+x.amount,0))} · Pago ${money(b.actual.reduce((s,x)=>s+x.amount,0))}`);
   }else if(view==='base'){
     h=filtersHTML()+`<div class="controls noPrint" style="margin-bottom:10px"><button class="btn primary" id="baseEditForecast">Editar previsões</button><button class="btn" id="baseEditActual">Editar pagamentos</button><span class="sumHint">Marque vários lançamentos para somar e usar ações em massa.</span></div>`+card('Base única de lançamentos',tableRows(filteredRows(A),[
@@ -1948,15 +2072,19 @@ function emptyMonthRecord(){
   return {forecast:[],actual:[],open:[],links:{},openLinks:{},catalog:{categories:[],costCenters:[]},auditLog:[],updatedAt:null,closedAt:null};
 }
 function normalizeMonthRecord(r){
-  const out={...emptyMonthRecord(),...(r||{})};
-  out.forecast=Array.isArray(out.forecast)?out.forecast:[];
-  out.actual=Array.isArray(out.actual)?out.actual:[];
-  out.links=out.links||{};
-  out.catalog=out.catalog||{categories:[],costCenters:[]};
-  out.catalog.categories=Array.isArray(out.catalog.categories)?out.catalog.categories:[];
-  out.catalog.costCenters=Array.isArray(out.catalog.costCenters)?out.catalog.costCenters:[];
-  out.auditLog=Array.isArray(out.auditLog)?out.auditLog:[];
-  return out;
+  r=r||{};
+  r.forecast=Array.isArray(r.forecast)?r.forecast:[];
+  r.actual=Array.isArray(r.actual)?r.actual:[];
+  r.open=Array.isArray(r.open)?r.open:[];
+  r.links=r.links||{};
+  r.openLinks=r.openLinks||{};
+  r.catalog=r.catalog||{categories:[],costCenters:[]};
+  r.catalog.categories=Array.isArray(r.catalog.categories)?r.catalog.categories:[];
+  r.catalog.costCenters=Array.isArray(r.catalog.costCenters)?r.catalog.costCenters:[];
+  r.auditLog=Array.isArray(r.auditLog)?r.auditLog:[];
+  r.updatedAt=r.updatedAt||null;
+  r.closedAt=r.closedAt||null;
+  return r;
 }
 function renderMonthHistory(){
   const box=$('#monthHistory');if(!box)return;
@@ -1984,7 +2112,9 @@ async function loadHistoricalMonthsFromSupabase(){
           forecast:row.forecast||[],
           actual:row.actual||[],
           open:row.open||[],
+          open:row.open||[],
           links:meta.links||{},
+          openLinks:meta.openLinks||{},
           openLinks:meta.openLinks||{},
           catalog:meta.catalog||{categories:[],costCenters:[]},
           auditLog:meta.auditLog||[],
@@ -2000,6 +2130,20 @@ async function loadHistoricalMonthsFromSupabase(){
       render();
     }
   }catch(e){console.warn('Histórico Supabase:',e)}
+}
+
+
+function seedAuthoritativeOpenAugust(){
+  if(!AUTHORITATIVE_OPEN_2026_08?.length)return;
+  const m='2026-08';
+  state[m]=normalizeMonthRecord(state[m]||emptyMonthRecord());
+  // Only seed when no open report exists yet; user imports can replace it later.
+  if(!state[m].open.length){
+    state[m].open=AUTHORITATIVE_OPEN_2026_08.map(x=>({...x}));
+    state[m].updatedAt=new Date().toISOString();
+    invalidateAnalytics();
+    localStorage.setItem(STORAGE_KEY,JSON.stringify(state));
+  }
 }
 
 function populateMonths(preferredMonth=null){
@@ -2054,6 +2198,7 @@ async function saveSupabase(){
    if(!session){const email=prompt('E-mail do administrador:');const password=prompt('Senha:');if(!email||!password)return;const res=await db.auth.signInWithPassword({email,password});if(res.error)throw res.error;session=res.data.session}
    const m=$('#month').value,r=rec();
    const payload={competence:m,forecast:r.forecast,actual:r.actual,metadata:{links:r.links||{},
+        openLinks:r.openLinks||{},
         openLinks:r.openLinks||{},catalog:r.catalog||{},auditLog:r.auditLog||[],dashboard_version:'premium-merge-v10'},updated_at:new Date().toISOString(),updated_by:session.user.id};
    const {error}=await db.from('financial_months').upsert(payload,{onConflict:'competence'});if(error)throw error;toast('Competência salva no Supabase.');
  }catch(e){toast('Erro Supabase: '+e.message)}
