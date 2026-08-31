@@ -11,7 +11,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.4/jspdf.plugin.autotable.min.js"></script>
 <style>
 :root{--navy:#111;--navy2:#1c1c1c;--blue:#171717;--cyan:#555;--green:#287d65;--red:#b84242;--amber:#a97525;--bg:#f4f4f3;--card:#fff;--ink:#181818;--muted:#727272;--line:#e5e5e3;--shadow:0 12px 34px rgba(0,0,0,.065)}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:linear-gradient(180deg,#fafafa 0,#f3f3f2 100%);color:var(--ink);font:13px Manrope,Arial,sans-serif;letter-spacing:-.005em}button,input,select{font:inherit}button{cursor:pointer}.hidden{display:none!important}.shell{display:grid;grid-template-columns:246px 1fr;min-height:100vh}.side{position:sticky;top:0;height:100vh;background:linear-gradient(165deg,#1b1b1b 0%,#080808 78%);color:#fff;padding:27px 17px;display:flex;flex-direction:column;z-index:8;box-shadow:14px 0 40px rgba(0,0,0,.14)}.brand{gap:0;display:block;padding:3px 9px 30px}.brandMark{display:none}.brand b{display:block;font-size:29px;font-weight:800;letter-spacing:-.085em;line-height:1;text-transform:lowercase}.brand small{display:block;color:#aaa;font-size:8px;letter-spacing:.16em;margin-top:9px}.nav{display:grid;gap:4px}.nav button{border:0;background:transparent;color:#aaa;text-align:left;border-radius:9px;padding:11px 15px;min-height:43px;font-size:11px;font-weight:650;transition:.18s}.nav button:hover{background:rgba(255,255,255,.07);color:#fff}.nav button.active{background:linear-gradient(90deg,rgba(255,255,255,.14),rgba(255,255,255,.025));box-shadow:inset 3px 0 #fff;color:#fff}.sideFoot{margin-top:auto;border-top:1px solid #ffffff16;padding:18px 8px 0;color:#858585;font-size:10px;line-height:1.6}.sideFoot b{color:#fff;letter-spacing:.08em;font-size:8px}.main{min-width:0}.topbar{height:76px;background:rgba(255,255,255,.93);border-bottom:1px solid #e8e8e6;backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:space-between;padding:0 30px;position:sticky;top:0;z-index:7;box-shadow:0 5px 22px rgba(17,35,64,.035)}.topbar h1{font-size:19px;margin:0;font-weight:800;letter-spacing:-.035em}.topbar h1:after{content:"";display:inline-block;width:22px;height:3px;margin-left:9px;vertical-align:middle;background:#171717}.topbar p{margin:3px 0 0;color:var(--muted);font-size:9px}.rightbar{display:flex;align-items:center;gap:8px}.control,select,input{border:1px solid #dbe2ec;background:white;border-radius:9px;padding:9px 11px;color:var(--ink);min-height:38px;font-size:10px;transition:.18s}.control:hover{transform:translateY(-1px);box-shadow:0 7px 18px rgba(18,37,68,.09)}button.control{font-weight:700}.primary{background:#171717;border-color:#171717;color:#fff;box-shadow:0 8px 20px rgba(0,0,0,.16)}.primary:hover{background:#000;box-shadow:0 10px 24px rgba(0,0,0,.22)}.content{padding:28px 30px 55px;max-width:1680px;margin:auto}.adminStrip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:20px}.upload{background:white;border:1px solid #e0e6ef;border-radius:12px;padding:17px 19px;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--shadow)}.upload b{display:block;font-size:11px}.upload small{display:block;color:var(--muted);margin-top:3px;font-size:8.5px}.filters{display:grid;grid-template-columns:2fr repeat(4,1fr) auto auto;gap:8px;margin-bottom:18px;padding:12px;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow)}.filters input,.filters select{width:100%;min-width:0}.clear{border:1px solid var(--line);background:#fff;border-radius:8px;color:var(--muted)}.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:18px}.kpis.exec6{grid-template-columns:repeat(6,1fr)}.kpi{background:var(--card);border:1px solid #e3e8f0;border-radius:13px;padding:18px;box-shadow:var(--shadow);position:relative;overflow:hidden;min-height:124px}.kpi:before{content:"";position:absolute;inset:0 auto 0 0;width:4px;background:#1b1b1b}.kpi.green:before{background:var(--green)}.kpi.red:before{background:var(--red)}.kpi.amber:before{background:var(--amber)}.kpi.cyan:before{background:#777}.kpi:after{content:"";position:absolute;right:-25px;bottom:-38px;width:90px;height:90px;border:1px solid rgba(0,0,0,.055);border-radius:50%}.kpi label{color:var(--muted);text-transform:uppercase;letter-spacing:.1em;font-size:8px;font-weight:800}.kpi strong{display:block;font-size:22px;margin:14px 0 8px;white-space:nowrap;letter-spacing:-.045em}.kpi small{color:var(--muted);font-size:8.5px}.grid2{display:grid;grid-template-columns:1.5fr 1fr;gap:14px}.execHero{display:grid;grid-template-columns:1.6fr .8fr;gap:14px;margin-bottom:18px}.execHeroMain{background:linear-gradient(135deg,#111,#272727);color:#fff;border-radius:15px;padding:26px 28px;box-shadow:0 18px 46px rgba(0,0,0,.16)}.execHeroMain .eyebrow{font-size:8px;letter-spacing:.16em;color:#bdbdbd;font-weight:800}.execHeroMain h2{font-size:25px;letter-spacing:-.045em;margin:7px 0 8px}.execHeroMain p{margin:0;color:#d3d3d3;font-size:10px;line-height:1.7}.execHeroMain .heroMeta{display:flex;gap:18px;flex-wrap:wrap;margin-top:18px;padding-top:15px;border-top:1px solid rgba(255,255,255,.12);font-size:9px;color:#bbb}.execHeroSide{display:grid;gap:10px}.execSignal{background:#fff;border:1px solid var(--line);border-radius:13px;padding:17px 18px;box-shadow:var(--shadow)}.execSignal small{display:block;color:var(--muted);font-size:8px;text-transform:uppercase;letter-spacing:.08em;font-weight:800}.execSignal b{display:block;font-size:17px;margin-top:8px}.execSignal p{margin:5px 0 0;color:var(--muted);font-size:9px;line-height:1.55}.execMiniTable table{min-width:680px}.card{background:var(--card);border:1px solid #e2e8f0;border-radius:13px;box-shadow:var(--shadow);margin-bottom:16px;min-width:0;overflow:hidden}.cardHead{padding:17px 19px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;background:linear-gradient(180deg,#fff,#fbfbfa)}.cardHead h2{font-size:12px;margin:0;font-weight:800}.cardHead small{color:var(--muted);font-size:8px}.chartBox{height:310px;padding:18px}.tableWrap{overflow:auto;max-height:520px;scrollbar-color:#b7c3d5 #f4f6f9;scrollbar-width:thin}.tableWrap.tall{max-height:640px}table{width:100%;border-collapse:collapse;min-width:920px;font-size:10px}th{position:sticky;top:0;z-index:2;background:#f6f8fb;color:var(--muted);font-size:7.5px;text-transform:uppercase;letter-spacing:.06em;text-align:left}th,td{padding:11px 12px;border-bottom:1px solid var(--line);vertical-align:top}tbody tr:nth-child(even) td{background:#fbfcfe}tr:hover td{background:#f1f6fd!important}.num{text-align:right;font-variant-numeric:tabular-nums}.positive{color:var(--red);font-weight:800}.negative{color:var(--green);font-weight:800}.tag{display:inline-block;border-radius:20px;padding:4px 8px;background:#ededeb;color:#222;font-size:7.5px;font-weight:800}.tag.red{background:#fff0f0;color:var(--red)}.tag.green{background:#eaf8f3;color:var(--green)}.tag.gray{background:#edf0f4;color:#657085}.click{color:#111;text-decoration:underline;text-decoration-color:#aaa;text-underline-offset:3px;font-weight:750;cursor:pointer}.empty{padding:45px;text-align:center;color:var(--muted)}.empty b{display:block;color:var(--ink);font-size:15px;margin-bottom:7px}.footer{text-align:center;color:var(--muted);font-size:9px;padding:18px 10px 10px}.modal{position:fixed;inset:0;background:#071126b8;display:none;place-items:center;padding:20px;z-index:30}.modal.open{display:grid}.dialog{background:white;border-radius:15px;width:min(1050px,96vw);max-height:88vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 28px 90px rgba(5,15,35,.32)}.dialog.small{width:min(430px,96vw);padding:24px}.dialogHead{display:flex;justify-content:space-between;align-items:center;padding:17px 19px;border-bottom:1px solid var(--line)}.dialogHead h2{font-size:15px;margin:0}.dialog .tableWrap{max-height:68vh}.dialog.small input{width:100%;margin:5px 0}.dialogActions{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}.notice{position:fixed;right:20px;bottom:20px;background:#111;color:#fff;padding:13px 16px;border-radius:10px;z-index:40;box-shadow:0 10px 30px #0003;border-left:4px solid #888;font-size:10px}.status{font-size:9px;color:var(--muted)}.mobileMenu{display:none}.sectionIntro{display:flex;justify-content:space-between;align-items:end;margin-bottom:14px;padding:4px 2px 2px}.sectionIntro h2{font-size:21px;margin:0;font-weight:800;letter-spacing:-.04em}.sectionIntro p{margin:4px 0 0;color:var(--muted);font-size:10px}.ruleGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.rule{padding:17px}.rule b{display:block;margin-bottom:7px}.rule p{color:var(--muted);line-height:1.6;margin:0}.progress{height:7px;background:#edf1f6;border-radius:10px;overflow:hidden;margin-top:8px}.progress i{display:block;height:100%;background:linear-gradient(90deg,#111,#666)}.danger{color:var(--red);border-color:#efcaca;background:#fff9f9}.multi{position:relative}.multi>button{width:100%;min-height:36px;border:1px solid #dbe2ec;background:#fff;border-radius:8px;padding:9px 11px;text-align:left;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:9px}.multi>button:after{content:'⌄';float:right;color:var(--muted)}.multiBox{display:none;position:absolute;top:calc(100% + 5px);left:0;min-width:230px;max-width:340px;max-height:280px;overflow:auto;background:#fff;border:1px solid var(--line);border-radius:11px;box-shadow:0 18px 48px rgba(13,28,54,.17);padding:7px;z-index:20}.multi.open .multiBox{display:block}.multiBox label{display:flex;gap:8px;align-items:flex-start;padding:7px;border-radius:6px;cursor:pointer;font-size:10px}.multiBox label:hover{background:#f3f7fd}.multiBox input{width:auto;margin:1px 0}.reportHero{background:radial-gradient(circle at 88% 0,rgba(255,255,255,.13),transparent 34%),linear-gradient(135deg,#111,#292929);color:#fff;border-radius:15px;padding:29px 30px;margin-bottom:14px;box-shadow:0 20px 50px rgba(0,0,0,.2)}.reportHero .eyebrow{color:#d5d5d5;font-size:9px;letter-spacing:.12em;font-weight:800}.reportHero h2{font-size:25px;margin:7px 0;letter-spacing:-.045em}.reportHero p{color:#c1cce0;line-height:1.7;max-width:1080px;margin:0;font-size:10px}.reportGrid{display:grid;grid-template-columns:1.25fr 1fr;gap:14px}.analysisBlock{padding:21px}.analysisBlock h3{font-size:13px;margin:0 0 12px}.analysisBlock p,.analysisBlock li{color:#56647b;font-size:10px;line-height:1.8}.analysisBlock ul{padding-left:18px;margin-bottom:0}.insight{border-left:3px solid var(--blue);padding:12px 14px;background:#f6f9fe;border-radius:0 9px 9px 0;margin:8px 0}.insight.warn{border-color:var(--amber);background:#fffbf2}.insight.risk{border-color:var(--red);background:#fff7f7}.reportStamp{font-size:9px;color:#9eacc4;margin-top:13px}.ranking{display:grid;gap:10px}.rankRow{display:grid;grid-template-columns:1fr auto;gap:9px;align-items:center}.rankRow small{color:var(--muted)}.monthPicker{position:relative;min-width:190px}.monthPicker>button{width:100%;min-height:38px;border:1px solid var(--line);background:#fff;border-radius:9px;padding:9px 11px;text-align:left;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.monthPicker>button:after{content:'⌄';float:right;color:var(--muted)}.monthPickerBox{display:none;position:absolute;right:0;top:calc(100% + 5px);min-width:260px;max-height:320px;overflow:auto;background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 18px 48px rgba(13,28,54,.17);padding:8px;z-index:25}.monthPicker.open .monthPickerBox{display:block}.monthPickerBox label{display:flex;gap:8px;align-items:center;padding:8px;border-radius:7px;cursor:pointer;font-size:10px}.monthPickerBox label:hover{background:#f3f7fd}.monthPickerBox input{width:auto;min-height:auto}.monthPickerHelp{padding:6px 8px 9px;color:var(--muted);font-size:8px;line-height:1.5;border-bottom:1px solid var(--line);margin-bottom:4px}.varianceLead{display:grid;grid-template-columns:1.35fr 1fr;gap:14px}.varianceFormula{padding:18px}.varianceFormula code{display:inline-block;margin-top:8px;padding:8px 10px;border-radius:8px;background:#eef3fb;color:var(--navy);font:700 10px Manrope,Arial,sans-serif}.varianceFormula p{color:var(--muted);line-height:1.7;margin:0}.varianceTable .tag{white-space:nowrap}#detailBody{min-height:0;overflow:auto}.drillBody{padding:16px}.drillKpis{grid-template-columns:repeat(4,minmax(0,1fr))}.drillToolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}.drillToolbar p{margin:0;color:var(--muted);font-size:9px}.dialog .drillBody .tableWrap{max-height:390px}.drillBody table{min-width:820px}.comparisonPrompt{display:flex;align-items:center;justify-content:space-between;gap:18px;margin:0 0 18px;padding:13px 16px;border:1px dashed #aaa;border-radius:11px;background:#fafaf9;color:#666}.comparisonPrompt b{font-size:10px;color:#222}.comparisonPrompt span{font-size:9px}.monthComparison{margin:0 0 24px;padding:20px 20px 4px;border:1px solid #ddd;border-radius:15px;background:linear-gradient(180deg,#fff,#fafaf9);box-shadow:0 12px 32px rgba(0,0,0,.055)}.comparisonTable{max-height:480px}.comparisonTable table{min-width:1050px}.detailMonthComparison{margin-bottom:18px;padding:17px 17px 3px;border:1px solid #ddd;border-radius:13px;background:#fafaf9}.rowActions{display:flex;flex-wrap:wrap;gap:5px;min-width:120px}.rowActions .control{min-height:29px;padding:5px 8px;font-size:8px;white-space:nowrap}.manualEditor{padding:20px;display:grid;gap:14px;overflow:auto}.manualSummary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:14px;background:#f6f9fe;border:1px solid #dfe8f5;border-radius:10px}.manualEditor label{display:grid;gap:6px;color:var(--muted);font-size:9px;font-weight:700}.manualEditor input,.manualEditor select{width:100%}.manualHelp{padding:10px 12px;background:#fffbf2;border-left:3px solid var(--amber);border-radius:0 8px 8px 0;color:#6d624e;font-size:9px;line-height:1.6}.manualEditorGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:linear-gradient(180deg,#fafafa 0,#f3f3f2 100%);color:var(--ink);font:13px Manrope,Arial,sans-serif;letter-spacing:-.005em}button,input,select{font:inherit}button{cursor:pointer}.hidden{display:none!important}.shell{display:grid;grid-template-columns:246px 1fr;min-height:100vh}.side{position:sticky;top:0;height:100vh;background:linear-gradient(165deg,#1b1b1b 0%,#080808 78%);color:#fff;padding:27px 17px;display:flex;flex-direction:column;z-index:8;box-shadow:14px 0 40px rgba(0,0,0,.14)}.brand{gap:0;display:block;padding:3px 9px 30px}.brandMark{display:none}.brand b{display:block;font-size:29px;font-weight:800;letter-spacing:-.085em;line-height:1;text-transform:lowercase}.brand small{display:block;color:#aaa;font-size:8px;letter-spacing:.16em;margin-top:9px}.nav{display:grid;gap:4px}.nav button{border:0;background:transparent;color:#aaa;text-align:left;border-radius:9px;padding:11px 15px;min-height:43px;font-size:11px;font-weight:650;transition:.18s}.nav button:hover{background:rgba(255,255,255,.07);color:#fff}.nav button.active{background:linear-gradient(90deg,rgba(255,255,255,.14),rgba(255,255,255,.025));box-shadow:inset 3px 0 #fff;color:#fff}.sideFoot{margin-top:auto;border-top:1px solid #ffffff16;padding:18px 8px 0;color:#858585;font-size:10px;line-height:1.6}.sideFoot b{color:#fff;letter-spacing:.08em;font-size:8px}.main{min-width:0}.topbar{height:76px;background:rgba(255,255,255,.93);border-bottom:1px solid #e8e8e6;backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:space-between;padding:0 30px;position:sticky;top:0;z-index:7;box-shadow:0 5px 22px rgba(17,35,64,.035)}.topbar h1{font-size:19px;margin:0;font-weight:800;letter-spacing:-.035em}.topbar h1:after{content:"";display:inline-block;width:22px;height:3px;margin-left:9px;vertical-align:middle;background:#171717}.topbar p{margin:3px 0 0;color:var(--muted);font-size:9px}.rightbar{display:flex;align-items:center;gap:8px}.control,select,input{border:1px solid #dbe2ec;background:white;border-radius:9px;padding:9px 11px;color:var(--ink);min-height:38px;font-size:10px;transition:.18s}.control:hover{transform:translateY(-1px);box-shadow:0 7px 18px rgba(18,37,68,.09)}button.control{font-weight:700}.primary{background:#171717;border-color:#171717;color:#fff;box-shadow:0 8px 20px rgba(0,0,0,.16)}.primary:hover{background:#000;box-shadow:0 10px 24px rgba(0,0,0,.22)}.content{padding:28px 30px 55px;max-width:1680px;margin:auto}.adminStrip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:20px}.upload{background:white;border:1px solid #e0e6ef;border-radius:12px;padding:17px 19px;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--shadow)}.upload b{display:block;font-size:11px}.upload small{display:block;color:var(--muted);margin-top:3px;font-size:8.5px}.filters{display:grid;grid-template-columns:2fr repeat(4,1fr) auto auto;gap:8px;margin-bottom:18px;padding:12px;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow)}.filters input,.filters select{width:100%;min-width:0}.clear{border:1px solid var(--line);background:#fff;border-radius:8px;color:var(--muted)}.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:18px}.kpis.exec6{grid-template-columns:repeat(6,1fr)}.kpi{background:var(--card);border:1px solid #e3e8f0;border-radius:13px;padding:18px;box-shadow:var(--shadow);position:relative;overflow:hidden;min-height:124px}.kpi:before{content:"";position:absolute;inset:0 auto 0 0;width:4px;background:#1b1b1b}.kpi.green:before{background:var(--green)}.kpi.red:before{background:var(--red)}.kpi.amber:before{background:var(--amber)}.kpi.cyan:before{background:#777}.kpi:after{content:"";position:absolute;right:-25px;bottom:-38px;width:90px;height:90px;border:1px solid rgba(0,0,0,.055);border-radius:50%}.kpi label{color:var(--muted);text-transform:uppercase;letter-spacing:.1em;font-size:8px;font-weight:800}.kpi strong{display:block;font-size:22px;margin:14px 0 8px;white-space:nowrap;letter-spacing:-.045em}.kpi small{color:var(--muted);font-size:8.5px}.grid2{display:grid;grid-template-columns:1.5fr 1fr;gap:14px}.execHero{display:grid;grid-template-columns:1.6fr .8fr;gap:14px;margin-bottom:18px}.execHeroMain{background:linear-gradient(135deg,#14213d,#244a73);color:#fff;border-radius:15px;padding:26px 28px;box-shadow:0 18px 46px rgba(0,0,0,.16)}.execHeroMain .eyebrow{font-size:8px;letter-spacing:.16em;color:#bdbdbd;font-weight:800}.execHeroMain h2{font-size:25px;letter-spacing:-.045em;margin:7px 0 8px}.execHeroMain p{margin:0;color:#d3d3d3;font-size:10px;line-height:1.7}.execHeroMain .heroMeta{display:flex;gap:18px;flex-wrap:wrap;margin-top:18px;padding-top:15px;border-top:1px solid rgba(255,255,255,.12);font-size:9px;color:#bbb}.execHeroSide{display:grid;gap:10px}.execSignal{background:linear-gradient(180deg,#ffffff,#f5f8fc);border:1px solid #d9e3ef;border-left:4px solid #2f6fa7;border-radius:13px;padding:17px 18px;box-shadow:var(--shadow)}.execSignal small{display:block;color:var(--muted);font-size:8px;text-transform:uppercase;letter-spacing:.08em;font-weight:800}.execSignal b{display:block;font-size:17px;margin-top:8px}.execSignal p{margin:5px 0 0;color:var(--muted);font-size:9px;line-height:1.55}.execMiniTable table{min-width:680px}.card{background:var(--card);border:1px solid #e2e8f0;border-radius:13px;box-shadow:var(--shadow);margin-bottom:16px;min-width:0;overflow:hidden}.cardHead{padding:17px 19px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;background:linear-gradient(180deg,#fff,#fbfbfa)}.cardHead h2{font-size:12px;margin:0;font-weight:800}.cardHead small{color:var(--muted);font-size:8px}.chartBox{height:310px;padding:18px}.tableWrap{overflow:auto;max-height:520px;scrollbar-color:#b7c3d5 #f4f6f9;scrollbar-width:thin}.tableWrap.tall{max-height:640px}table{width:100%;border-collapse:collapse;min-width:920px;font-size:10px}th{position:sticky;top:0;z-index:2;background:#f6f8fb;color:var(--muted);font-size:7.5px;text-transform:uppercase;letter-spacing:.06em;text-align:left}th,td{padding:11px 12px;border-bottom:1px solid var(--line);vertical-align:top}tbody tr:nth-child(even) td{background:#fbfcfe}tr:hover td{background:#f1f6fd!important}.num{text-align:right;font-variant-numeric:tabular-nums}.positive{color:var(--red);font-weight:800}.negative{color:var(--green);font-weight:800}.tag{display:inline-block;border-radius:20px;padding:4px 8px;background:#ededeb;color:#222;font-size:7.5px;font-weight:800}.tag.red{background:#fff0f0;color:var(--red)}.tag.green{background:#eaf8f3;color:var(--green)}.tag.gray{background:#edf0f4;color:#657085}.click{color:#111;text-decoration:underline;text-decoration-color:#aaa;text-underline-offset:3px;font-weight:750;cursor:pointer}.empty{padding:45px;text-align:center;color:var(--muted)}.empty b{display:block;color:var(--ink);font-size:15px;margin-bottom:7px}.footer{text-align:center;color:var(--muted);font-size:9px;padding:18px 10px 10px}.modal{position:fixed;inset:0;background:#071126b8;display:none;place-items:center;padding:20px;z-index:30}.modal.open{display:grid}.dialog{background:white;border-radius:15px;width:min(1050px,96vw);max-height:88vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 28px 90px rgba(5,15,35,.32)}.dialog.small{width:min(430px,96vw);padding:24px}.dialogHead{display:flex;justify-content:space-between;align-items:center;padding:17px 19px;border-bottom:1px solid var(--line)}.dialogHead h2{font-size:15px;margin:0}.dialog .tableWrap{max-height:68vh}.dialog.small input{width:100%;margin:5px 0}.dialogActions{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}.notice{position:fixed;right:20px;bottom:20px;background:#111;color:#fff;padding:13px 16px;border-radius:10px;z-index:40;box-shadow:0 10px 30px #0003;border-left:4px solid #888;font-size:10px}.status{font-size:9px;color:var(--muted)}.mobileMenu{display:none}.sectionIntro{display:flex;justify-content:space-between;align-items:end;margin-bottom:14px;padding:4px 2px 2px}.sectionIntro h2{font-size:21px;margin:0;font-weight:800;letter-spacing:-.04em}.sectionIntro p{margin:4px 0 0;color:var(--muted);font-size:10px}.ruleGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.rule{padding:17px}.rule b{display:block;margin-bottom:7px}.rule p{color:var(--muted);line-height:1.6;margin:0}.progress{height:7px;background:#edf1f6;border-radius:10px;overflow:hidden;margin-top:8px}.progress i{display:block;height:100%;background:linear-gradient(90deg,#111,#666)}.danger{color:var(--red);border-color:#efcaca;background:#fff9f9}.multi{position:relative}.multi>button{width:100%;min-height:36px;border:1px solid #dbe2ec;background:#fff;border-radius:8px;padding:9px 11px;text-align:left;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:9px}.multi>button:after{content:'⌄';float:right;color:var(--muted)}.multiBox{display:none;position:absolute;top:calc(100% + 5px);left:0;min-width:230px;max-width:340px;max-height:280px;overflow:auto;background:#fff;border:1px solid var(--line);border-radius:11px;box-shadow:0 18px 48px rgba(13,28,54,.17);padding:7px;z-index:20}.multi.open .multiBox{display:block}.multiBox label{display:flex;gap:8px;align-items:flex-start;padding:7px;border-radius:6px;cursor:pointer;font-size:10px}.multiBox label:hover{background:#f3f7fd}.multiBox input{width:auto;margin:1px 0}.reportHero{background:radial-gradient(circle at 88% 0,rgba(255,255,255,.13),transparent 34%),linear-gradient(135deg,#111,#292929);color:#fff;border-radius:15px;padding:29px 30px;margin-bottom:14px;box-shadow:0 20px 50px rgba(0,0,0,.2)}.reportHero .eyebrow{color:#d5d5d5;font-size:9px;letter-spacing:.12em;font-weight:800}.reportHero h2{font-size:25px;margin:7px 0;letter-spacing:-.045em}.reportHero p{color:#c1cce0;line-height:1.7;max-width:1080px;margin:0;font-size:10px}.reportGrid{display:grid;grid-template-columns:1.25fr 1fr;gap:14px}.analysisBlock{padding:21px}.analysisBlock h3{font-size:13px;margin:0 0 12px}.analysisBlock p,.analysisBlock li{color:#56647b;font-size:10px;line-height:1.8}.analysisBlock ul{padding-left:18px;margin-bottom:0}.insight{border-left:3px solid var(--blue);padding:12px 14px;background:#f6f9fe;border-radius:0 9px 9px 0;margin:8px 0}.insight.warn{border-color:var(--amber);background:#fffbf2}.insight.risk{border-color:var(--red);background:#fff7f7}.reportStamp{font-size:9px;color:#9eacc4;margin-top:13px}.ranking{display:grid;gap:10px}.rankRow{display:grid;grid-template-columns:1fr auto;gap:9px;align-items:center}.rankRow small{color:var(--muted)}.monthPicker{position:relative;min-width:190px}.monthPicker>button{width:100%;min-height:38px;border:1px solid var(--line);background:#fff;border-radius:9px;padding:9px 11px;text-align:left;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.monthPicker>button:after{content:'⌄';float:right;color:var(--muted)}.monthPickerBox{display:none;position:absolute;right:0;top:calc(100% + 5px);min-width:260px;max-height:320px;overflow:auto;background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 18px 48px rgba(13,28,54,.17);padding:8px;z-index:25}.monthPicker.open .monthPickerBox{display:block}.monthPickerBox label{display:flex;gap:8px;align-items:center;padding:8px;border-radius:7px;cursor:pointer;font-size:10px}.monthPickerBox label:hover{background:#f3f7fd}.monthPickerBox input{width:auto;min-height:auto}.monthPickerHelp{padding:6px 8px 9px;color:var(--muted);font-size:8px;line-height:1.5;border-bottom:1px solid var(--line);margin-bottom:4px}.varianceLead{display:grid;grid-template-columns:1.35fr 1fr;gap:14px}.varianceFormula{padding:18px}.varianceFormula code{display:inline-block;margin-top:8px;padding:8px 10px;border-radius:8px;background:#eef3fb;color:var(--navy);font:700 10px Manrope,Arial,sans-serif}.varianceFormula p{color:var(--muted);line-height:1.7;margin:0}.varianceTable .tag{white-space:nowrap}#detailBody{min-height:0;overflow:auto}.drillBody{padding:16px}.drillKpis{grid-template-columns:repeat(4,minmax(0,1fr))}.drillToolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}.drillToolbar p{margin:0;color:var(--muted);font-size:9px}.dialog .drillBody .tableWrap{max-height:390px}.drillBody table{min-width:820px}.comparisonPrompt{display:flex;align-items:center;justify-content:space-between;gap:18px;margin:0 0 18px;padding:13px 16px;border:1px dashed #aaa;border-radius:11px;background:#fafaf9;color:#666}.comparisonPrompt b{font-size:10px;color:#222}.comparisonPrompt span{font-size:9px}.monthComparison{margin:0 0 24px;padding:20px 20px 4px;border:1px solid #ddd;border-radius:15px;background:linear-gradient(180deg,#fff,#fafaf9);box-shadow:0 12px 32px rgba(0,0,0,.055)}.comparisonTable{max-height:480px}.comparisonTable table{min-width:1050px}.detailMonthComparison{margin-bottom:18px;padding:17px 17px 3px;border:1px solid #ddd;border-radius:13px;background:#fafaf9}.rowActions{display:flex;flex-wrap:wrap;gap:5px;min-width:120px}.rowActions .control{min-height:29px;padding:5px 8px;font-size:8px;white-space:nowrap}.manualEditor{padding:20px;display:grid;gap:14px;overflow:auto}.manualSummary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:14px;background:#f6f9fe;border:1px solid #dfe8f5;border-radius:10px}.manualEditor label{display:grid;gap:6px;color:var(--muted);font-size:9px;font-weight:700}.manualEditor input,.manualEditor select{width:100%}.manualHelp{padding:10px 12px;background:#fffbf2;border-left:3px solid var(--amber);border-radius:0 8px 8px 0;color:#6d624e;font-size:9px;line-height:1.6}.manualEditorGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 @media(max-width:1100px){.shell{grid-template-columns:78px 1fr}.brand div:last-child,.nav .text,.sideFoot{display:none}.nav button{justify-content:center}.kpis{grid-template-columns:repeat(3,1fr)}.filters{grid-template-columns:2fr repeat(2,1fr)}.grid2{grid-template-columns:1fr}}
 @media(max-width:900px){.reportGrid,.varianceLead,.execHero{grid-template-columns:1fr}.kpis.exec6{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:720px){.shell{display:block}.side{position:fixed;left:-250px;width:246px;transition:.2s}.side.open{left:0}.brand div:last-child,.nav .text,.sideFoot{display:block}.nav button{justify-content:flex-start}.mobileMenu{display:block}.topbar{height:auto;min-height:72px;padding:11px 14px}.topbar h1:after{display:none}.rightbar{flex-wrap:wrap;justify-content:flex-end}.rightbar .status{display:none}.content{padding:17px 13px 42px}.adminStrip,.kpis{grid-template-columns:1fr 1fr}.filters{grid-template-columns:1fr 1fr;padding:9px}.filters input{grid-column:1/-1}.upload{display:block}.upload button{margin-top:10px;width:100%}.kpi{min-height:108px}.kpi strong{font-size:18px}.reportHero{padding:22px}.reportHero h2{font-size:20px}.drillBody{padding:12px}.drillKpis{grid-template-columns:1fr 1fr}.drillToolbar,.comparisonPrompt{align-items:flex-start;flex-direction:column}.manualSummary,.manualEditorGrid{grid-template-columns:1fr}}
@@ -19,14 +19,14 @@
 
 .execBoard{display:grid;gap:16px}
 .execHeader{display:grid;grid-template-columns:1.5fr .7fr;gap:14px}
-.execHeaderMain{background:linear-gradient(135deg,#0e0e0e,#2a2a2a);color:#fff;border-radius:15px;padding:28px 30px;box-shadow:0 20px 48px rgba(0,0,0,.18)}
+.execHeaderMain{background:linear-gradient(135deg,#14213d,#244a73);color:#fff;border-radius:15px;padding:28px 30px;box-shadow:0 20px 48px rgba(0,0,0,.18)}
 .execHeaderMain .eyebrow{font-size:8px;letter-spacing:.18em;color:#bbb;font-weight:800}
 .execHeaderMain h2{font-size:27px;letter-spacing:-.05em;margin:8px 0 9px}
 .execHeaderMain p{font-size:10px;color:#d0d0d0;line-height:1.7;margin:0;max-width:820px}
 .execHeaderMain .meta{display:flex;gap:20px;flex-wrap:wrap;margin-top:18px;padding-top:15px;border-top:1px solid rgba(255,255,255,.13);font-size:9px;color:#bbb}
 .execHeaderMain .meta b{color:#fff}
 .execDecision{display:grid;gap:10px}
-.execDecisionCard{background:#fff;border:1px solid var(--line);border-radius:13px;padding:16px 18px;box-shadow:var(--shadow);cursor:pointer;transition:.16s}
+.execDecisionCard{background:linear-gradient(180deg,#fff,#f6f9fc);border:1px solid #d9e3ef;border-top:3px solid #2f6fa7;border-radius:13px;padding:16px 18px;box-shadow:var(--shadow);cursor:pointer;transition:.16s}
 .execDecisionCard:hover{transform:translateY(-2px);box-shadow:0 16px 36px rgba(0,0,0,.11)}
 .execDecisionCard small{display:block;font-size:7.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:800}
 .execDecisionCard b{display:block;font-size:16px;margin:7px 0 4px}
@@ -35,7 +35,7 @@
 .boardTitle h3{margin:0;font-size:13px;letter-spacing:-.02em}
 .boardTitle span{font-size:8px;color:var(--muted)}
 .actionGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.actionCard{background:#fff;border:1px solid var(--line);border-radius:13px;padding:17px;box-shadow:var(--shadow);cursor:pointer;transition:.16s}
+.actionCard{background:linear-gradient(180deg,#fff,#f8fafc);border:1px solid #dce5ee;border-top:3px solid #2f6fa7;border-radius:13px;padding:17px;box-shadow:var(--shadow);cursor:pointer;transition:.16s}
 .actionCard:hover{transform:translateY(-2px);box-shadow:0 15px 34px rgba(0,0,0,.1)}
 .actionCard .n{font-size:8px;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.08em}
 .actionCard strong{display:block;font-size:19px;margin:9px 0 5px}
@@ -58,6 +58,299 @@
 
 .systemEditor{padding:18px;overflow:auto}.systemEditorGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.systemEditor label{display:grid;gap:6px;color:var(--muted);font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.055em}.systemEditor input,.systemEditor select,.systemEditor textarea{width:100%;border:1px solid #dbe2ec;border-radius:9px;padding:9px 11px;background:#fff;color:var(--ink);font:10px Manrope,Arial,sans-serif}.systemEditor textarea{min-height:78px;resize:vertical}.systemEditor select[multiple]{min-height:190px;text-transform:none;letter-spacing:0}.systemEditor .full{grid-column:1/-1}.systemHint{padding:11px 13px;border-left:3px solid #111;background:#f5f5f4;border-radius:0 8px 8px 0;font-size:9px;line-height:1.65;color:#555;margin-bottom:14px}.systemActions{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;margin-top:16px}.systemActions .left{margin-right:auto}.catalogGrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.catalogBox{border:1px solid var(--line);border-radius:11px;overflow:hidden}.catalogBox h3{font-size:10px;margin:0;padding:12px 14px;border-bottom:1px solid var(--line);background:#fafafa}.catalogList{max-height:320px;overflow:auto}.catalogItem{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 12px;border-bottom:1px solid #eee;font-size:9px}.catalogItem:last-child{border-bottom:0}.catalogCreate{display:flex;gap:7px;padding:12px;border-top:1px solid var(--line);background:#fafafa}.catalogCreate input{flex:1}.linkSummary{padding:10px 12px;border-radius:9px;background:#f7f8fa;border:1px solid var(--line);font-size:9px;color:#555;line-height:1.6}.linkSummary b{color:#111}.miniBtn{min-height:28px!important;padding:5px 8px!important;font-size:8px!important}.clickableKpi{cursor:pointer;transition:.16s}.clickableKpi:hover{transform:translateY(-2px);box-shadow:0 16px 34px rgba(0,0,0,.11)}
 @media(max-width:1200px){.adminStrip{grid-template-columns:1fr 1fr}}@media(max-width:720px){.systemEditorGrid,.catalogGrid{grid-template-columns:1fr}.systemEditor .full{grid-column:auto}}
+
+
+/* Executive corporate palette */
+.execHero,.execBoard{--exec-navy:#14213d;--exec-blue:#2f6fa7;--exec-blue-soft:#eaf2f9;--exec-green:#2f7d62;--exec-green-soft:#e9f5ef;--exec-amber:#b7791f;--exec-amber-soft:#fff5df;--exec-red:#a54848;--exec-red-soft:#fbecec}
+.execBoard .kpi,.execHero~.kpis .kpi{border:1px solid #dce5ee;background:linear-gradient(180deg,#fff,#f8fafc);position:relative;overflow:hidden}
+.execBoard .kpi:before,.execHero~.kpis .kpi:before{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:#2f6fa7}
+.execBoard .kpi.green:before,.execHero~.kpis .kpi.green:before{background:#2f7d62}
+.execBoard .kpi.amber:before,.execHero~.kpis .kpi.amber:before{background:#b7791f}
+.execBoard .kpi.red:before,.execHero~.kpis .kpi.red:before{background:#a54848}
+.execBoard .kpi.cyan:before,.execHero~.kpis .kpi.cyan:before{background:#397f9f}
+.execBoard .card,.execHero~.grid2 .card{border-color:#dce5ee}
+.execBoard .cardHead,.execHero~.grid2 .cardHead{background:linear-gradient(180deg,#fbfdff,#f2f6fa)}
+.execBoard thead th,.execHero~* thead th{background:#edf3f8;color:#294760}
+.execBoard tbody tr:hover td,.execHero~* tbody tr:hover td{background:#f1f6fa!important}
+.execHeaderMain .eyebrow,.execHeroMain .eyebrow{color:#bcd0e4}
+.execHeaderMain .meta,.execHeroMain .heroMeta{border-top-color:rgba(255,255,255,.18);color:#d6e1ec}
+.execHeaderMain .meta b,.execHeroMain .heroMeta b{color:#fff}
+.execDecisionCard:nth-child(2),.actionCard:nth-child(2){border-top-color:#b7791f}
+.execDecisionCard:nth-child(3),.actionCard:nth-child(3){border-top-color:#2f7d62}
+.execDecisionCard:nth-child(2) b,.actionCard:nth-child(2) strong{color:#8c5b18}
+.execDecisionCard:nth-child(3) b,.actionCard:nth-child(3) strong{color:#25664f}
+.execSignal b{color:#183b5b}
+.boardTitle h3,.execSectionTitle h3{color:#173958}
+
+
+/* ============================================================
+   BANK-GRADE EXECUTIVE EXPERIENCE
+   ============================================================ */
+.bankExecutive{
+  --bank-navy:#0f2742;
+  --bank-blue:#1f5f8b;
+  --bank-blue-2:#2c79a8;
+  --bank-slate:#52677b;
+  --bank-green:#1f7a5a;
+  --bank-green-soft:#e8f4ef;
+  --bank-amber:#a86f19;
+  --bank-amber-soft:#fff4df;
+  --bank-red:#a54444;
+  --bank-red-soft:#fbecec;
+  --bank-line:#d8e1e9;
+  --bank-bg:#f3f6f9;
+}
+.bankExecutive .bankTop{
+  display:grid;
+  grid-template-columns:1.45fr .55fr;
+  gap:16px;
+  margin-bottom:16px;
+}
+.bankExecutive .bankTopMain{
+  background:linear-gradient(135deg,#0f2742 0%,#163c61 55%,#1f5f8b 100%);
+  color:#fff;
+  border-radius:18px;
+  padding:30px 32px;
+  box-shadow:0 20px 48px rgba(15,39,66,.22);
+  position:relative;
+  overflow:hidden;
+}
+.bankExecutive .bankTopMain:after{
+  content:"";
+  position:absolute;
+  width:220px;height:220px;border-radius:50%;
+  right:-70px;top:-80px;
+  background:rgba(255,255,255,.06);
+}
+.bankExecutive .bankEyebrow{
+  font-size:8px;
+  font-weight:800;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:#bcd2e3;
+}
+.bankExecutive .bankTopMain h2{
+  margin:8px 0 10px;
+  font-size:28px;
+  letter-spacing:-.045em;
+}
+.bankExecutive .bankTopMain p{
+  margin:0;
+  max-width:900px;
+  color:#dbe7f0;
+  line-height:1.7;
+  font-size:10px;
+}
+.bankExecutive .bankTopMeta{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+  margin-top:22px;
+  padding-top:18px;
+  border-top:1px solid rgba(255,255,255,.18);
+}
+.bankExecutive .bankTopMeta div small{
+  display:block;
+  color:#abc2d4;
+  font-size:7.5px;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+}
+.bankExecutive .bankTopMeta div b{
+  display:block;
+  margin-top:4px;
+  color:#fff;
+  font-size:12px;
+}
+.bankExecutive .bankStatusStack{display:grid;gap:10px}
+.bankExecutive .bankStatus{
+  background:#fff;
+  border:1px solid var(--bank-line);
+  border-left:4px solid var(--bank-blue);
+  border-radius:13px;
+  padding:16px 18px;
+  box-shadow:0 10px 26px rgba(15,39,66,.07);
+  cursor:pointer;
+  transition:.16s;
+}
+.bankExecutive .bankStatus:hover{transform:translateY(-2px)}
+.bankExecutive .bankStatus.warn{border-left-color:var(--bank-amber)}
+.bankExecutive .bankStatus.risk{border-left-color:var(--bank-red)}
+.bankExecutive .bankStatus.good{border-left-color:var(--bank-green)}
+.bankExecutive .bankStatus small{
+  display:block;
+  color:#708396;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  font-size:7.5px;font-weight:800
+}
+.bankExecutive .bankStatus b{
+  display:block;
+  margin-top:7px;
+  font-size:15px;
+  color:#17334f;
+}
+.bankExecutive .bankStatus p{
+  margin:4px 0 0;
+  color:#718292;
+  font-size:8.5px;
+  line-height:1.55;
+}
+.bankKpiGrid{
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+  gap:12px;
+  margin-bottom:16px;
+}
+.bankKpi{
+  background:#fff;
+  border:1px solid var(--bank-line);
+  border-radius:14px;
+  padding:15px 16px 14px;
+  box-shadow:0 9px 24px rgba(15,39,66,.055);
+  position:relative;
+  overflow:hidden;
+  cursor:pointer;
+}
+.bankKpi:before{
+  content:"";
+  position:absolute;left:0;right:0;top:0;height:3px;
+  background:var(--bank-blue);
+}
+.bankKpi.good:before{background:var(--bank-green)}
+.bankKpi.warn:before{background:var(--bank-amber)}
+.bankKpi.risk:before{background:var(--bank-red)}
+.bankKpi small{
+  display:block;font-size:7.4px;
+  color:#718292;text-transform:uppercase;letter-spacing:.075em;font-weight:800
+}
+.bankKpi strong{
+  display:block;margin-top:8px;
+  color:#132f49;font-size:19px;letter-spacing:-.03em
+}
+.bankKpi span{
+  display:block;margin-top:4px;
+  color:#718292;font-size:8px;line-height:1.45
+}
+.bankSectionHead{
+  display:flex;justify-content:space-between;align-items:flex-end;
+  margin:4px 1px 10px;
+}
+.bankSectionHead h3{margin:0;color:#17334f;font-size:13px}
+.bankSectionHead span{font-size:8px;color:#7b8b98}
+.bankDecisionGrid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;margin-bottom:16px
+}
+.bankDecision{
+  background:#fff;
+  border:1px solid var(--bank-line);
+  border-radius:13px;
+  padding:16px;
+  box-shadow:0 9px 24px rgba(15,39,66,.05);
+  cursor:pointer;
+}
+.bankDecision .rank{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-width:24px;height:24px;padding:0 7px;
+  border-radius:7px;background:#eaf1f7;color:#1d5078;
+  font-size:8px;font-weight:800
+}
+.bankDecision h4{
+  font-size:10px;margin:10px 0 5px;color:#17334f
+}
+.bankDecision strong{
+  display:block;font-size:17px;color:#17334f
+}
+.bankDecision p{
+  margin:5px 0 0;color:#748493;font-size:8.4px;line-height:1.5
+}
+.bankPanelGrid{display:grid;grid-template-columns:1.25fr .75fr;gap:14px;margin-bottom:14px}
+.bankPanelGrid.equal{grid-template-columns:1fr 1fr}
+.bankExecutive .card{
+  border:1px solid var(--bank-line);
+  box-shadow:0 10px 28px rgba(15,39,66,.055)
+}
+.bankExecutive .cardHead{
+  background:#f7f9fb;
+  border-bottom:1px solid #e2e8ee
+}
+.bankExecutive .cardHead h3{color:#17334f}
+.bankExecutive thead th{
+  background:#edf3f7!important;
+  color:#36556f!important;
+  font-size:7.4px;
+}
+.bankExecutive tbody td{font-size:8.5px}
+.bankExecutive tbody tr{cursor:pointer}
+.bankExecutive tbody tr:hover td{background:#f0f5f9!important}
+.bankInsight{
+  border:1px solid var(--bank-line);
+  border-radius:12px;
+  overflow:hidden;
+  background:#fff
+}
+.bankInsightRow{
+  display:grid;
+  grid-template-columns:110px 1fr;
+  gap:12px;
+  padding:13px 14px;
+  border-bottom:1px solid #e8edf2;
+}
+.bankInsightRow:last-child{border-bottom:0}
+.bankInsightRow b{
+  color:#244963;font-size:8px;text-transform:uppercase;letter-spacing:.06em
+}
+.bankInsightRow span{
+  color:#5f7282;font-size:9px;line-height:1.55
+}
+.bankBadge{
+  display:inline-flex;align-items:center;
+  padding:4px 7px;border-radius:999px;
+  font-size:7px;font-weight:800;
+  background:#eaf1f7;color:#235679
+}
+.bankBadge.good{background:var(--bank-green-soft);color:var(--bank-green)}
+.bankBadge.warn{background:var(--bank-amber-soft);color:var(--bank-amber)}
+.bankBadge.risk{background:var(--bank-red-soft);color:var(--bank-red)}
+.bankReportCover{
+  background:linear-gradient(135deg,#0f2742,#1f5f8b);
+  color:#fff;border-radius:17px;padding:30px 32px;
+  margin-bottom:16px;box-shadow:0 18px 42px rgba(15,39,66,.2)
+}
+.bankReportCover .eyebrow{font-size:8px;color:#bcd2e3;letter-spacing:.18em;font-weight:800;text-transform:uppercase}
+.bankReportCover h2{font-size:27px;letter-spacing:-.04em;margin:8px 0 8px}
+.bankReportCover p{margin:0;color:#d9e7f0;font-size:9.5px;line-height:1.65}
+.bankReportCover .stamp{margin-top:16px;font-size:8px;color:#afc6d7}
+.bankReportGrid{display:grid;grid-template-columns:1.2fr .8fr;gap:14px;margin-bottom:14px}
+.bankMemo{
+  padding:15px 16px;border:1px solid var(--bank-line);
+  border-radius:12px;background:#fff;color:#52677b;
+  font-size:9px;line-height:1.7
+}
+.bankMemo p{margin:0 0 8px}.bankMemo p:last-child{margin-bottom:0}
+.bankMemo b{color:#17334f}
+.bankRiskMatrix{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.bankRiskItem{
+  border:1px solid var(--bank-line);border-radius:11px;padding:13px;background:#fff
+}
+.bankRiskItem small{
+  display:block;text-transform:uppercase;letter-spacing:.07em;
+  color:#748493;font-size:7px;font-weight:800
+}
+.bankRiskItem b{display:block;margin-top:6px;color:#17334f;font-size:13px}
+.bankRiskItem p{margin:4px 0 0;color:#748493;font-size:8px;line-height:1.45}
+@media(max-width:1100px){
+  .bankKpiGrid{grid-template-columns:repeat(3,1fr)}
+  .bankDecisionGrid{grid-template-columns:1fr 1fr}
+  .bankTop{grid-template-columns:1fr}
+  .bankPanelGrid,.bankPanelGrid.equal,.bankReportGrid{grid-template-columns:1fr}
+}
+@media(max-width:650px){
+  .bankKpiGrid,.bankDecisionGrid{grid-template-columns:1fr 1fr}
+  .bankTopMeta{grid-template-columns:1fr 1fr}
+}
 
 </style>
 </head>
@@ -234,9 +527,35 @@ const excluded=r=>r.statusOverride?r.statusOverride==='excluded':text(r).include
 const uber=r=>/\bUBER\b/.test(text(r));
 function salaryAdvanceLike(r){
   const t=text(r);
-  const yes=/\b(ADIANTAMENTO|ADIANT|ADTO|VALE SALARIO|ANTECIPACAO SALARIAL)\b/.test(t);
-  const no=/\b(LUCRO|LUCROS|FORNECEDOR|FORNECEDORES|VIAGEM|VIAGENS|COMPRA|COMPRAS)\b/.test(t);
-  return yes&&!no;
+
+  // Não misturar 13º salário, bônus de prestador, lucro ou adiantamentos operacionais
+  const excludedAdvance=
+    /\b(13|13O|DECIMO TERCEIRO)\b.*\bSALARIO\b/.test(t) ||
+    /\bADIANTAMENT(?:O|OS)\b.*\bBONUS\b/.test(t) ||
+    /\b(LUCRO|LUCROS|FORNECEDOR|FORNECEDORES|VIAGEM|VIAGENS|COMPRA|COMPRAS)\b/.test(t);
+
+  if(excludedAdvance)return false;
+
+  // Abrange singular e plural:
+  // "ADIANTAMENTO SALARIAL"
+  // "ADIANTAMENTOS SALARIAIS"
+  // "PREVISÃO - FOPAG XX/XX - Adiantamentos Salariais Colaboradores"
+  return (
+    /\bADIANTAMENT(?:O|OS)\b.*\bSALARIA(?:L|IS)\b/.test(t) ||
+    /\bADIANT\b.*\bSALARI/.test(t) ||
+    /\bADTO\b.*\bSALARI/.test(t) ||
+    /\bVALE SALARIO\b/.test(t) ||
+    /\bANTECIPACAO SALARIAL\b/.test(t) ||
+    (/\bFOPAG\b/.test(t) && /\bADIANTAMENT/.test(t) && /\bSALARI/.test(t))
+  );
+}
+
+function salaryAdvanceForecast(r){
+  return r.source==='previsto' && salaryAdvanceLike(r);
+}
+
+function salaryAdvanceActualPayment(r){
+  return r.source==='realizado' && salaryAdvanceLike(r);
 }
 
 
@@ -284,8 +603,8 @@ function naPraiaBucket(r){
   const t=text(r);
   if(!naPraia(r))return'';
   if(/\bFACCAO\b/.test(t)||/\bCOSTURA\b/.test(t)||/\bCONFECCAO\b/.test(t))return'faccao';
+  if(/\bADIANTAMENT/.test(t))return'adiantamento';
   if(/\bSALARIO\b/.test(t)||/\bFOLHA\b/.test(t)||/\bFOPAG\b/.test(t)||/\bCOMISSAO\b/.test(t)||/\bBONIFICACAO\b/.test(t))return'salario';
-  if(/\bADIANTAMENTO\b/.test(t))return'adiantamento';
   if(/\bFERIAS\b/.test(t))return'ferias';
   if(/\bALUGUEL\b/.test(t)||/\bLOCACAO\b/.test(t))return'locacao';
   if(/\bTRANSPORTE\b/.test(t)||/\bFRETE\b/.test(t)||/\bLOGISTICA\b/.test(t))return'logistica';
@@ -439,17 +758,10 @@ function analyze(){
   const used=new Set,links=[];
   const naPraiaPlans=forecast.filter(naPraia);
 
-  const salaryAdvanceActualSeed=actual.filter(r=>salaryAdvance(r)&&!naPraia(r));
-  const salaryAdvancePlans=forecast.filter(r=>{
-    if(naPraia(r))return false;
-    if(salaryAdvance(r))return true;
-    return salaryAdvanceActualSeed.some(a=>{
-      const sameMonth=!rowMonth(a)||!rowMonth(r)||rowMonth(a)===rowMonth(r);
-      const sameName=sameMeaningfulName(a,r);
-      const amountClose=Math.abs((Number(a.amount)||0)-(Number(r.amount)||0))<=1000;
-      return sameMonth&&sameName&&amountClose;
-    });
-  });
+  // Adiantamento salarial é um orçamento agrupador:
+  // uma única previsão mensal pode receber vários pagamentos de colaboradores.
+  const salaryAdvanceActualSeed=actual.filter(r=>salaryAdvanceActualPayment(r)&&!naPraia(r));
+  const salaryAdvancePlans=forecast.filter(r=>salaryAdvanceForecast(r)&&!naPraia(r));
 
   const vacationPlans=forecast.filter(r=>vacationPayment(r)&&!naPraia(r));
   const servicePlans=forecast.filter(r=>forecastService(r)&&!naPraia(r));
@@ -473,10 +785,25 @@ function analyze(){
       f=bestPlanForActual(a,compatiblePlans.filter(p=>!used.has(rowLocator(p))))||bestPlanForActual(a,compatiblePlans);
       reason=f?'Na Praia · '+bucket+' conciliado com previsão equivalente':'Na Praia sem previsão compatível no mesmo grupo';
     }
-    else if(salaryAdvance(a)){
-      const samePersonPlans=salaryAdvancePlans.filter(p=>(!rowMonth(a)||!rowMonth(p)||rowMonth(a)===rowMonth(p))&&sameMeaningfulName(a,p));
-      f=bestPlanForActual(a,samePersonPlans.length?samePersonPlans:salaryAdvancePlans);
-      reason=f?'Adiantamento salarial conciliado com previsão existente':'Adiantamento salarial sem previsão compatível';
+    else if(salaryAdvanceActualPayment(a)){
+      const sameMonthPlans=salaryAdvancePlans.filter(p=>
+        !rowMonth(a)||!rowMonth(p)||rowMonth(a)===rowMonth(p)
+      );
+
+      // Previsões com texto de orçamento agrupador têm prioridade.
+      const groupedPlans=sameMonthPlans.filter(p=>{
+        const t=text(p);
+        return /FOPAG/.test(t) &&
+               /ADIANTAMENT/.test(t) &&
+               /SALARI/.test(t);
+      });
+
+      const pool=groupedPlans.length?groupedPlans:sameMonthPlans;
+      f=bestPlanForActual(a,pool);
+
+      reason=f
+        ?'Adiantamento salarial vinculado à previsão mensal agrupadora'
+        :'Adiantamento salarial sem previsão compatível';
     }
     else if(vacationPayment(a)&&(f=bestPlanForActual(a,vacationPlans))){reason='Férias'}
     else if(actualFopag(a)&&(f=bestPlanForActual(a,fopagPlans))){a.reconciledGroup='fopag';reason='Grupo FOPAG: folha, salários, comissões e bonificações'}
@@ -507,7 +834,7 @@ function analyze(){
         pending=forecast.filter(f=>!used.has(rowLocator(f))&&!forecastFopag(f)&&!forecastService(f)&&!salaryAdvancePlans.some(x=>rowLocator(x)===rowLocator(f))&&!vacationPayment(f)),
         naPraiaActual=actual.filter(naPraia),
         fopagActual=actual.filter(r=>actualFopag(r)&&!naPraia(r)),
-        salaryAdvanceActual=actual.filter(r=>salaryAdvanceLike(r)&&!naPraia(r)),
+        salaryAdvanceActual=actual.filter(r=>salaryAdvanceActualPayment(r)&&!naPraia(r)),
         vacationActual=actual.filter(r=>vacationPayment(r)&&!naPraia(r)),
         serviceActual=actual.filter(r=>actualService(r)&&!naPraia(r)),
         profitAdvanceActual=actual.filter(r=>paymentTypeOf(r)==='profitAdvance'&&!naPraia(r)),
@@ -586,9 +913,22 @@ function fopagSummaryHTML(a){
         npActual=(a.naPraiaActual||[]).filter(r=>['salario','adiantamento','ferias'].includes(naPraiaBucket(r))),
         rows=[...blocks,{name:'FOPAG Na Praia',plans:npPlans,actual:npActual}],
         planned=sum(rows.flatMap(x=>x.plans),r=>r.amount),
-        realized=sum(rows.flatMap(x=>x.actual),r=>r.amount);
+        realized=sum(rows.flatMap(x=>x.actual),r=>r.amount),
+        advPlan=sum(a.salaryAdvancePlans||[],r=>r.amount),
+        advPaid=sum(a.salaryAdvanceActual||[],r=>r.amount);
 
-  return card('Resumo FOPAG',`<div class="tableWrap mgmtTable"><table><thead><tr><th>Componente</th><th class="num">Previsto</th><th class="num">Realizado</th><th class="num">Diferença</th><th class="num">Execução</th></tr></thead><tbody>${rows.map(b=>{const p=sum(b.plans,r=>r.amount),r=sum(b.actual,x=>x.amount),d=r-p;return`<tr data-fopag-drill="${esc(b.name)}"><td><b>${esc(b.name)}</b><span class="pillAction">abrir</span></td><td class="num">${money(p)}</td><td class="num">${money(r)}</td><td class="num ${d>0?'positive':'negative'}">${money(d)}</td><td class="num">${pct(p?r/p*100:0)}</td></tr>`}).join('')}</tbody></table></div>`,`Total previsto ${money(planned)} · Total realizado ${money(realized)}`);
+  return card('Resumo FOPAG',`
+    <div class="linkSummary" style="margin:0 0 12px">
+      <b>Adiantamentos salariais:</b> a previsão mensal é tratada como orçamento agrupador.
+      Vários pagamentos de colaboradores podem consumir a mesma previsão.
+      Previsto <b>${money(advPlan)}</b> · Pago <b>${money(advPaid)}</b> · Diferença <b>${money(advPaid-advPlan)}</b>.
+    </div>
+    <div class="tableWrap mgmtTable"><table>
+      <thead><tr><th>Componente</th><th class="num">Previsto</th><th class="num">Realizado</th><th class="num">Diferença</th><th class="num">Execução</th></tr></thead>
+      <tbody>${rows.map(b=>{const p=sum(b.plans,r=>r.amount),r=sum(b.actual,x=>x.amount),d=r-p;return`<tr data-fopag-drill="${esc(b.name)}"><td><b>${esc(b.name)}</b><span class="pillAction">abrir</span></td><td class="num">${money(p)}</td><td class="num">${money(r)}</td><td class="num ${d>0?'positive':'negative'}">${money(d)}</td><td class="num">${pct(p?r/p*100:0)}</td></tr>`}).join('')}</tbody>
+    </table></div>`,
+    `Total previsto ${money(planned)} · Total realizado ${money(realized)}`
+  );
 }
 
 function table(rows,{status=true,max=true,actions=true}={}){
@@ -653,17 +993,173 @@ function executiveTopCategories(a,limit=10){
   return [...new Set([...fm.keys(),...am.keys()])].map(name=>{const forecast=sum(fm.get(name)||[],r=>r.amount),actual=sum(am.get(name)||[],r=>r.amount);return{name,forecast,actual,diff:actual-forecast}}).sort((x,y)=>y.actual-x.actual).slice(0,limit)
 }
 function executiveStatus(a){const diff=a.actualTotal-a.forecastTotal,execution=a.forecastTotal?a.actualTotal/a.forecastTotal*100:0,unexpected=sum(a.unexpected||[],r=>r.amount),unexpectedPct=a.actualTotal?unexpected/a.actualTotal*100:0;if(diff>0||execution>105)return{label:'Atenção orçamentária',detail:'Realizado acima do planejado. Priorize as categorias com maior desvio.'};if(unexpectedPct>5)return{label:'Previsibilidade em atenção',detail:'Os pagamentos não previstos estão relevantes dentro do realizado.'};return{label:'Execução controlada',detail:'O realizado está dentro de uma faixa controlada frente ao orçamento.'}}
-function executiveDashboardHTML(a){
-  const wk=weekly(a),diff=a.actualTotal-a.forecastTotal,exec=a.forecastTotal?a.actualTotal/a.forecastTotal*100:0,unexpectedTotal=sum(a.unexpected||[],r=>r.amount),pending=pendingForecastTotal(a),status=executiveStatus(a),cats=executiveTopCategories(a,10),worst=[...cats].sort((x,y)=>y.diff-x.diff)[0],largestUnexpected=[...(a.unexpected||[])].sort((x,y)=>y.amount-x.amount).slice(0,8);
-  return `<section class="execHero"><div class="execHeroMain"><span class="eyebrow">PAINEL EXECUTIVO · DANE-SE FINANCEIRO</span><h2>${esc(selectedMonthText())}</h2><p>Visão gerencial do orçamento e dos pagamentos efetivamente realizados, com foco em desvios, previsibilidade e decisões de fechamento.</p><div class="heroMeta"><span><b>${a.forecast.length}</b> previstos</span><span><b>${a.actual.length}</b> pagos</span><span><b>${a.unexpected.length}</b> não previstos</span></div></div><div class="execHeroSide"><div class="execSignal"><small>Status da competência</small><b>${esc(status.label)}</b><p>${esc(status.detail)}</p></div><div class="execSignal"><small>Maior pressão</small><b>${worst?esc(worst.name):'Sem dados'}</b><p>${worst?`${money(worst.actual)} realizado · desvio ${money(worst.diff)}`:'Sem base suficiente.'}</p></div></div></section><div class="kpis exec6">${kpi('Orçamento previsto',money(a.forecastTotal),'Base aprovada')}${kpi('Total realizado',money(a.actualTotal),'Somente pagamentos efetivos','green')}${kpi('Desvio orçamentário',money(diff),diff>0?'Acima do previsto':'Dentro/abaixo do previsto',diff>0?'red':'green')}${kpi('Execução',pct(exec),'Realizado ÷ previsto','cyan')}${kpi('Não previstos',money(unexpectedTotal),a.unexpected.length+' pagamentos','amber')}${kpi('Previsto pendente',money(pending),'Acompanhar até fechamento','cyan')}</div><div class="grid2">${card('Evolução semanal','<div class="chartBox"><canvas id="execWeekChart"></canvas></div>','Previsto x realizado')}${card('Composição do realizado','<div class="chartBox"><canvas id="execCatChart"></canvas></div>','10 maiores categorias')}</div><div class="grid2">${card('Categorias que mais pressionam o orçamento',`<div class="tableWrap execMiniTable"><table><thead><tr><th>Categoria</th><th class="num">Previsto</th><th class="num">Realizado</th><th class="num">Desvio</th><th class="num">Execução</th></tr></thead><tbody>${cats.map(x=>`<tr><td><b>${esc(x.name)}</b></td><td class="num">${money(x.forecast)}</td><td class="num">${money(x.actual)}</td><td class="num ${x.diff>0?'positive':'negative'}">${money(x.diff)}</td><td class="num">${pct(x.forecast?x.actual/x.forecast*100:0)}</td></tr>`).join('')}</tbody></table></div>`,'Ordenado pelo maior valor realizado')}${card('Maiores pagamentos não previstos',`<div class="tableWrap execMiniTable"><table><thead><tr><th>Data</th><th>Fornecedor</th><th>Descrição</th><th class="num">Valor</th></tr></thead><tbody>${largestUnexpected.map(r=>`<tr><td>${dateText(r.date)}</td><td>${esc(r.party)}</td><td>${esc(r.description)}</td><td class="num"><b>${money(r.amount)}</b></td></tr>`).join('')||'<tr><td colspan="4">Nenhum pagamento não previsto.</td></tr>'}</tbody></table></div>`,'Prioridade de revisão')}</div>${card('Resumo semanal para fechamento',`<div class="tableWrap"><table><thead><tr><th>Semana</th><th class="num">Previsto</th><th class="num">Realizado</th><th class="num">Desvio</th><th class="num">Não previsto</th><th class="num">Execução</th></tr></thead><tbody>${wk.map(x=>`<tr><td>${esc(x.label)}</td><td class="num">${money(x.forecast)}</td><td class="num">${money(x.actual)}</td><td class="num ${x.actual-x.forecast>0?'positive':'negative'}">${money(x.actual-x.forecast)}</td><td class="num">${money(x.unexpected)}</td><td class="num">${pct(x.forecast?x.actual/x.forecast*100:0)}</td></tr>`).join('')}</tbody></table></div>`,'Leitura semanal da competência')}`
+
+function planningAccuracy(a){
+  if(!a.forecastTotal)return 0;
+  const error=Math.abs(a.actualTotal-a.forecastTotal);
+  return Math.max(0,100-(error/a.forecastTotal*100));
 }
-function drawExecutiveCharts(a){if(!window.Chart)return;const wk=weekly(a),cats=executiveTopCategories(a,10),wc=$('#execWeekChart'),cc=$('#execCatChart');if(wc)charts.push(new Chart(wc,{type:'bar',data:{labels:wk.map(x=>'S'+x.week),datasets:[{label:'Previsto',data:wk.map(x=>x.forecast),backgroundColor:'#c7c7c7',borderRadius:5},{label:'Realizado',data:wk.map(x=>x.actual),backgroundColor:'#222',borderRadius:5}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{boxWidth:9,font:{size:9}}}},scales:{x:{grid:{display:false}},y:{grid:{color:'#ededed'},ticks:{callback:v=>'R$ '+Number(v/1000).toLocaleString('pt-BR')+' mil'}}}}}));if(cc)charts.push(new Chart(cc,{type:'doughnut',data:{labels:cats.map(x=>x.name),datasets:[{data:cats.map(x=>x.actual),backgroundColor:['#111','#333','#555','#777','#999','#bbb','#d0d0d0','#444','#666','#888'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'66%',plugins:{legend:{position:'right',labels:{boxWidth:9,font:{size:8}}}}}}))}
+function topSupplierConcentration(a,n=5){
+  const ranking=vendorRanking(a,n);
+  const total=sum(ranking,x=>x.value);
+  return {
+    ranking,
+    value:total,
+    pct:a.actualTotal?total/a.actualTotal*100:0
+  };
+}
+function bankRiskLevel(a){
+  const execution=a.forecastTotal?a.actualTotal/a.forecastTotal*100:0;
+  const unexpected=sum(a.unexpected||[],r=>r.amount);
+  const unexpectedPct=a.actualTotal?unexpected/a.actualTotal*100:0;
+  const accuracy=planningAccuracy(a);
 
+  let score=0;
+  if(execution>105)score+=2;
+  else if(execution>100)score+=1;
+  if(unexpectedPct>8)score+=2;
+  else if(unexpectedPct>4)score+=1;
+  if(accuracy<90)score+=1;
 
-function vendorRanking(a,limit=10){
-  return [...group(a.actual,r=>r.party)].map(([name,rows])=>({
-    name,rows,value:sum(rows,r=>r.amount)
-  })).sort((x,y)=>y.value-x.value).slice(0,limit);
+  if(score>=4)return {label:'Elevado',className:'risk',detail:'Desvio e imprevisibilidade exigem atuação imediata.'};
+  if(score>=2)return {label:'Moderado',className:'warn',detail:'Há pontos relevantes para acompanhamento gerencial.'};
+  return {label:'Controlado',className:'good',detail:'Execução financeira dentro de uma faixa administrável.'};
+}
+function executiveNarrative(a){
+  const diff=a.actualTotal-a.forecastTotal;
+  const exec=a.forecastTotal?a.actualTotal/a.forecastTotal*100:0;
+  const unexpected=sum(a.unexpected||[],r=>r.amount);
+  const unexpectedPct=a.actualTotal?unexpected/a.actualTotal*100:0;
+  const pending=pendingForecastTotal(a);
+  const supplier=topSupplierConcentration(a,5);
+  const cats=executiveTopCategories(a,10);
+  const over=cats.filter(x=>x.diff>0).sort((x,y)=>y.diff-x.diff)[0];
+  return {
+    headline: diff>0
+      ? `Execução acima do orçamento em ${money(diff)}.`
+      : `Execução abaixo do orçamento em ${money(Math.abs(diff))}.`,
+    budget: diff>0
+      ? `O realizado alcançou ${pct(exec)}, exigindo justificativa dos maiores estouros.`
+      : `O consumo do orçamento está em ${pct(exec)}, sem estouro consolidado no recorte.`,
+    unexpected: unexpectedPct>5
+      ? `Pagamentos não previstos representam ${pct(unexpectedPct)} do realizado e reduzem a previsibilidade do caixa.`
+      : `Pagamentos não previstos representam ${pct(unexpectedPct)} do realizado e permanecem em nível administrável.`,
+    pending: `Existem ${money(pending)} previstos ainda sem pagamento conciliado; esse valor não deve ser interpretado como economia até o fechamento.`,
+    concentration: `Os 5 maiores fornecedores concentram ${pct(supplier.pct)} do desembolso realizado.`,
+    pressure: over
+      ? `${over.name} é a maior pressão orçamentária, com desvio de ${money(over.diff)}.`
+      : `Nenhuma categoria apresenta pressão relevante acima do orçamento.`
+  };
+}
+
+function executiveDashboardHTML(a){
+  const wk=weekly(a),
+        diff=a.actualTotal-a.forecastTotal,
+        execution=a.forecastTotal?a.actualTotal/a.forecastTotal*100:0,
+        accuracy=planningAccuracy(a),
+        unexpectedTotal=sum(a.unexpected||[],r=>r.amount),
+        unexpectedPct=a.actualTotal?unexpectedTotal/a.actualTotal*100:0,
+        pending=pendingForecastTotal(a),
+        risk=bankRiskLevel(a),
+        narrative=executiveNarrative(a),
+        cats=executiveTopCategories(a,10),
+        over=[...cats].filter(x=>x.diff>0).sort((x,y)=>y.diff-x.diff),
+        suppliers=topSupplierConcentration(a,10),
+        topUnexpected=[...(a.unexpected||[])].sort((x,y)=>y.amount-x.amount).slice(0,8),
+        worstWeek=[...wk].sort((x,y)=>(y.actual-y.forecast)-(x.actual-x.forecast))[0],
+        advPlan=sum(a.salaryAdvancePlans||[],r=>r.amount),
+        advPaid=sum(a.salaryAdvanceActual||[],r=>r.amount);
+
+  return `<div class="bankExecutive">
+    <section class="bankTop">
+      <div class="bankTopMain">
+        <span class="bankEyebrow">DANE-SE · FINANCIAL MANAGEMENT COCKPIT</span>
+        <h2>${esc(selectedMonthText())}</h2>
+        <p>${esc(narrative.headline)} Esta visão resume posição orçamentária, previsibilidade do caixa, concentração de desembolsos e itens que exigem decisão executiva.</p>
+        <div class="bankTopMeta">
+          <div><small>Orçamento aprovado</small><b>${money(a.forecastTotal)}</b></div>
+          <div><small>Realizado</small><b>${money(a.actualTotal)}</b></div>
+          <div><small>Execução</small><b>${pct(execution)}</b></div>
+          <div><small>Aderência ao plano</small><b>${pct(accuracy)}</b></div>
+        </div>
+      </div>
+      <div class="bankStatusStack">
+        <article class="bankStatus ${risk.className}" data-report-action="over"><small>Nível de atenção</small><b>${esc(risk.label)}</b><p>${esc(risk.detail)}</p></article>
+        <article class="bankStatus ${unexpectedPct>5?'warn':'good'}" data-report-action="unexpected"><small>Previsibilidade</small><b>${pct(unexpectedPct)} não previsto</b><p>${esc(narrative.unexpected)}</p></article>
+        <article class="bankStatus ${pending>0?'warn':'good'}" data-report-action="pending"><small>Compromissos pendentes</small><b>${money(pending)}</b><p>Previsões ainda sem pagamento conciliado.</p></article>
+      </div>
+    </section>
+
+    <section class="bankKpiGrid">
+      <article class="bankKpi" data-report-action="budget"><small>Orçamento</small><strong>${money(a.forecastTotal)}</strong><span>${a.forecast.length} lançamentos previstos</span></article>
+      <article class="bankKpi good" data-report-action="actual"><small>Desembolso realizado</small><strong>${money(a.actualTotal)}</strong><span>${a.actual.length} pagamentos efetivos</span></article>
+      <article class="bankKpi ${diff>0?'risk':'good'}" data-report-action="over"><small>Desvio consolidado</small><strong>${money(diff)}</strong><span>${diff>0?'Acima do orçamento':'Favorável ao orçamento'}</span></article>
+      <article class="bankKpi ${unexpectedPct>5?'warn':'good'}" data-report-action="unexpected"><small>Fora da previsão</small><strong>${money(unexpectedTotal)}</strong><span>${pct(unexpectedPct)} do realizado</span></article>
+      <article class="bankKpi ${pending>0?'warn':'good'}" data-report-action="pending"><small>Previsto pendente</small><strong>${money(pending)}</strong><span>Monitorar até fechamento</span></article>
+      <article class="bankKpi" data-report-action="supplier"><small>Concentração Top 5</small><strong>${pct(topSupplierConcentration(a,5).pct)}</strong><span>Participação no desembolso</span></article>
+    </section>
+
+    <div class="bankSectionHead"><h3>Prioridades executivas</h3><span>Clique para abrir a composição</span></div>
+    <section class="bankDecisionGrid">
+      <article class="bankDecision" data-report-action="over"><span class="rank">01</span><h4>Pressão orçamentária</h4><strong>${over.length?money(over[0].diff):'R$ 0,00'}</strong><p>${over.length?esc(over[0].name):'Nenhuma categoria acima do previsto.'}</p></article>
+      <article class="bankDecision" data-report-action="unexpected"><span class="rank">02</span><h4>Não previstos</h4><strong>${money(unexpectedTotal)}</strong><p>${a.unexpected.length} pagamentos fora do orçamento.</p></article>
+      <article class="bankDecision" data-report-action="pending"><span class="rank">03</span><h4>Compromissos ainda abertos</h4><strong>${money(pending)}</strong><p>Previsões sem pagamento vinculado.</p></article>
+      <article class="bankDecision" data-fopag-drill="Adiantamento Salarial"><span class="rank">04</span><h4>Adiantamento salarial</h4><strong>${money(advPaid)}</strong><p>Previsto ${money(advPlan)} · diferença ${money(advPaid-advPlan)}.</p></article>
+    </section>
+
+    <section class="bankPanelGrid">
+      ${card('Execução semanal','<div class="chartBox"><canvas id="execWeekChart"></canvas></div>',worstWeek?`Maior pressão: ${worstWeek.label}`:'Sem dados')}
+      ${card('Leitura da gestão',`<div class="bankInsight">
+        <div class="bankInsightRow"><b>Orçamento</b><span>${esc(narrative.budget)}</span></div>
+        <div class="bankInsightRow"><b>Previsibilidade</b><span>${esc(narrative.unexpected)}</span></div>
+        <div class="bankInsightRow"><b>Fechamento</b><span>${esc(narrative.pending)}</span></div>
+        <div class="bankInsightRow"><b>Concentração</b><span>${esc(narrative.concentration)}</span></div>
+        <div class="bankInsightRow"><b>Principal pressão</b><span>${esc(narrative.pressure)}</span></div>
+      </div>`,'Leitura automática do recorte')}
+    </section>
+
+    <section class="bankPanelGrid equal">
+      ${card('Desvios por categoria',`<div class="tableWrap mgmtTable"><table>
+        <thead><tr><th>Categoria</th><th class="num">Previsto</th><th class="num">Realizado</th><th class="num">Desvio</th><th class="num">Execução</th></tr></thead>
+        <tbody>${cats.map(x=>`<tr data-drill="category" data-name="${esc(x.name)}"><td><b>${esc(x.name)}</b></td><td class="num">${money(x.forecast)}</td><td class="num">${money(x.actual)}</td><td class="num ${x.diff>0?'positive':'negative'}">${money(x.diff)}</td><td class="num">${pct(x.forecast?x.actual/x.forecast*100:0)}</td></tr>`).join('')}</tbody>
+      </table></div>`,'10 maiores categorias por desembolso')}
+      ${card('Concentração por fornecedor',`<div class="tableWrap mgmtTable"><table>
+        <thead><tr><th>Fornecedor</th><th class="num">Pagamentos</th><th class="num">Realizado</th><th class="num">Participação</th></tr></thead>
+        <tbody>${suppliers.ranking.map(v=>`<tr data-drill="vendor" data-name="${esc(v.name)}"><td><b>${esc(v.name)}</b></td><td class="num">${v.rows.length}</td><td class="num">${money(v.value)}</td><td class="num">${pct(a.actualTotal?v.value/a.actualTotal*100:0)}</td></tr>`).join('')}</tbody>
+      </table></div>`,`Top 10 · concentração Top 5 ${pct(topSupplierConcentration(a,5).pct)}`)}
+    </section>
+
+    ${card('Pagamentos não previstos prioritários',`<div class="tableWrap mgmtTable"><table>
+      <thead><tr><th>Data</th><th>Fornecedor</th><th>Descrição</th><th>Categoria</th><th class="num">Valor</th></tr></thead>
+      <tbody>${topUnexpected.map(r=>`<tr data-row-drill="${esc(rowStorageKey(r))}" data-row-month="${esc(rowMonth(r))}"><td>${dateText(r.date)}</td><td>${esc(r.party)}</td><td>${esc(r.description)}</td><td>${esc(r.category)}</td><td class="num"><b>${money(r.amount)}</b></td></tr>`).join('')||'<tr><td colspan="5">Nenhum pagamento não previsto no recorte.</td></tr>'}</tbody>
+    </table></div>`,'Prioridade de revisão e justificativa')}
+  </div>`;
+}
+function drawExecutiveCharts(a){
+  if(!window.Chart)return;
+  const wk=weekly(a);
+  const weekCanvas=$('#execWeekChart');
+  if(weekCanvas){
+    charts.push(new Chart(weekCanvas,{
+      type:'bar',
+      data:{
+        labels:wk.map(x=>'S'+x.week),
+        datasets:[
+          {label:'Previsto',data:wk.map(x=>x.forecast),backgroundColor:'#9fb8cf',borderRadius:5},
+          {label:'Realizado',data:wk.map(x=>x.actual),backgroundColor:'#1f5f8b',borderRadius:5},
+          {label:'Não previsto',data:wk.map(x=>x.unexpected),backgroundColor:'#c9913d',borderRadius:5}
+        ]
+      },
+      options:{
+        responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{position:'bottom',labels:{boxWidth:9,font:{size:9}}}},
+        scales:{
+          x:{grid:{display:false}},
+          y:{grid:{color:'#e8edf2'},ticks:{callback:v=>'R$ '+Number(v/1000).toLocaleString('pt-BR')+' mil'}}
+        }
+      }
+    }));
+  }
 }
 
 function pendingRows(a){
@@ -1065,72 +1561,97 @@ function bindRowInteractions(){
 function reportHTML(a){
   const diff=a.actualTotal-a.forecastTotal,
         execution=a.forecastTotal?a.actualTotal/a.forecastTotal*100:0,
+        accuracy=planningAccuracy(a),
         unexpectedTotal=sum(a.unexpected||[],r=>r.amount),
         unexpectedPct=a.actualTotal?unexpectedTotal/a.actualTotal*100:0,
         pending=pendingRows(a),
         pendingTotal=sum(pending,r=>r.amount),
         cats=executiveTopCategories(a,12),
-        vendors=vendorRanking(a,10),
-        actions=managementActions(a),
+        over=[...cats].filter(x=>x.diff>0).sort((x,y)=>y.diff-x.diff),
+        suppliers=topSupplierConcentration(a,10),
+        top5=topSupplierConcentration(a,5),
+        risk=bankRiskLevel(a),
+        narrative=executiveNarrative(a),
         weeks=weekly(a),
         worstWeek=[...weeks].sort((x,y)=>(y.actual-y.forecast)-(x.actual-x.forecast))[0],
         fopag=fopagBlocks(a),
-        npPayrollPlans=(a.naPraiaPlans||[]).filter(r=>['salario','adiantamento','ferias'].includes(naPraiaBucket(r))),
-        npPayrollActual=(a.naPraiaActual||[]).filter(r=>['salario','adiantamento','ferias'].includes(naPraiaBucket(r))),
-        fopagForecast=sum(fopag.flatMap(x=>x.plans),r=>r.amount)+sum(npPayrollPlans,r=>r.amount),
-        fopagActual=sum(fopag.flatMap(x=>x.actual),r=>r.amount)+sum(npPayrollActual,r=>r.amount);
+        npPlans=(a.naPraiaPlans||[]).filter(r=>['salario','adiantamento','ferias'].includes(naPraiaBucket(r))),
+        npActual=(a.naPraiaActual||[]).filter(r=>['salario','adiantamento','ferias'].includes(naPraiaBucket(r))),
+        fopagRows=[...fopag,{name:'FOPAG Na Praia',plans:npPlans,actual:npActual}],
+        fopagForecast=sum(fopagRows.flatMap(x=>x.plans),r=>r.amount),
+        fopagActual=sum(fopagRows.flatMap(x=>x.actual),r=>r.amount),
+        advPlan=sum(a.salaryAdvancePlans||[],r=>r.amount),
+        advPaid=sum(a.salaryAdvanceActual||[],r=>r.amount);
 
-  const headline = diff>0
-    ? `O realizado está ${money(diff)} acima do orçamento.`
-    : `O realizado está ${money(Math.abs(diff))} dentro/abaixo do orçamento.`;
-
-  return `<div class="execBoard">
-    <section class="execHeader">
-      <div class="execHeaderMain">
-        <span class="eyebrow">RELATÓRIO GERENCIAL · FECHAMENTO FINANCEIRO</span>
-        <h2>${esc(selectedMonthText())}</h2>
-        <p>${esc(headline)} A leitura abaixo organiza apenas o que precisa ser acompanhado pela gestão: desvios, não previstos, compromissos pendentes, pressão por fornecedor e FOPAG.</p>
-        <div class="meta">
-          <span>Execução <b>${pct(execution)}</b></span>
-          <span>Não previstos <b>${pct(unexpectedPct)}</b> do realizado</span>
-          <span>Previsto pendente <b>${money(pendingTotal)}</b></span>
-          <span>FOPAG realizado <b>${money(fopagActual)}</b></span>
-        </div>
-      </div>
-      <div class="execDecision">
-        <div class="execDecisionCard" data-report-action="over"><small>Prioridade 01</small><b>${actions.over.length?esc(actions.over[0].name):'Sem estouro relevante'}</b><p>${actions.over.length?`${money(actions.over[0].diff)} acima do previsto`:'Nenhuma categoria crítica identificada.'}</p></div>
-        <div class="execDecisionCard" data-report-action="unexpected"><small>Prioridade 02</small><b>${actions.unexpected.length?money(actions.unexpected[0].amount):'R$ 0,00'}</b><p>${actions.unexpected.length?`Maior pagamento não previsto · ${esc(actions.unexpected[0].party)}`:'Sem pagamentos não previstos.'}</p></div>
-        <div class="execDecisionCard" data-report-action="pending"><small>Prioridade 03</small><b>${money(pendingTotal)}</b><p>Previsto ainda sem pagamento vinculado.</p></div>
-      </div>
+  return `<div class="bankExecutive">
+    <section class="bankReportCover">
+      <span class="eyebrow">RELATÓRIO GERENCIAL FINANCEIRO · FECHAMENTO EXECUTIVO</span>
+      <h2>${esc(selectedMonthText())}</h2>
+      <p>${esc(narrative.headline)} Documento preparado para leitura gerencial, com foco em orçamento, execução, previsibilidade, concentração de desembolsos e pontos de decisão.</p>
+      <div class="stamp">Atualizado em ${new Date().toLocaleString('pt-BR')} · Fonte: base consolidada do dashboard</div>
     </section>
 
-    <div class="kpis exec6">
-      ${kpi('Orçamento aprovado',money(a.forecastTotal),`${a.forecast.length} lançamentos`)}
-      ${kpi('Realizado',money(a.actualTotal),`${a.actual.length} pagamentos`,'green')}
-      ${kpi('Desvio',money(diff),diff>0?'Desfavorável':'Favorável',diff>0?'red':'green')}
-      ${kpi('Execução',pct(execution),'Realizado ÷ previsto','cyan')}
-      ${kpi('Não previstos',money(unexpectedTotal),`${a.unexpected.length} pagamentos`,'amber')}
-      ${kpi('Previsto pendente',money(pendingTotal),`${pending.length} compromissos`,'cyan')}
-    </div>
-
-    <div class="boardTitle"><h3>O que exige ação</h3><span>Clique em qualquer bloco para abrir a composição</span></div>
-    <section class="actionGrid">
-      <article class="actionCard" data-report-action="over"><span class="n">Categorias acima do previsto</span><strong>${actions.over.length}</strong><p>${actions.over.length?`Maior desvio: ${esc(actions.over[0].name)} · ${money(actions.over[0].diff)}`:'Nenhum desvio positivo relevante.'}</p></article>
-      <article class="actionCard" data-report-action="unexpected"><span class="n">Pagamentos não previstos</span><strong>${a.unexpected.length}</strong><p>${money(unexpectedTotal)} fora da previsão · ${pct(unexpectedPct)} do realizado.</p></article>
-      <article class="actionCard" data-report-action="pending"><span class="n">Compromissos pendentes</span><strong>${pending.length}</strong><p>${money(pendingTotal)} previstos ainda sem pagamento conciliado.</p></article>
+    <section class="bankKpiGrid">
+      <article class="bankKpi"><small>Orçamento aprovado</small><strong>${money(a.forecastTotal)}</strong><span>Base prevista</span></article>
+      <article class="bankKpi good"><small>Realizado</small><strong>${money(a.actualTotal)}</strong><span>Pagamentos efetivos</span></article>
+      <article class="bankKpi ${diff>0?'risk':'good'}"><small>Desvio</small><strong>${money(diff)}</strong><span>${diff>0?'Desfavorável':'Favorável'}</span></article>
+      <article class="bankKpi"><small>Execução</small><strong>${pct(execution)}</strong><span>Consumo do orçamento</span></article>
+      <article class="bankKpi ${unexpectedPct>5?'warn':'good'}"><small>Não previstos</small><strong>${money(unexpectedTotal)}</strong><span>${pct(unexpectedPct)} do realizado</span></article>
+      <article class="bankKpi ${pendingTotal>0?'warn':'good'}"><small>Previsto pendente</small><strong>${money(pendingTotal)}</strong><span>${pending.length} compromissos</span></article>
     </section>
 
-    <section class="mgmtGrid">
-      ${card('Desvios por categoria',`<div class="tableWrap mgmtTable"><table><thead><tr><th>Categoria</th><th class="num">Previsto</th><th class="num">Realizado</th><th class="num">Desvio</th><th class="num">Execução</th></tr></thead><tbody>${cats.map(x=>`<tr data-drill="category" data-name="${esc(x.name)}"><td><b>${esc(x.name)}</b><span class="pillAction">abrir</span></td><td class="num">${money(x.forecast)}</td><td class="num">${money(x.actual)}</td><td class="num ${x.diff>0?'positive':'negative'}">${money(x.diff)}</td><td class="num">${pct(x.forecast?x.actual/x.forecast*100:0)}</td></tr>`).join('')}</tbody></table></div>`,'Ordenado pelo maior realizado')}
-      ${card('Fornecedores com maior desembolso',`<div class="tableWrap mgmtTable"><table><thead><tr><th>Fornecedor</th><th class="num">Pagamentos</th><th class="num">Realizado</th><th class="num">Participação</th></tr></thead><tbody>${vendors.map(v=>`<tr data-drill="vendor" data-name="${esc(v.name)}"><td><b>${esc(v.name)}</b><span class="pillAction">abrir</span></td><td class="num">${v.rows.length}</td><td class="num">${money(v.value)}</td><td class="num">${pct(a.actualTotal?v.value/a.actualTotal*100:0)}</td></tr>`).join('')}</tbody></table></div>`,'Participação sobre o realizado')}
+    <section class="bankReportGrid">
+      ${card('Sumário executivo',`<div class="bankMemo">
+        <p><b>Posição orçamentária.</b> ${esc(narrative.budget)}</p>
+        <p><b>Qualidade do planejamento.</b> Aderência consolidada de <b>${pct(accuracy)}</b>. ${esc(narrative.unexpected)}</p>
+        <p><b>Fechamento.</b> ${esc(narrative.pending)}</p>
+        <p><b>Concentração.</b> ${esc(narrative.concentration)}</p>
+        <p><b>Pressão principal.</b> ${esc(narrative.pressure)}</p>
+      </div>`,'Síntese para decisão')}
+      ${card('Matriz de atenção',`<div class="bankRiskMatrix">
+        <div class="bankRiskItem"><small>Risco consolidado</small><b><span class="bankBadge ${risk.className}">${esc(risk.label)}</span></b><p>${esc(risk.detail)}</p></div>
+        <div class="bankRiskItem"><small>Aderência ao orçamento</small><b>${pct(accuracy)}</b><p>Quanto o realizado se aproxima do planejado.</p></div>
+        <div class="bankRiskItem"><small>Concentração Top 5</small><b>${pct(top5.pct)}</b><p>Participação dos cinco maiores fornecedores.</p></div>
+        <div class="bankRiskItem"><small>Maior semana de pressão</small><b>${worstWeek?esc(worstWeek.label):'—'}</b><p>${worstWeek?`Desvio ${money(worstWeek.actual-worstWeek.forecast)}`:'Sem dados suficientes.'}</p></div>
+      </div>`,'Indicadores de atenção gerencial')}
     </section>
 
-    <section class="mgmtGrid">
-      ${card('Controle semanal',`<div class="tableWrap mgmtTable"><table><thead><tr><th>Semana</th><th class="num">Previsto</th><th class="num">Realizado</th><th class="num">Desvio</th><th class="num">Não previsto</th></tr></thead><tbody>${weeks.map(w=>`<tr data-drill="week" data-name="${w.week}"><td><b>${esc(w.label)}</b><span class="pillAction">abrir</span></td><td class="num">${money(w.forecast)}</td><td class="num">${money(w.actual)}</td><td class="num ${w.actual-w.forecast>0?'positive':'negative'}">${money(w.actual-w.forecast)}</td><td class="num">${money(w.unexpected)}</td></tr>`).join('')}</tbody></table></div>`,`Maior pressão: ${worstWeek?worstWeek.label:'—'}`)}
-      ${card('FOPAG · checkpoint gerencial',`<div class="tableWrap mgmtTable"><table><thead><tr><th>Componente</th><th class="num">Previsto</th><th class="num">Realizado</th><th class="num">Diferença</th></tr></thead><tbody>${[
-        ...fopag.map(b=>({name:b.name,plans:b.plans,actual:b.actual})),
-        {name:'FOPAG Na Praia',plans:npPayrollPlans,actual:npPayrollActual}
-      ].map(b=>{const p=sum(b.plans,r=>r.amount),r=sum(b.actual,x=>x.amount);return`<tr data-fopag-drill="${esc(b.name)}"><td><b>${esc(b.name)}</b><span class="pillAction">abrir</span></td><td class="num">${money(p)}</td><td class="num">${money(r)}</td><td class="num ${r-p>0?'positive':'negative'}">${money(r-p)}</td></tr>`}).join('')}</tbody></table></div>`,`Total previsto ${money(fopagForecast)} · realizado ${money(fopagActual)}`)}
+    <section class="bankPanelGrid equal">
+      ${card('Categorias com maior desvio',`<div class="tableWrap mgmtTable"><table>
+        <thead><tr><th>Categoria</th><th class="num">Previsto</th><th class="num">Realizado</th><th class="num">Desvio</th><th class="num">Execução</th></tr></thead>
+        <tbody>${cats.map(x=>`<tr data-drill="category" data-name="${esc(x.name)}"><td><b>${esc(x.name)}</b></td><td class="num">${money(x.forecast)}</td><td class="num">${money(x.actual)}</td><td class="num ${x.diff>0?'positive':'negative'}">${money(x.diff)}</td><td class="num">${pct(x.forecast?x.actual/x.forecast*100:0)}</td></tr>`).join('')}</tbody>
+      </table></div>`,'Análise orçamentária por categoria')}
+      ${card('Fornecedores com maior desembolso',`<div class="tableWrap mgmtTable"><table>
+        <thead><tr><th>Fornecedor</th><th class="num">Pagamentos</th><th class="num">Realizado</th><th class="num">Participação</th></tr></thead>
+        <tbody>${suppliers.ranking.map(v=>`<tr data-drill="vendor" data-name="${esc(v.name)}"><td><b>${esc(v.name)}</b></td><td class="num">${v.rows.length}</td><td class="num">${money(v.value)}</td><td class="num">${pct(a.actualTotal?v.value/a.actualTotal*100:0)}</td></tr>`).join('')}</tbody>
+      </table></div>`,`Top 5 concentram ${pct(top5.pct)}`)}
+    </section>
+
+    <section class="bankPanelGrid equal">
+      ${card('FOPAG · controle executivo',`<div class="tableWrap mgmtTable"><table>
+        <thead><tr><th>Componente</th><th class="num">Previsto</th><th class="num">Realizado</th><th class="num">Diferença</th><th class="num">Execução</th></tr></thead>
+        <tbody>${fopagRows.map(b=>{const p=sum(b.plans,r=>r.amount),r=sum(b.actual,x=>x.amount),d=r-p;return`<tr data-fopag-drill="${esc(b.name)}"><td><b>${esc(b.name)}</b></td><td class="num">${money(p)}</td><td class="num">${money(r)}</td><td class="num ${d>0?'positive':'negative'}">${money(d)}</td><td class="num">${pct(p?r/p*100:0)}</td></tr>`}).join('')}</tbody>
+      </table></div>`,`FOPAG previsto ${money(fopagForecast)} · realizado ${money(fopagActual)}`)}
+      ${card('Ponto de atenção · Adiantamento Salarial',`<div class="bankMemo">
+        <p><b>Previsão:</b> ${money(advPlan)}</p>
+        <p><b>Pagamentos realizados:</b> ${money(advPaid)}</p>
+        <p><b>Diferença:</b> ${money(advPaid-advPlan)}</p>
+        <p>A previsão “Adiantamentos Salariais Colaboradores” é tratada como orçamento agrupador e pode receber vários pagamentos individuais.</p>
+      </div>`,'Regra validada no dashboard')}
+    </section>
+
+    <section class="bankPanelGrid equal">
+      ${card('Execução semanal',`<div class="tableWrap mgmtTable"><table>
+        <thead><tr><th>Semana</th><th class="num">Previsto</th><th class="num">Realizado</th><th class="num">Desvio</th><th class="num">Não previsto</th><th class="num">Execução</th></tr></thead>
+        <tbody>${weeks.map(w=>`<tr data-drill="week" data-name="${w.week}"><td><b>${esc(w.label)}</b></td><td class="num">${money(w.forecast)}</td><td class="num">${money(w.actual)}</td><td class="num ${w.actual-w.forecast>0?'positive':'negative'}">${money(w.actual-w.forecast)}</td><td class="num">${money(w.unexpected)}</td><td class="num">${pct(w.forecast?w.actual/w.forecast*100:0)}</td></tr>`).join('')}</tbody>
+      </table></div>`,'Controle de caixa por semana')}
+      ${card('Plano de ação da gestão',`<div class="bankInsight">
+        <div class="bankInsightRow"><b>1. Desvios</b><span>${over.length?`Validar justificativa das ${over.length} categorias acima do orçamento, começando por ${esc(over[0].name)}.`:'Nenhuma categoria acima do orçamento no recorte.'}</span></div>
+        <div class="bankInsightRow"><b>2. Não previstos</b><span>Revisar os ${a.unexpected.length} pagamentos fora da previsão e decidir quais devem integrar o orçamento recorrente.</span></div>
+        <div class="bankInsightRow"><b>3. Pendências</b><span>Confirmar os ${pending.length} compromissos previstos sem pagamento antes de concluir o fechamento.</span></div>
+        <div class="bankInsightRow"><b>4. Concentração</b><span>Acompanhar fornecedores que concentram parcela relevante do desembolso mensal.</span></div>
+        <div class="bankInsightRow"><b>5. FOPAG</b><span>Manter folha, adiantamentos, férias, serviços e FOPAG Na Praia segregados para leitura gerencial.</span></div>
+      </div>`,'Ações recomendadas')}
     </section>
   </div>`;
 }
@@ -1201,7 +1722,7 @@ function render(){
       <section class="card rule"><b>FOPAG Na Praia</b><p>Não existe aba separada. Salários, adiantamentos e férias do Na Praia aparecem dentro da FOPAG em um bloco gerencial próprio.</p></section>
       <section class="card rule"><b>Competências</b><p>Cada mês possui seu próprio registro no Supabase. Importar setembro não substitui agosto.</p></section>
       <section class="card rule"><b>Data do realizado</b><p>A data de pagamento tem prioridade sobre data prevista ou vencimento no relatório de realizados.</p></section>
-    <section class="card rule"><b>Edição centralizada</b><p>Alterações de valor, data, fornecedor, categoria, centro de custo, tipo ou vínculo são feitas no registro principal e recalculam todas as abas.</p></section><section class="card rule"><b>Vínculos manuais</b><p>Um pagamento pode ser vinculado à previsão correta e uma previsão pode receber vários pagamentos. O vínculo manual prevalece sobre a conciliação automática.</p></section><section class="card rule"><b>Cadastros</b><p>Administradores podem criar previsões, pagamentos, categorias e centros de custo sem editar o código.</p></section></div>`;
+    <section class="card rule"><b>Edição centralizada</b><p>Alterações de valor, data, fornecedor, categoria, centro de custo, tipo ou vínculo são feitas no registro principal e recalculam todas as abas.</p></section><section class="card rule"><b>Adiantamentos salariais</b><p>Previsões do tipo “FOPAG XX/XX - Adiantamentos Salariais Colaboradores” funcionam como orçamento agrupador e podem receber vários pagamentos de colaboradores na mesma competência.</p></section><section class="card rule"><b>Vínculos manuais</b><p>Um pagamento pode ser vinculado à previsão correta e uma previsão pode receber vários pagamentos. O vínculo manual prevalece sobre a conciliação automática.</p></section><section class="card rule"><b>Cadastros</b><p>Administradores podem criar previsões, pagamentos, categorias e centros de custo sem editar o código.</p></section></div>`;
   }
 
   $('#app').innerHTML=h;
@@ -1225,6 +1746,12 @@ function bindReportInteractions(a){
     }
     if(type==='unexpected')return openReportRows('Pagamentos não previstos',actions.unexpected);
     if(type==='pending')return openReportRows('Compromissos previstos pendentes',actions.pending);
+    if(type==='budget')return openReportRows('Orçamento previsto',a.forecast);
+    if(type==='actual')return openReportRows('Pagamentos realizados',a.actual);
+    if(type==='supplier'){
+      const top=topSupplierConcentration(a,5).ranking.map(x=>x.name);
+      return openReportRows('Pagamentos dos 5 maiores fornecedores',a.actual.filter(r=>top.includes(r.party)));
+    }
   });
 
   $$('[data-drill="category"]').forEach(el=>el.onclick=()=>openReportRows('Categoria · '+el.dataset.name,rowsByCategory(a,el.dataset.name)));
