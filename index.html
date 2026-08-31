@@ -11,11 +11,54 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.4/jspdf.plugin.autotable.min.js"></script>
 <style>
 :root{--navy:#111;--navy2:#1c1c1c;--blue:#171717;--cyan:#555;--green:#287d65;--red:#b84242;--amber:#a97525;--bg:#f4f4f3;--card:#fff;--ink:#181818;--muted:#727272;--line:#e5e5e3;--shadow:0 12px 34px rgba(0,0,0,.065)}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:linear-gradient(180deg,#fafafa 0,#f3f3f2 100%);color:var(--ink);font:13px Manrope,Arial,sans-serif;letter-spacing:-.005em}button,input,select{font:inherit}button{cursor:pointer}.hidden{display:none!important}.shell{display:grid;grid-template-columns:246px 1fr;min-height:100vh}.side{position:sticky;top:0;height:100vh;background:linear-gradient(165deg,#1b1b1b 0%,#080808 78%);color:#fff;padding:27px 17px;display:flex;flex-direction:column;z-index:8;box-shadow:14px 0 40px rgba(0,0,0,.14)}.brand{gap:0;display:block;padding:3px 9px 30px}.brandMark{display:none}.brand b{display:block;font-size:29px;font-weight:800;letter-spacing:-.085em;line-height:1;text-transform:lowercase}.brand small{display:block;color:#aaa;font-size:8px;letter-spacing:.16em;margin-top:9px}.nav{display:grid;gap:4px}.nav button{border:0;background:transparent;color:#aaa;text-align:left;border-radius:9px;padding:11px 15px;min-height:43px;font-size:11px;font-weight:650;transition:.18s}.nav button:hover{background:rgba(255,255,255,.07);color:#fff}.nav button.active{background:linear-gradient(90deg,rgba(255,255,255,.14),rgba(255,255,255,.025));box-shadow:inset 3px 0 #fff;color:#fff}.sideFoot{margin-top:auto;border-top:1px solid #ffffff16;padding:18px 8px 0;color:#858585;font-size:10px;line-height:1.6}.sideFoot b{color:#fff;letter-spacing:.08em;font-size:8px}.main{min-width:0}.topbar{height:76px;background:rgba(255,255,255,.93);border-bottom:1px solid #e8e8e6;backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:space-between;padding:0 30px;position:sticky;top:0;z-index:7;box-shadow:0 5px 22px rgba(17,35,64,.035)}.topbar h1{font-size:19px;margin:0;font-weight:800;letter-spacing:-.035em}.topbar h1:after{content:"";display:inline-block;width:22px;height:3px;margin-left:9px;vertical-align:middle;background:#171717}.topbar p{margin:3px 0 0;color:var(--muted);font-size:9px}.rightbar{display:flex;align-items:center;gap:8px}.control,select,input{border:1px solid #dbe2ec;background:white;border-radius:9px;padding:9px 11px;color:var(--ink);min-height:38px;font-size:10px;transition:.18s}.control:hover{transform:translateY(-1px);box-shadow:0 7px 18px rgba(18,37,68,.09)}button.control{font-weight:700}.primary{background:#171717;border-color:#171717;color:#fff;box-shadow:0 8px 20px rgba(0,0,0,.16)}.primary:hover{background:#000;box-shadow:0 10px 24px rgba(0,0,0,.22)}.content{padding:28px 30px 55px;max-width:1680px;margin:auto}.adminStrip{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}.upload{background:white;border:1px solid #e0e6ef;border-radius:12px;padding:17px 19px;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--shadow)}.upload b{display:block;font-size:11px}.upload small{display:block;color:var(--muted);margin-top:3px;font-size:8.5px}.filters{display:grid;grid-template-columns:2fr repeat(4,1fr) auto auto;gap:8px;margin-bottom:18px;padding:12px;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow)}.filters input,.filters select{width:100%;min-width:0}.clear{border:1px solid var(--line);background:#fff;border-radius:8px;color:var(--muted)}.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:18px}.kpi{background:var(--card);border:1px solid #e3e8f0;border-radius:13px;padding:18px;box-shadow:var(--shadow);position:relative;overflow:hidden;min-height:124px}.kpi:before{content:"";position:absolute;inset:0 auto 0 0;width:4px;background:#1b1b1b}.kpi.green:before{background:var(--green)}.kpi.red:before{background:var(--red)}.kpi.amber:before{background:var(--amber)}.kpi.cyan:before{background:#777}.kpi:after{content:"";position:absolute;right:-25px;bottom:-38px;width:90px;height:90px;border:1px solid rgba(0,0,0,.055);border-radius:50%}.kpi label{color:var(--muted);text-transform:uppercase;letter-spacing:.1em;font-size:8px;font-weight:800}.kpi strong{display:block;font-size:22px;margin:14px 0 8px;white-space:nowrap;letter-spacing:-.045em}.kpi small{color:var(--muted);font-size:8.5px}.grid2{display:grid;grid-template-columns:1.5fr 1fr;gap:14px}.card{background:var(--card);border:1px solid #e2e8f0;border-radius:13px;box-shadow:var(--shadow);margin-bottom:16px;min-width:0;overflow:hidden}.cardHead{padding:17px 19px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;background:linear-gradient(180deg,#fff,#fbfbfa)}.cardHead h2{font-size:12px;margin:0;font-weight:800}.cardHead small{color:var(--muted);font-size:8px}.chartBox{height:310px;padding:18px}.tableWrap{overflow:auto;max-height:520px;scrollbar-color:#b7c3d5 #f4f6f9;scrollbar-width:thin}.tableWrap.tall{max-height:640px}table{width:100%;border-collapse:collapse;min-width:920px;font-size:10px}th{position:sticky;top:0;z-index:2;background:#f6f8fb;color:var(--muted);font-size:7.5px;text-transform:uppercase;letter-spacing:.06em;text-align:left}th,td{padding:11px 12px;border-bottom:1px solid var(--line);vertical-align:top}tbody tr:nth-child(even) td{background:#fbfcfe}tr:hover td{background:#f1f6fd!important}.num{text-align:right;font-variant-numeric:tabular-nums}.positive{color:var(--red);font-weight:800}.negative{color:var(--green);font-weight:800}.tag{display:inline-block;border-radius:20px;padding:4px 8px;background:#ededeb;color:#222;font-size:7.5px;font-weight:800}.tag.red{background:#fff0f0;color:var(--red)}.tag.green{background:#eaf8f3;color:var(--green)}.tag.gray{background:#edf0f4;color:#657085}.click{color:#111;text-decoration:underline;text-decoration-color:#aaa;text-underline-offset:3px;font-weight:750;cursor:pointer}.empty{padding:45px;text-align:center;color:var(--muted)}.empty b{display:block;color:var(--ink);font-size:15px;margin-bottom:7px}.footer{text-align:center;color:var(--muted);font-size:9px;padding:18px 10px 10px}.modal{position:fixed;inset:0;background:#071126b8;display:none;place-items:center;padding:20px;z-index:30}.modal.open{display:grid}.dialog{background:white;border-radius:15px;width:min(1050px,96vw);max-height:88vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 28px 90px rgba(5,15,35,.32)}.dialog.small{width:min(430px,96vw);padding:24px}.dialogHead{display:flex;justify-content:space-between;align-items:center;padding:17px 19px;border-bottom:1px solid var(--line)}.dialogHead h2{font-size:15px;margin:0}.dialog .tableWrap{max-height:68vh}.dialog.small input{width:100%;margin:5px 0}.dialogActions{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}.notice{position:fixed;right:20px;bottom:20px;background:#111;color:#fff;padding:13px 16px;border-radius:10px;z-index:40;box-shadow:0 10px 30px #0003;border-left:4px solid #888;font-size:10px}.status{font-size:9px;color:var(--muted)}.mobileMenu{display:none}.sectionIntro{display:flex;justify-content:space-between;align-items:end;margin-bottom:14px;padding:4px 2px 2px}.sectionIntro h2{font-size:21px;margin:0;font-weight:800;letter-spacing:-.04em}.sectionIntro p{margin:4px 0 0;color:var(--muted);font-size:10px}.ruleGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.rule{padding:17px}.rule b{display:block;margin-bottom:7px}.rule p{color:var(--muted);line-height:1.6;margin:0}.progress{height:7px;background:#edf1f6;border-radius:10px;overflow:hidden;margin-top:8px}.progress i{display:block;height:100%;background:linear-gradient(90deg,#111,#666)}.danger{color:var(--red);border-color:#efcaca;background:#fff9f9}.multi{position:relative}.multi>button{width:100%;min-height:36px;border:1px solid #dbe2ec;background:#fff;border-radius:8px;padding:9px 11px;text-align:left;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:9px}.multi>button:after{content:'⌄';float:right;color:var(--muted)}.multiBox{display:none;position:absolute;top:calc(100% + 5px);left:0;min-width:230px;max-width:340px;max-height:280px;overflow:auto;background:#fff;border:1px solid var(--line);border-radius:11px;box-shadow:0 18px 48px rgba(13,28,54,.17);padding:7px;z-index:20}.multi.open .multiBox{display:block}.multiBox label{display:flex;gap:8px;align-items:flex-start;padding:7px;border-radius:6px;cursor:pointer;font-size:10px}.multiBox label:hover{background:#f3f7fd}.multiBox input{width:auto;margin:1px 0}.reportHero{background:radial-gradient(circle at 88% 0,rgba(255,255,255,.13),transparent 34%),linear-gradient(135deg,#111,#292929);color:#fff;border-radius:15px;padding:29px 30px;margin-bottom:14px;box-shadow:0 20px 50px rgba(0,0,0,.2)}.reportHero .eyebrow{color:#d5d5d5;font-size:9px;letter-spacing:.12em;font-weight:800}.reportHero h2{font-size:25px;margin:7px 0;letter-spacing:-.045em}.reportHero p{color:#c1cce0;line-height:1.7;max-width:1080px;margin:0;font-size:10px}.reportGrid{display:grid;grid-template-columns:1.25fr 1fr;gap:14px}.analysisBlock{padding:21px}.analysisBlock h3{font-size:13px;margin:0 0 12px}.analysisBlock p,.analysisBlock li{color:#56647b;font-size:10px;line-height:1.8}.analysisBlock ul{padding-left:18px;margin-bottom:0}.insight{border-left:3px solid var(--blue);padding:12px 14px;background:#f6f9fe;border-radius:0 9px 9px 0;margin:8px 0}.insight.warn{border-color:var(--amber);background:#fffbf2}.insight.risk{border-color:var(--red);background:#fff7f7}.reportStamp{font-size:9px;color:#9eacc4;margin-top:13px}.ranking{display:grid;gap:10px}.rankRow{display:grid;grid-template-columns:1fr auto;gap:9px;align-items:center}.rankRow small{color:var(--muted)}.monthPicker{position:relative;min-width:190px}.monthPicker>button{width:100%;min-height:38px;border:1px solid var(--line);background:#fff;border-radius:9px;padding:9px 11px;text-align:left;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.monthPicker>button:after{content:'⌄';float:right;color:var(--muted)}.monthPickerBox{display:none;position:absolute;right:0;top:calc(100% + 5px);min-width:260px;max-height:320px;overflow:auto;background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 18px 48px rgba(13,28,54,.17);padding:8px;z-index:25}.monthPicker.open .monthPickerBox{display:block}.monthPickerBox label{display:flex;gap:8px;align-items:center;padding:8px;border-radius:7px;cursor:pointer;font-size:10px}.monthPickerBox label:hover{background:#f3f7fd}.monthPickerBox input{width:auto;min-height:auto}.monthPickerHelp{padding:6px 8px 9px;color:var(--muted);font-size:8px;line-height:1.5;border-bottom:1px solid var(--line);margin-bottom:4px}.varianceLead{display:grid;grid-template-columns:1.35fr 1fr;gap:14px}.varianceFormula{padding:18px}.varianceFormula code{display:inline-block;margin-top:8px;padding:8px 10px;border-radius:8px;background:#eef3fb;color:var(--navy);font:700 10px Manrope,Arial,sans-serif}.varianceFormula p{color:var(--muted);line-height:1.7;margin:0}.varianceTable .tag{white-space:nowrap}#detailBody{min-height:0;overflow:auto}.drillBody{padding:16px}.drillKpis{grid-template-columns:repeat(4,minmax(0,1fr))}.drillToolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}.drillToolbar p{margin:0;color:var(--muted);font-size:9px}.dialog .drillBody .tableWrap{max-height:390px}.drillBody table{min-width:820px}.comparisonPrompt{display:flex;align-items:center;justify-content:space-between;gap:18px;margin:0 0 18px;padding:13px 16px;border:1px dashed #aaa;border-radius:11px;background:#fafaf9;color:#666}.comparisonPrompt b{font-size:10px;color:#222}.comparisonPrompt span{font-size:9px}.monthComparison{margin:0 0 24px;padding:20px 20px 4px;border:1px solid #ddd;border-radius:15px;background:linear-gradient(180deg,#fff,#fafaf9);box-shadow:0 12px 32px rgba(0,0,0,.055)}.comparisonTable{max-height:480px}.comparisonTable table{min-width:1050px}.detailMonthComparison{margin-bottom:18px;padding:17px 17px 3px;border:1px solid #ddd;border-radius:13px;background:#fafaf9}.rowActions{display:flex;flex-wrap:wrap;gap:5px;min-width:120px}.rowActions .control{min-height:29px;padding:5px 8px;font-size:8px;white-space:nowrap}.manualEditor{padding:20px;display:grid;gap:14px;overflow:auto}.manualSummary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:14px;background:#f6f9fe;border:1px solid #dfe8f5;border-radius:10px}.manualEditor label{display:grid;gap:6px;color:var(--muted);font-size:9px;font-weight:700}.manualEditor input,.manualEditor select{width:100%}.manualHelp{padding:10px 12px;background:#fffbf2;border-left:3px solid var(--amber);border-radius:0 8px 8px 0;color:#6d624e;font-size:9px;line-height:1.6}.manualEditorGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:linear-gradient(180deg,#fafafa 0,#f3f3f2 100%);color:var(--ink);font:13px Manrope,Arial,sans-serif;letter-spacing:-.005em}button,input,select{font:inherit}button{cursor:pointer}.hidden{display:none!important}.shell{display:grid;grid-template-columns:246px 1fr;min-height:100vh}.side{position:sticky;top:0;height:100vh;background:linear-gradient(165deg,#1b1b1b 0%,#080808 78%);color:#fff;padding:27px 17px;display:flex;flex-direction:column;z-index:8;box-shadow:14px 0 40px rgba(0,0,0,.14)}.brand{gap:0;display:block;padding:3px 9px 30px}.brandMark{display:none}.brand b{display:block;font-size:29px;font-weight:800;letter-spacing:-.085em;line-height:1;text-transform:lowercase}.brand small{display:block;color:#aaa;font-size:8px;letter-spacing:.16em;margin-top:9px}.nav{display:grid;gap:4px}.nav button{border:0;background:transparent;color:#aaa;text-align:left;border-radius:9px;padding:11px 15px;min-height:43px;font-size:11px;font-weight:650;transition:.18s}.nav button:hover{background:rgba(255,255,255,.07);color:#fff}.nav button.active{background:linear-gradient(90deg,rgba(255,255,255,.14),rgba(255,255,255,.025));box-shadow:inset 3px 0 #fff;color:#fff}.sideFoot{margin-top:auto;border-top:1px solid #ffffff16;padding:18px 8px 0;color:#858585;font-size:10px;line-height:1.6}.sideFoot b{color:#fff;letter-spacing:.08em;font-size:8px}.main{min-width:0}.topbar{height:76px;background:rgba(255,255,255,.93);border-bottom:1px solid #e8e8e6;backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:space-between;padding:0 30px;position:sticky;top:0;z-index:7;box-shadow:0 5px 22px rgba(17,35,64,.035)}.topbar h1{font-size:19px;margin:0;font-weight:800;letter-spacing:-.035em}.topbar h1:after{content:"";display:inline-block;width:22px;height:3px;margin-left:9px;vertical-align:middle;background:#171717}.topbar p{margin:3px 0 0;color:var(--muted);font-size:9px}.rightbar{display:flex;align-items:center;gap:8px}.control,select,input{border:1px solid #dbe2ec;background:white;border-radius:9px;padding:9px 11px;color:var(--ink);min-height:38px;font-size:10px;transition:.18s}.control:hover{transform:translateY(-1px);box-shadow:0 7px 18px rgba(18,37,68,.09)}button.control{font-weight:700}.primary{background:#171717;border-color:#171717;color:#fff;box-shadow:0 8px 20px rgba(0,0,0,.16)}.primary:hover{background:#000;box-shadow:0 10px 24px rgba(0,0,0,.22)}.content{padding:28px 30px 55px;max-width:1680px;margin:auto}.adminStrip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:20px}.upload{background:white;border:1px solid #e0e6ef;border-radius:12px;padding:17px 19px;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--shadow)}.upload b{display:block;font-size:11px}.upload small{display:block;color:var(--muted);margin-top:3px;font-size:8.5px}.filters{display:grid;grid-template-columns:2fr repeat(4,1fr) auto auto;gap:8px;margin-bottom:18px;padding:12px;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow)}.filters input,.filters select{width:100%;min-width:0}.clear{border:1px solid var(--line);background:#fff;border-radius:8px;color:var(--muted)}.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:18px}.kpis.exec6{grid-template-columns:repeat(6,1fr)}.kpi{background:var(--card);border:1px solid #e3e8f0;border-radius:13px;padding:18px;box-shadow:var(--shadow);position:relative;overflow:hidden;min-height:124px}.kpi:before{content:"";position:absolute;inset:0 auto 0 0;width:4px;background:#1b1b1b}.kpi.green:before{background:var(--green)}.kpi.red:before{background:var(--red)}.kpi.amber:before{background:var(--amber)}.kpi.cyan:before{background:#777}.kpi:after{content:"";position:absolute;right:-25px;bottom:-38px;width:90px;height:90px;border:1px solid rgba(0,0,0,.055);border-radius:50%}.kpi label{color:var(--muted);text-transform:uppercase;letter-spacing:.1em;font-size:8px;font-weight:800}.kpi strong{display:block;font-size:22px;margin:14px 0 8px;white-space:nowrap;letter-spacing:-.045em}.kpi small{color:var(--muted);font-size:8.5px}.grid2{display:grid;grid-template-columns:1.5fr 1fr;gap:14px}.execHero{display:grid;grid-template-columns:1.6fr .8fr;gap:14px;margin-bottom:18px}.execHeroMain{background:linear-gradient(135deg,#111,#272727);color:#fff;border-radius:15px;padding:26px 28px;box-shadow:0 18px 46px rgba(0,0,0,.16)}.execHeroMain .eyebrow{font-size:8px;letter-spacing:.16em;color:#bdbdbd;font-weight:800}.execHeroMain h2{font-size:25px;letter-spacing:-.045em;margin:7px 0 8px}.execHeroMain p{margin:0;color:#d3d3d3;font-size:10px;line-height:1.7}.execHeroMain .heroMeta{display:flex;gap:18px;flex-wrap:wrap;margin-top:18px;padding-top:15px;border-top:1px solid rgba(255,255,255,.12);font-size:9px;color:#bbb}.execHeroSide{display:grid;gap:10px}.execSignal{background:#fff;border:1px solid var(--line);border-radius:13px;padding:17px 18px;box-shadow:var(--shadow)}.execSignal small{display:block;color:var(--muted);font-size:8px;text-transform:uppercase;letter-spacing:.08em;font-weight:800}.execSignal b{display:block;font-size:17px;margin-top:8px}.execSignal p{margin:5px 0 0;color:var(--muted);font-size:9px;line-height:1.55}.execMiniTable table{min-width:680px}.card{background:var(--card);border:1px solid #e2e8f0;border-radius:13px;box-shadow:var(--shadow);margin-bottom:16px;min-width:0;overflow:hidden}.cardHead{padding:17px 19px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;background:linear-gradient(180deg,#fff,#fbfbfa)}.cardHead h2{font-size:12px;margin:0;font-weight:800}.cardHead small{color:var(--muted);font-size:8px}.chartBox{height:310px;padding:18px}.tableWrap{overflow:auto;max-height:520px;scrollbar-color:#b7c3d5 #f4f6f9;scrollbar-width:thin}.tableWrap.tall{max-height:640px}table{width:100%;border-collapse:collapse;min-width:920px;font-size:10px}th{position:sticky;top:0;z-index:2;background:#f6f8fb;color:var(--muted);font-size:7.5px;text-transform:uppercase;letter-spacing:.06em;text-align:left}th,td{padding:11px 12px;border-bottom:1px solid var(--line);vertical-align:top}tbody tr:nth-child(even) td{background:#fbfcfe}tr:hover td{background:#f1f6fd!important}.num{text-align:right;font-variant-numeric:tabular-nums}.positive{color:var(--red);font-weight:800}.negative{color:var(--green);font-weight:800}.tag{display:inline-block;border-radius:20px;padding:4px 8px;background:#ededeb;color:#222;font-size:7.5px;font-weight:800}.tag.red{background:#fff0f0;color:var(--red)}.tag.green{background:#eaf8f3;color:var(--green)}.tag.gray{background:#edf0f4;color:#657085}.click{color:#111;text-decoration:underline;text-decoration-color:#aaa;text-underline-offset:3px;font-weight:750;cursor:pointer}.empty{padding:45px;text-align:center;color:var(--muted)}.empty b{display:block;color:var(--ink);font-size:15px;margin-bottom:7px}.footer{text-align:center;color:var(--muted);font-size:9px;padding:18px 10px 10px}.modal{position:fixed;inset:0;background:#071126b8;display:none;place-items:center;padding:20px;z-index:30}.modal.open{display:grid}.dialog{background:white;border-radius:15px;width:min(1050px,96vw);max-height:88vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 28px 90px rgba(5,15,35,.32)}.dialog.small{width:min(430px,96vw);padding:24px}.dialogHead{display:flex;justify-content:space-between;align-items:center;padding:17px 19px;border-bottom:1px solid var(--line)}.dialogHead h2{font-size:15px;margin:0}.dialog .tableWrap{max-height:68vh}.dialog.small input{width:100%;margin:5px 0}.dialogActions{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}.notice{position:fixed;right:20px;bottom:20px;background:#111;color:#fff;padding:13px 16px;border-radius:10px;z-index:40;box-shadow:0 10px 30px #0003;border-left:4px solid #888;font-size:10px}.status{font-size:9px;color:var(--muted)}.mobileMenu{display:none}.sectionIntro{display:flex;justify-content:space-between;align-items:end;margin-bottom:14px;padding:4px 2px 2px}.sectionIntro h2{font-size:21px;margin:0;font-weight:800;letter-spacing:-.04em}.sectionIntro p{margin:4px 0 0;color:var(--muted);font-size:10px}.ruleGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.rule{padding:17px}.rule b{display:block;margin-bottom:7px}.rule p{color:var(--muted);line-height:1.6;margin:0}.progress{height:7px;background:#edf1f6;border-radius:10px;overflow:hidden;margin-top:8px}.progress i{display:block;height:100%;background:linear-gradient(90deg,#111,#666)}.danger{color:var(--red);border-color:#efcaca;background:#fff9f9}.multi{position:relative}.multi>button{width:100%;min-height:36px;border:1px solid #dbe2ec;background:#fff;border-radius:8px;padding:9px 11px;text-align:left;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:9px}.multi>button:after{content:'⌄';float:right;color:var(--muted)}.multiBox{display:none;position:absolute;top:calc(100% + 5px);left:0;min-width:230px;max-width:340px;max-height:280px;overflow:auto;background:#fff;border:1px solid var(--line);border-radius:11px;box-shadow:0 18px 48px rgba(13,28,54,.17);padding:7px;z-index:20}.multi.open .multiBox{display:block}.multiBox label{display:flex;gap:8px;align-items:flex-start;padding:7px;border-radius:6px;cursor:pointer;font-size:10px}.multiBox label:hover{background:#f3f7fd}.multiBox input{width:auto;margin:1px 0}.reportHero{background:radial-gradient(circle at 88% 0,rgba(255,255,255,.13),transparent 34%),linear-gradient(135deg,#111,#292929);color:#fff;border-radius:15px;padding:29px 30px;margin-bottom:14px;box-shadow:0 20px 50px rgba(0,0,0,.2)}.reportHero .eyebrow{color:#d5d5d5;font-size:9px;letter-spacing:.12em;font-weight:800}.reportHero h2{font-size:25px;margin:7px 0;letter-spacing:-.045em}.reportHero p{color:#c1cce0;line-height:1.7;max-width:1080px;margin:0;font-size:10px}.reportGrid{display:grid;grid-template-columns:1.25fr 1fr;gap:14px}.analysisBlock{padding:21px}.analysisBlock h3{font-size:13px;margin:0 0 12px}.analysisBlock p,.analysisBlock li{color:#56647b;font-size:10px;line-height:1.8}.analysisBlock ul{padding-left:18px;margin-bottom:0}.insight{border-left:3px solid var(--blue);padding:12px 14px;background:#f6f9fe;border-radius:0 9px 9px 0;margin:8px 0}.insight.warn{border-color:var(--amber);background:#fffbf2}.insight.risk{border-color:var(--red);background:#fff7f7}.reportStamp{font-size:9px;color:#9eacc4;margin-top:13px}.ranking{display:grid;gap:10px}.rankRow{display:grid;grid-template-columns:1fr auto;gap:9px;align-items:center}.rankRow small{color:var(--muted)}.monthPicker{position:relative;min-width:190px}.monthPicker>button{width:100%;min-height:38px;border:1px solid var(--line);background:#fff;border-radius:9px;padding:9px 11px;text-align:left;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.monthPicker>button:after{content:'⌄';float:right;color:var(--muted)}.monthPickerBox{display:none;position:absolute;right:0;top:calc(100% + 5px);min-width:260px;max-height:320px;overflow:auto;background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 18px 48px rgba(13,28,54,.17);padding:8px;z-index:25}.monthPicker.open .monthPickerBox{display:block}.monthPickerBox label{display:flex;gap:8px;align-items:center;padding:8px;border-radius:7px;cursor:pointer;font-size:10px}.monthPickerBox label:hover{background:#f3f7fd}.monthPickerBox input{width:auto;min-height:auto}.monthPickerHelp{padding:6px 8px 9px;color:var(--muted);font-size:8px;line-height:1.5;border-bottom:1px solid var(--line);margin-bottom:4px}.varianceLead{display:grid;grid-template-columns:1.35fr 1fr;gap:14px}.varianceFormula{padding:18px}.varianceFormula code{display:inline-block;margin-top:8px;padding:8px 10px;border-radius:8px;background:#eef3fb;color:var(--navy);font:700 10px Manrope,Arial,sans-serif}.varianceFormula p{color:var(--muted);line-height:1.7;margin:0}.varianceTable .tag{white-space:nowrap}#detailBody{min-height:0;overflow:auto}.drillBody{padding:16px}.drillKpis{grid-template-columns:repeat(4,minmax(0,1fr))}.drillToolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}.drillToolbar p{margin:0;color:var(--muted);font-size:9px}.dialog .drillBody .tableWrap{max-height:390px}.drillBody table{min-width:820px}.comparisonPrompt{display:flex;align-items:center;justify-content:space-between;gap:18px;margin:0 0 18px;padding:13px 16px;border:1px dashed #aaa;border-radius:11px;background:#fafaf9;color:#666}.comparisonPrompt b{font-size:10px;color:#222}.comparisonPrompt span{font-size:9px}.monthComparison{margin:0 0 24px;padding:20px 20px 4px;border:1px solid #ddd;border-radius:15px;background:linear-gradient(180deg,#fff,#fafaf9);box-shadow:0 12px 32px rgba(0,0,0,.055)}.comparisonTable{max-height:480px}.comparisonTable table{min-width:1050px}.detailMonthComparison{margin-bottom:18px;padding:17px 17px 3px;border:1px solid #ddd;border-radius:13px;background:#fafaf9}.rowActions{display:flex;flex-wrap:wrap;gap:5px;min-width:120px}.rowActions .control{min-height:29px;padding:5px 8px;font-size:8px;white-space:nowrap}.manualEditor{padding:20px;display:grid;gap:14px;overflow:auto}.manualSummary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:14px;background:#f6f9fe;border:1px solid #dfe8f5;border-radius:10px}.manualEditor label{display:grid;gap:6px;color:var(--muted);font-size:9px;font-weight:700}.manualEditor input,.manualEditor select{width:100%}.manualHelp{padding:10px 12px;background:#fffbf2;border-left:3px solid var(--amber);border-radius:0 8px 8px 0;color:#6d624e;font-size:9px;line-height:1.6}.manualEditorGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 @media(max-width:1100px){.shell{grid-template-columns:78px 1fr}.brand div:last-child,.nav .text,.sideFoot{display:none}.nav button{justify-content:center}.kpis{grid-template-columns:repeat(3,1fr)}.filters{grid-template-columns:2fr repeat(2,1fr)}.grid2{grid-template-columns:1fr}}
-@media(max-width:900px){.reportGrid,.varianceLead{grid-template-columns:1fr}}
+@media(max-width:900px){.reportGrid,.varianceLead,.execHero{grid-template-columns:1fr}.kpis.exec6{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:720px){.shell{display:block}.side{position:fixed;left:-250px;width:246px;transition:.2s}.side.open{left:0}.brand div:last-child,.nav .text,.sideFoot{display:block}.nav button{justify-content:flex-start}.mobileMenu{display:block}.topbar{height:auto;min-height:72px;padding:11px 14px}.topbar h1:after{display:none}.rightbar{flex-wrap:wrap;justify-content:flex-end}.rightbar .status{display:none}.content{padding:17px 13px 42px}.adminStrip,.kpis{grid-template-columns:1fr 1fr}.filters{grid-template-columns:1fr 1fr;padding:9px}.filters input{grid-column:1/-1}.upload{display:block}.upload button{margin-top:10px;width:100%}.kpi{min-height:108px}.kpi strong{font-size:18px}.reportHero{padding:22px}.reportHero h2{font-size:20px}.drillBody{padding:12px}.drillKpis{grid-template-columns:1fr 1fr}.drillToolbar,.comparisonPrompt{align-items:flex-start;flex-direction:column}.manualSummary,.manualEditorGrid{grid-template-columns:1fr}}
 @media(max-width:440px){.kpis,.adminStrip,.filters,.ruleGrid{grid-template-columns:1fr}.filters input{grid-column:auto}.rightbar #loginBtn{font-size:0}.rightbar #loginBtn:after{content:'Admin';font-size:10px}.drillKpis{grid-template-columns:1fr}}
+
+.execBoard{display:grid;gap:16px}
+.execHeader{display:grid;grid-template-columns:1.5fr .7fr;gap:14px}
+.execHeaderMain{background:linear-gradient(135deg,#0e0e0e,#2a2a2a);color:#fff;border-radius:15px;padding:28px 30px;box-shadow:0 20px 48px rgba(0,0,0,.18)}
+.execHeaderMain .eyebrow{font-size:8px;letter-spacing:.18em;color:#bbb;font-weight:800}
+.execHeaderMain h2{font-size:27px;letter-spacing:-.05em;margin:8px 0 9px}
+.execHeaderMain p{font-size:10px;color:#d0d0d0;line-height:1.7;margin:0;max-width:820px}
+.execHeaderMain .meta{display:flex;gap:20px;flex-wrap:wrap;margin-top:18px;padding-top:15px;border-top:1px solid rgba(255,255,255,.13);font-size:9px;color:#bbb}
+.execHeaderMain .meta b{color:#fff}
+.execDecision{display:grid;gap:10px}
+.execDecisionCard{background:#fff;border:1px solid var(--line);border-radius:13px;padding:16px 18px;box-shadow:var(--shadow);cursor:pointer;transition:.16s}
+.execDecisionCard:hover{transform:translateY(-2px);box-shadow:0 16px 36px rgba(0,0,0,.11)}
+.execDecisionCard small{display:block;font-size:7.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:800}
+.execDecisionCard b{display:block;font-size:16px;margin:7px 0 4px}
+.execDecisionCard p{margin:0;color:var(--muted);font-size:8.5px;line-height:1.55}
+.boardTitle{display:flex;justify-content:space-between;align-items:flex-end;margin:3px 1px 10px}
+.boardTitle h3{margin:0;font-size:13px;letter-spacing:-.02em}
+.boardTitle span{font-size:8px;color:var(--muted)}
+.actionGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.actionCard{background:#fff;border:1px solid var(--line);border-radius:13px;padding:17px;box-shadow:var(--shadow);cursor:pointer;transition:.16s}
+.actionCard:hover{transform:translateY(-2px);box-shadow:0 15px 34px rgba(0,0,0,.1)}
+.actionCard .n{font-size:8px;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.08em}
+.actionCard strong{display:block;font-size:19px;margin:9px 0 5px}
+.actionCard p{font-size:8.5px;color:var(--muted);line-height:1.55;margin:0}
+.mgmtGrid{display:grid;grid-template-columns:1.2fr .8fr;gap:14px}
+.mgmtTable tr[data-drill],.mgmtTable tr[data-row-drill],.mgmtTable tr[data-fopag-drill]{cursor:pointer}
+.mgmtTable tr[data-drill]:hover td,.mgmtTable tr[data-row-drill]:hover td,.mgmtTable tr[data-fopag-drill]:hover td{background:#eef2f7!important}
+.pillAction{display:inline-block;margin-left:6px;font-size:7px;color:#777;font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.detailGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:16px}
+.detailField{border:1px solid var(--line);border-radius:10px;padding:11px;background:#fafafa}
+.detailField small{display:block;font-size:7.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px}
+.detailField b{display:block;font-size:10px;overflow-wrap:anywhere}
+.editorGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:18px}
+.editorGrid label{display:grid;gap:5px;font-size:8px;font-weight:700;color:var(--muted)}
+.editorGrid input,.editorGrid select{width:100%}
+.editorActions{display:flex;justify-content:flex-end;gap:8px;padding:0 18px 18px}
+@media(max-width:900px){.execHeader,.mgmtGrid{grid-template-columns:1fr}.actionGrid{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.actionGrid,.detailGrid,.editorGrid{grid-template-columns:1fr}}
+
+
+.systemEditor{padding:18px;overflow:auto}.systemEditorGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.systemEditor label{display:grid;gap:6px;color:var(--muted);font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.055em}.systemEditor input,.systemEditor select,.systemEditor textarea{width:100%;border:1px solid #dbe2ec;border-radius:9px;padding:9px 11px;background:#fff;color:var(--ink);font:10px Manrope,Arial,sans-serif}.systemEditor textarea{min-height:78px;resize:vertical}.systemEditor select[multiple]{min-height:190px;text-transform:none;letter-spacing:0}.systemEditor .full{grid-column:1/-1}.systemHint{padding:11px 13px;border-left:3px solid #111;background:#f5f5f4;border-radius:0 8px 8px 0;font-size:9px;line-height:1.65;color:#555;margin-bottom:14px}.systemActions{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;margin-top:16px}.systemActions .left{margin-right:auto}.catalogGrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.catalogBox{border:1px solid var(--line);border-radius:11px;overflow:hidden}.catalogBox h3{font-size:10px;margin:0;padding:12px 14px;border-bottom:1px solid var(--line);background:#fafafa}.catalogList{max-height:320px;overflow:auto}.catalogItem{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 12px;border-bottom:1px solid #eee;font-size:9px}.catalogItem:last-child{border-bottom:0}.catalogCreate{display:flex;gap:7px;padding:12px;border-top:1px solid var(--line);background:#fafafa}.catalogCreate input{flex:1}.linkSummary{padding:10px 12px;border-radius:9px;background:#f7f8fa;border:1px solid var(--line);font-size:9px;color:#555;line-height:1.6}.linkSummary b{color:#111}.miniBtn{min-height:28px!important;padding:5px 8px!important;font-size:8px!important}.clickableKpi{cursor:pointer;transition:.16s}.clickableKpi:hover{transform:translateY(-2px);box-shadow:0 16px 34px rgba(0,0,0,.11)}
+@media(max-width:1200px){.adminStrip{grid-template-columns:1fr 1fr}}@media(max-width:720px){.systemEditorGrid,.catalogGrid{grid-template-columns:1fr}.systemEditor .full{grid-column:auto}}
+
 </style>
 </head>
 <body>
@@ -29,7 +72,6 @@
 <button data-view="categories"><span class="text">Despesas por Categoria</span></button>
 <button data-view="unexpected"><span class="text">Pagamentos Não Previstos</span></button>
 <button data-view="fopag"><span class="text">FOPAG</span></button>
-<button data-view="naPraia"><span class="text">Na Praia</span></button>
 <button data-view="services"><span class="text">Serviços e Antecipações</span></button>
 <button data-view="base"><span class="text">Base de Lançamentos</span></button>
 <button data-view="rules"><span class="text">Regras de Conciliação</span></button>
@@ -57,6 +99,8 @@
 <div class="adminStrip hidden" id="adminStrip">
 <article class="upload"><div><b>Previsão mensal</b><small id="forecastInfo">Importe uma vez por competência</small></div><button class="control primary" data-file="forecastFile">Importar / substituir</button><input class="hidden" id="forecastFile" type="file" accept=".xlsx,.xls,.csv"></article>
 <article class="upload"><div><b>Pagamentos realizados</b><small id="actualInfo">Substitua semanalmente pelo relatório completo</small></div><button class="control primary" data-file="actualFile">Atualizar realizados</button><input class="hidden" id="actualFile" type="file" accept=".xlsx,.xls,.csv"></article>
+<article class="upload"><div><b>Novo lançamento</b><small>Crie previsão ou pagamento manualmente</small></div><button class="control primary" id="newRowBtn">Criar lançamento</button></article>
+<article class="upload"><div><b>Cadastros financeiros</b><small>Categorias e centros de custo globais</small></div><button class="control" id="catalogBtn">Gerenciar cadastros</button></article>
 </div>
 <div id="app"></div>
 <div class="footer" id="footer"></div>
@@ -72,7 +116,7 @@
 const SUPABASE_URL='https://tohgvkvkvajqxhtvbija.supabase.co';
 const SUPABASE_ANON_KEY='sb_publishable_ZLue4j1oo6ULkFIWVhkwNQ_iLkQHgah';
 
-const VIEW_IDS=['dashboard','report','comparison','differences','weeks','categories','unexpected','fopag','naPraia','services','base','rules'];
+const VIEW_IDS=['dashboard','report','comparison','differences','weeks','categories','unexpected','fopag','services','base','rules'];
 const freshFilters=()=>({q:'',weeks:[],categories:[],costCenters:[],statuses:[]});
 const FILTER_STATE=Object.fromEntries(VIEW_IDS.map(id=>[id,freshFilters()]));
 const MONTH_STATE=Object.fromEntries(VIEW_IDS.map(id=>[id,[]]));
@@ -188,6 +232,13 @@ function parse(raw,source){
 const text=r=>norm([r.party,r.description,r.category,r.subcategory,r.costCenter].join(' '));
 const excluded=r=>r.statusOverride?r.statusOverride==='excluded':text(r).includes('EXCLUIR');
 const uber=r=>/\bUBER\b/.test(text(r));
+function salaryAdvanceLike(r){
+  const t=text(r);
+  const yes=/\b(ADIANTAMENTO|ADIANT|ADTO|VALE SALARIO|ANTECIPACAO SALARIAL)\b/.test(t);
+  const no=/\b(LUCRO|LUCROS|FORNECEDOR|FORNECEDORES|VIAGEM|VIAGENS|COMPRA|COMPRAS)\b/.test(t);
+  return yes&&!no;
+}
+
 
 function bankFee(r){
   const t=text(r);
@@ -209,7 +260,7 @@ function paymentTypeOf(r){
   if(t.includes('ANTECIPACAO DE LUCROS')||t.includes('ANTECIPACAO LUCROS')||t.includes('ADIANTAMENTO DE LUCROS')||t.includes('ADIANTAMENTO LUCROS'))return'profitAdvance';
   if(/\bFERIAS\b/.test(t))return'vacation';
 
-  if((/\bADIANTAMENTO\b/.test(t)||t.includes('VALE SALARIO')||t.includes('ADIANTAMENTO SALARIAL')||t.includes('ADIANTAMENTO DE SALARIO'))&&!/\b(LUCRO|LUCROS|FORNECEDOR|FORNECEDORES|VIAGEM|VIAGENS|COMPRA|COMPRAS)\b/.test(t))return'salaryAdvance';
+  if(salaryAdvanceLike(r))return'salaryAdvance';
 
   if(/\bPRESTAC(?:AO|OES)(?: DE)? SERVICOS?\b/.test(t)||t.includes('SERVICOS PRESTADOS'))return'service';
 
@@ -222,7 +273,7 @@ function paymentTypeLabel(code){
   return({fopag:'FOPAG',salaryAdvance:'Adiantamento Salarial',vacation:'Férias',service:'Prestação de Serviço',profitAdvance:'Antecipação de Lucros'})[code]||'Outros';
 }
 
-const salaryAdvance=r=>paymentTypeOf(r)==='salaryAdvance';
+const salaryAdvance=r=>salaryAdvanceLike(r)||paymentTypeOf(r)==='salaryAdvance';
 const vacationPayment=r=>paymentTypeOf(r)==='vacation';
 const forecastFopag=r=>r.source==='previsto'&&paymentTypeOf(r)==='fopag';
 const actualFopag=r=>r.source==='realizado'&&paymentTypeOf(r)==='fopag';
@@ -290,6 +341,75 @@ function dashboardRecord(){
   return{forecast,actual,metadata:{months}};
 }
 
+
+function allRawRows(){
+  return Object.values(recordsByMonth).flatMap(r=>[...(r.forecast||[]),...(r.actual||[])]);
+}
+function catalogCategories(){
+  const fromRows=allRawRows().map(r=>r.category).filter(Boolean);
+  const fromMeta=Object.values(recordsByMonth).flatMap(r=>r.metadata?.catalogCategories||[]);
+  return [...new Set([...fromRows,...fromMeta,'Sem categoria'])].sort((a,b)=>a.localeCompare(b,'pt-BR'));
+}
+function catalogCostCenters(){
+  const fromRows=allRawRows().map(r=>r.costCenter).filter(Boolean);
+  const fromMeta=Object.values(recordsByMonth).flatMap(r=>r.metadata?.catalogCostCenters||[]);
+  return [...new Set([...fromRows,...fromMeta,'Não informado'])].sort((a,b)=>a.localeCompare(b,'pt-BR'));
+}
+async function persistRecordForMonth(competence,base,message='Alterações salvas.'){
+  if(!session)throw Error('Entre como administrador.');
+  const now=new Date().toISOString();
+  base.metadata={...(base.metadata||{}),lastEditAt:now};
+  const payload={competence,forecast:base.forecast||[],actual:base.actual||[],metadata:base.metadata||{},updated_at:now,updated_by:session.user.id};
+  const {data,error}=await db.from('financial_months').upsert(payload,{onConflict:'competence'}).select('*').single();
+  if(error)throw error;
+  const confirmed=data?{forecast:data.forecast||[],actual:data.actual||[],metadata:data.metadata||{}}:base;
+  recordsByMonth[competence]=confirmed;
+  if(competence===$('#month').value)record=confirmed;
+  if(!availableMonths.includes(competence))availableMonths.push(competence);
+  renderMonthPicker();
+  render();
+  if(message)notice(message);
+  return confirmed;
+}
+async function persistManyMonths(changes,message){
+  if(!session)throw Error('Entre como administrador.');
+  const now=new Date().toISOString();
+  const payloads=Object.entries(changes).map(([competence,base])=>({
+    competence,
+    forecast:base.forecast||[],
+    actual:base.actual||[],
+    metadata:{...(base.metadata||{}),lastEditAt:now},
+    updated_at:now,
+    updated_by:session.user.id
+  }));
+  if(!payloads.length)return;
+  const {data,error}=await db.from('financial_months').upsert(payloads,{onConflict:'competence'}).select('*');
+  if(error)throw error;
+  (data||payloads).forEach(item=>{
+    recordsByMonth[item.competence]={
+      forecast:item.forecast||[],
+      actual:item.actual||[],
+      metadata:item.metadata||{}
+    };
+  });
+  const current=recordsByMonth[$('#month').value];
+  if(current)record=current;
+  availableMonths=[...new Set([...availableMonths,...payloads.map(x=>x.competence)])].sort();
+  renderMonthPicker();render();notice(message);
+}
+function forecastOptionsForMonth(competence){
+  const base=monthRecord(competence);
+  return (base?.forecast||[]).map(r=>rowForMonth(r,competence,base)).filter(r=>!excluded(r));
+}
+function actualOptionsForMonth(competence){
+  const base=monthRecord(competence);
+  return (base?.actual||[]).map(r=>rowForMonth(r,competence,base)).filter(r=>!excluded(r));
+}
+function linkedActualKeysForForecast(competence,forecastKey){
+  const links=monthRecord(competence)?.metadata?.manualLinks||{};
+  return Object.entries(links).filter(([,fkey])=>fkey===forecastKey).map(([akey])=>akey);
+}
+
 function manualForecastForActual(actual,forecast){
   const targetKey=monthRecord(rowMonth(actual))?.metadata?.manualLinks?.[rowStorageKey(actual)];
   return targetKey?forecast.find(p=>rowMonth(p)===rowMonth(actual)&&rowStorageKey(p)===targetKey)||null:null;
@@ -316,117 +436,85 @@ function analyze(){
   const dash=dashboardRecord(),forecastAll=dash.forecast||[],actualAll=dash.actual||[],
         forecast=forecastAll.filter(r=>!excluded(r)),actual=actualAll.filter(r=>!excluded(r));
 
-  const used=new Set,links=[],
-        naPraiaPlans=forecast.filter(naPraia),
-        fopagPlans=forecast.filter(r=>forecastFopag(r)&&!naPraia(r)),
-        salaryAdvancePlans=forecast.filter(r=>salaryAdvance(r)&&!naPraia(r)),
-        vacationPlans=forecast.filter(r=>vacationPayment(r)&&!naPraia(r)),
-        servicePlans=forecast.filter(r=>forecastService(r)&&!naPraia(r)),
-        serviceOnlyPlans=forecast.filter(r=>paymentTypeOf(r)==='service'&&!naPraia(r)),
-        profitAdvancePlans=forecast.filter(r=>paymentTypeOf(r)==='profitAdvance'&&!naPraia(r)),
-        caesbPlans=forecast.filter(caesb);
+  const used=new Set,links=[];
+  const naPraiaPlans=forecast.filter(naPraia);
+
+  const salaryAdvanceActualSeed=actual.filter(r=>salaryAdvance(r)&&!naPraia(r));
+  const salaryAdvancePlans=forecast.filter(r=>{
+    if(naPraia(r))return false;
+    if(salaryAdvance(r))return true;
+    return salaryAdvanceActualSeed.some(a=>{
+      const sameMonth=!rowMonth(a)||!rowMonth(r)||rowMonth(a)===rowMonth(r);
+      const sameName=sameMeaningfulName(a,r);
+      const amountClose=Math.abs((Number(a.amount)||0)-(Number(r.amount)||0))<=1000;
+      return sameMonth&&sameName&&amountClose;
+    });
+  });
+
+  const vacationPlans=forecast.filter(r=>vacationPayment(r)&&!naPraia(r));
+  const servicePlans=forecast.filter(r=>forecastService(r)&&!naPraia(r));
+  const serviceOnlyPlans=forecast.filter(r=>paymentTypeOf(r)==='service'&&!naPraia(r));
+  const profitAdvancePlans=forecast.filter(r=>paymentTypeOf(r)==='profitAdvance'&&!naPraia(r));
+  const fopagPlans=forecast.filter(r=>forecastFopag(r)&&!naPraia(r)&&!salaryAdvancePlans.some(x=>rowLocator(x)===rowLocator(r))&&!vacationPlans.some(x=>rowLocator(x)===rowLocator(r)));
+  const caesbPlans=forecast.filter(caesb);
 
   for(const a of actual){
     let f=null,reason='',manualPlan=manualForecastForActual(a,forecast),forcedStatus=a.statusOverride||'';
-
-    if(forcedStatus==='unexpected'){
-      reason='Status definido: Não previsto';
-    }
-    else if(manualPlan){
-      f=manualPlan;reason='Vínculo definido';
-    }
-    else if(uber(a)){
-      reason='Uber validado como não previsto';
-    }
+    if(forcedStatus==='unexpected'){reason='Status definido: Não previsto'}
+    else if(manualPlan){f=manualPlan;reason='Vínculo definido'}
+    else if(uber(a)){reason='Uber validado como não previsto'}
     else if(bankFee(a)){
       const feePlans=forecast.filter(p=>bankFee(p));
       f=bestPlanForActual(a,feePlans.filter(p=>!used.has(rowLocator(p))))||bestPlanForActual(a,feePlans);
       reason=f?'Tarifa bancária conciliada exclusivamente com tarifa bancária':'Tarifa bancária sem previsão';
     }
     else if(naPraia(a)){
-      const bucket=naPraiaBucket(a);
-      const compatiblePlans=naPraiaPlans.filter(p=>naPraiaBucket(p)===bucket);
+      const bucket=naPraiaBucket(a),compatiblePlans=naPraiaPlans.filter(p=>naPraiaBucket(p)===bucket);
       f=bestPlanForActual(a,compatiblePlans.filter(p=>!used.has(rowLocator(p))))||bestPlanForActual(a,compatiblePlans);
       reason=f?'Na Praia · '+bucket+' conciliado com previsão equivalente':'Na Praia sem previsão compatível no mesmo grupo';
     }
-    else if(salaryAdvance(a)&&(f=bestPlanForActual(a,salaryAdvancePlans))){
-      reason='Adiantamento salarial';
+    else if(salaryAdvance(a)){
+      const samePersonPlans=salaryAdvancePlans.filter(p=>(!rowMonth(a)||!rowMonth(p)||rowMonth(a)===rowMonth(p))&&sameMeaningfulName(a,p));
+      f=bestPlanForActual(a,samePersonPlans.length?samePersonPlans:salaryAdvancePlans);
+      reason=f?'Adiantamento salarial conciliado com previsão existente':'Adiantamento salarial sem previsão compatível';
     }
-    else if(vacationPayment(a)&&(f=bestPlanForActual(a,vacationPlans))){
-      reason='Férias';
-    }
-    else if(actualFopag(a)&&(f=bestPlanForActual(a,fopagPlans))){
-      a.reconciledGroup='fopag';reason='Grupo FOPAG: folha, salários, comissões e bonificações';
-    }
-    else if(actualService(a)&&(f=bestPlanForActual(a,servicePlans))){
-      reason='Grupo Prestação de Serviço / Antecipação de Lucros';
-    }
-    else if(caesb(a)&&(f=bestPlanForActual(a,caesbPlans.filter(p=>!used.has(rowLocator(p))))||bestPlanForActual(a,caesbPlans))){
-      reason='CAESB conciliada com a previsão da competência';
-    }
+    else if(vacationPayment(a)&&(f=bestPlanForActual(a,vacationPlans))){reason='Férias'}
+    else if(actualFopag(a)&&(f=bestPlanForActual(a,fopagPlans))){a.reconciledGroup='fopag';reason='Grupo FOPAG: folha, salários, comissões e bonificações'}
+    else if(actualService(a)&&(f=bestPlanForActual(a,servicePlans))){reason='Grupo Prestação de Serviço / Antecipação de Lucros'}
+    else if(caesb(a)&&(f=bestPlanForActual(a,caesbPlans.filter(p=>!used.has(rowLocator(p))))||bestPlanForActual(a,caesbPlans))){reason='CAESB conciliada com a previsão da competência'}
     else{
-      const candidates=forecast.filter(p=>
-        !used.has(rowLocator(p)) &&
-        !forecastFopag(p) &&
-        !forecastService(p) &&
-        !salaryAdvance(p) &&
-        !vacationPayment(p) &&
-        !caesb(p) &&
-        !naPraia(p) &&
-        !bankFee(p) &&
-        !naPraia(a) &&
-        !bankFee(a) &&
-        (!rowMonth(a)||!rowMonth(p)||rowMonth(a)===rowMonth(p))
-      );
-
+      const candidates=forecast.filter(p=>!used.has(rowLocator(p))&&!forecastFopag(p)&&!forecastService(p)&&!salaryAdvancePlans.some(x=>rowLocator(x)===rowLocator(p))&&!vacationPayment(p)&&!caesb(p)&&!naPraia(p)&&!bankFee(p)&&!naPraia(a)&&!bankFee(a)&&(!rowMonth(a)||!rowMonth(p)||rowMonth(a)===rowMonth(p)));
       const sameNamePlans=candidates.filter(p=>sameMeaningfulName(a,p));
-      if(sameNamePlans.length){
-        f=bestPlanForActual(a,sameNamePlans);reason='Mesmo fornecedor ou descrição na competência';
-      }else{
+      if(sameNamePlans.length){f=bestPlanForActual(a,sameNamePlans);reason='Mesmo fornecedor ou descrição na competência'}
+      else{
         let best=null,score=0;
         for(const p of candidates){
-          let s=similarity(a.party+' '+a.description+' '+a.category,p.party+' '+p.description+' '+p.category);
-          if(norm(a.party)!=='NAO INFORMADO'&&norm(a.party)===norm(p.party))s+=.25;
-          if(a.date&&p.date&&a.date===p.date)s+=.12;
-          if(Math.abs(a.amount-p.amount)<.02)s+=.28;
-          if(s>score){score=s;best=p}
+          let ss=similarity(a.party+' '+a.description+' '+a.category,p.party+' '+p.description+' '+p.category);
+          if(norm(a.party)!=='NAO INFORMADO'&&norm(a.party)===norm(p.party))ss+=.25;
+          if(a.date&&p.date&&a.date===p.date)ss+=.12;
+          if(Math.abs(a.amount-p.amount)<.02)ss+=.28;
+          if(ss>score){score=ss;best=p}
         }
         if(score>=.62){f=best;reason='Correspondência '+Math.round(score*100)+'%'}
       }
     }
-
-    if(f){
-      a.originalCategory=a.originalCategory||a.category;
-      a.category=a.classificationOverride?.category||f.category||a.category;
-      a.reconciledForecast=f;
-      a.reconciledPaymentType=paymentTypeOf(f)||'';
-    }
-
-    if(f&&!forecastFopag(f)&&!forecastService(f)&&!salaryAdvance(f)&&!vacationPayment(f))used.add(rowLocator(f));
+    if(f){a.originalCategory=a.originalCategory||a.category;a.category=a.classificationOverride?.category||f.category||a.category;a.reconciledForecast=f;a.reconciledPaymentType=paymentTypeOf(f)||''}
+    if(f&&!forecastFopag(f)&&!forecastService(f)&&!salaryAdvancePlans.some(x=>rowLocator(x)===rowLocator(f))&&!vacationPayment(f))used.add(rowLocator(f));
     links.push({actual:a,forecast:f,reason});
   }
 
   const unexpected=links.filter(x=>x.actual.statusOverride==='unexpected'||(x.actual.statusOverride!=='actual'&&!x.forecast&&!prediction(x.actual))).map(x=>x.actual),
-        pending=forecast.filter(f=>!used.has(rowLocator(f))&&!forecastFopag(f)&&!forecastService(f)&&!salaryAdvance(f)&&!vacationPayment(f)),
+        pending=forecast.filter(f=>!used.has(rowLocator(f))&&!forecastFopag(f)&&!forecastService(f)&&!salaryAdvancePlans.some(x=>rowLocator(x)===rowLocator(f))&&!vacationPayment(f)),
         naPraiaActual=actual.filter(naPraia),
         fopagActual=actual.filter(r=>actualFopag(r)&&!naPraia(r)),
-        salaryAdvanceActual=actual.filter(r=>salaryAdvance(r)&&!naPraia(r)),
+        salaryAdvanceActual=actual.filter(r=>salaryAdvanceLike(r)&&!naPraia(r)),
         vacationActual=actual.filter(r=>vacationPayment(r)&&!naPraia(r)),
         serviceActual=actual.filter(r=>actualService(r)&&!naPraia(r)),
         profitAdvanceActual=actual.filter(r=>paymentTypeOf(r)==='profitAdvance'&&!naPraia(r)),
         serviceOnlyActual=actual.filter(r=>paymentTypeOf(r)==='service'&&!naPraia(r)),
         caesbActual=actual.filter(caesb);
 
-  return{
-    forecastAll,actualAll,forecast,actual,links,linksAll:[...links],
-    unexpected,unexpectedAll:[...unexpected],pending,
-    fopagPlans,fopagActual,salaryAdvancePlans,salaryAdvanceActual,
-    vacationPlans,vacationActual,servicePlans,serviceOnlyPlans,
-    profitAdvancePlans,serviceActual,serviceOnlyActual,profitAdvanceActual,
-    naPraiaPlans,naPraiaActual,caesbPlans,caesbActual,
-    forecastTotal:sum(forecast,x=>x.amount),
-    actualTotal:sum(actual,x=>x.amount)
-  };
+  return{forecastAll,actualAll,forecast,actual,links,linksAll:[...links],unexpected,unexpectedAll:[...unexpected],pending,fopagPlans,fopagActual,salaryAdvancePlans,salaryAdvanceActual,vacationPlans,vacationActual,servicePlans,serviceOnlyPlans,profitAdvancePlans,serviceActual,serviceOnlyActual,profitAdvanceActual,naPraiaPlans,naPraiaActual,caesbPlans,caesbActual,forecastTotal:sum(forecast,x=>x.amount),actualTotal:sum(actual,x=>x.amount)};
 }
 
 function linkedForecast(r,a){return r.source==='realizado'?(r.reconciledForecast||(a.links||[]).find(x=>rowLocator(x.actual)===rowLocator(r))?.forecast||null):null}
@@ -474,7 +562,7 @@ function filterBar(a){
   const source=[...(a.forecastAll||a.forecast),...(a.actualAll||a.actual)],
         cats=[...new Set(source.flatMap(r=>[r.category,reportingCategory(r,a),...(r.allocations||[]).map(x=>x.category)]).filter(Boolean))].sort(),
         ccs=[...new Set(source.flatMap(r=>[r.costCenter,...(r.allocations||[]).map(x=>x.costCenter)]).filter(Boolean))].sort();
-  return`<div class="filters"><input id="fq" placeholder="Buscar fornecedor, descrição ou categoria" value="${esc(filters.q)}">${multi('weeks','Todas as semanas',[1,2,3,4,5].map(x=>({v:String(x),t:weekLabel(x)})),filters.weeks)}${multi('categories','Todas as categorias',cats.map(x=>({v:x,t:x})),filters.categories)}${multi('costCenters','Todos os centros',ccs.map(x=>({v:x,t:x})),filters.costCenters)}${multi('statuses','Todos os status',[{v:'forecast',t:'Previstos'},{v:'actual',t:'Realizados conciliados'},{v:'unexpected',t:'Não previstos'},{v:'excluded',t:'Excluídos'}],filters.statuses)}<button class="clear" id="clearFilters">Limpar</button>${session?'<button type="button" class="control primary" id="manageRows">Gerenciar lançamentos</button>':''}</div>`;
+  return`<div class="filters"><input id="fq" placeholder="Buscar fornecedor, descrição ou categoria" value="${esc(filters.q)}">${multi('weeks','Todas as semanas',[1,2,3,4,5].map(x=>({v:String(x),t:weekLabel(x)})),filters.weeks)}${multi('categories','Todas as categorias',cats.map(x=>({v:x,t:x})),filters.categories)}${multi('costCenters','Todos os centros',ccs.map(x=>({v:x,t:x})),filters.costCenters)}${multi('statuses','Todos os status',[{v:'forecast',t:'Previstos'},{v:'actual',t:'Realizados conciliados'},{v:'unexpected',t:'Não previstos'},{v:'excluded',t:'Excluídos'}],filters.statuses)}<button class="clear" id="clearFilters">Limpar</button>${session?'<button type="button" class="control primary" id="quickNewForecast">+ Previsão</button><button type="button" class="control" id="quickNewPayment">+ Pagamento</button>':''}</div>`;
 }
 
 function kpi(label,value,detail,tone=''){return `<article class="kpi ${tone}"><label>${label}</label><strong>${value}</strong><small>${detail}</small></article>`}
@@ -485,7 +573,7 @@ function variancePercentText(forecast,paid){const value=variancePercent(forecast
 
 function fopagBlocks(a){
   return[
-    {name:'FOPAG',plans:a.fopagPlans||[],actual:a.fopagActual||[]},
+    {name:'Folha / Salários',plans:a.fopagPlans||[],actual:a.fopagActual||[]},
     {name:'Adiantamento Salarial',plans:a.salaryAdvancePlans||[],actual:a.salaryAdvanceActual||[]},
     {name:'Férias',plans:a.vacationPlans||[],actual:a.vacationActual||[]},
     {name:'Prestação de Serviço',plans:a.serviceOnlyPlans||[],actual:a.serviceOnlyActual||[]}
@@ -493,18 +581,25 @@ function fopagBlocks(a){
 }
 
 function fopagSummaryHTML(a){
-  const blocks=fopagBlocks(a),planned=sum(blocks.flatMap(x=>x.plans),r=>r.amount),realized=sum(blocks.flatMap(x=>x.actual),r=>r.amount);
-  return card('Resumo FOPAG',`<div class="tableWrap"><table><thead><tr><th>Tipo</th><th class="num">Previsto</th><th class="num">Realizado</th><th class="num">Diferença</th></tr></thead><tbody>${blocks.map(b=>{const p=sum(b.plans,r=>r.amount),r=sum(b.actual,x=>x.amount);return`<tr><td>${esc(b.name)}</td><td class="num">${money(p)}</td><td class="num">${money(r)}</td><td class="num ${r-p>0?'positive':'negative'}">${money(r-p)}</td></tr>`}).join('')}</tbody></table></div>`,`Total previsto ${money(planned)} · Total realizado ${money(realized)}`);
+  const blocks=fopagBlocks(a),
+        npPlans=(a.naPraiaPlans||[]).filter(r=>['salario','adiantamento','ferias'].includes(naPraiaBucket(r))),
+        npActual=(a.naPraiaActual||[]).filter(r=>['salario','adiantamento','ferias'].includes(naPraiaBucket(r))),
+        rows=[...blocks,{name:'FOPAG Na Praia',plans:npPlans,actual:npActual}],
+        planned=sum(rows.flatMap(x=>x.plans),r=>r.amount),
+        realized=sum(rows.flatMap(x=>x.actual),r=>r.amount);
+
+  return card('Resumo FOPAG',`<div class="tableWrap mgmtTable"><table><thead><tr><th>Componente</th><th class="num">Previsto</th><th class="num">Realizado</th><th class="num">Diferença</th><th class="num">Execução</th></tr></thead><tbody>${rows.map(b=>{const p=sum(b.plans,r=>r.amount),r=sum(b.actual,x=>x.amount),d=r-p;return`<tr data-fopag-drill="${esc(b.name)}"><td><b>${esc(b.name)}</b><span class="pillAction">abrir</span></td><td class="num">${money(p)}</td><td class="num">${money(r)}</td><td class="num ${d>0?'positive':'negative'}">${money(d)}</td><td class="num">${pct(p?r/p*100:0)}</td></tr>`}).join('')}</tbody></table></div>`,`Total previsto ${money(planned)} · Total realizado ${money(realized)}`);
 }
 
 function table(rows,{status=true,max=true,actions=true}={}){
   if(!rows.length)return'<div class="empty"><b>Nenhum lançamento encontrado</b>Revise os filtros ou importe a planilha.</div>';
   const a=lastAnalysis||analyze(),showActions=actions&&!!session;
-  return `<div class="tableWrap ${max?'tall':''}"><table><thead><tr><th>Competência</th><th>Origem</th><th>Data</th><th>Fornecedor</th><th>Descrição</th><th>Categoria</th><th>Centro de custo</th><th>Tipo</th>${status?'<th>Status</th>':''}<th class="num">Valor</th>${showActions?'<th>Editar</th>':''}</tr></thead><tbody>${rows.map(r=>{
+  return `<div class="tableWrap ${max?'tall':''}"><table><thead><tr><th>Competência</th><th>Origem</th><th>Data</th><th>Fornecedor</th><th>Descrição</th><th>Categoria</th><th>Centro de custo</th><th>Tipo</th>${status?'<th>Status</th>':''}<th class="num">Valor</th>${showActions?'<th>Ação</th>':''}</tr></thead><tbody>${rows.map(r=>{
     const statusCode=statusOf(r,a),type=paymentTypeOf(r),
           st=statusCode==='excluded'?'<span class="tag gray">Excluído</span>':statusCode==='forecast'?'<span class="tag">Previsto</span>':statusCode==='unexpected'?'<span class="tag red">Não previsto</span>':'<span class="tag green">Conciliado</span>',
-          actionButtons=showActions?`<div class="rowActions"><button type="button" class="control primary" data-edit-row="${esc(rowStorageKey(r))}" data-row-month="${esc(rowMonth(r))}">Editar lançamento</button></div>`:'';
-    return `<tr><td>${esc(r.competence?monthText(r.competence):monthText($('#month').value))}</td><td><span class="tag ${r.source==='realizado'?'green':''}">${r.source}</span></td><td>${dateText(r.date)}</td><td>${esc(r.party)}</td><td>${esc(r.description)}</td><td>${esc(r.category)}</td><td>${esc(r.costCenter)}</td><td><span class="tag ${type?'green':'gray'}">${esc(paymentTypeLabel(type))}</span></td>${status?`<td>${st}</td>`:''}<td class="num"><b>${money(r.amount)}</b></td>${showActions?`<td>${actionButtons}</td>`:''}</tr>`;
+          key=rowStorageKey(r),month=rowMonth(r),
+          actionButtons=showActions?`<button type="button" class="control primary" data-edit-direct="${esc(key)}" data-row-month="${esc(month)}">Editar</button>`:'';
+    return `<tr data-row-drill="${esc(key)}" data-row-month="${esc(month)}"><td>${esc(r.competence?monthText(r.competence):monthText($('#month').value))}</td><td><span class="tag ${r.source==='realizado'?'green':''}">${r.source}</span></td><td>${dateText(r.date)}</td><td>${esc(r.party)}</td><td>${esc(r.description)}</td><td>${esc(r.category)}</td><td>${esc(r.costCenter)}</td><td><span class="tag ${type?'green':'gray'}">${esc(paymentTypeLabel(type))}</span></td>${status?`<td>${st}</td>`:''}<td class="num"><b>${money(r.amount)}</b></td>${showActions?`<td>${actionButtons}</td>`:''}</tr>`;
   }).join('')}</tbody></table></div>`;
 }
 
@@ -552,12 +647,492 @@ async function loadAllMonths(){
   renderMonthPicker();
 }
 
+function pendingForecastTotal(a){return sum(a.pending||[],r=>r.amount)}
+function executiveTopCategories(a,limit=10){
+  const fm=group(a.forecast,r=>reportingCategory(r,a)),am=group(a.actual,r=>reportingCategory(r,a));
+  return [...new Set([...fm.keys(),...am.keys()])].map(name=>{const forecast=sum(fm.get(name)||[],r=>r.amount),actual=sum(am.get(name)||[],r=>r.amount);return{name,forecast,actual,diff:actual-forecast}}).sort((x,y)=>y.actual-x.actual).slice(0,limit)
+}
+function executiveStatus(a){const diff=a.actualTotal-a.forecastTotal,execution=a.forecastTotal?a.actualTotal/a.forecastTotal*100:0,unexpected=sum(a.unexpected||[],r=>r.amount),unexpectedPct=a.actualTotal?unexpected/a.actualTotal*100:0;if(diff>0||execution>105)return{label:'Atenção orçamentária',detail:'Realizado acima do planejado. Priorize as categorias com maior desvio.'};if(unexpectedPct>5)return{label:'Previsibilidade em atenção',detail:'Os pagamentos não previstos estão relevantes dentro do realizado.'};return{label:'Execução controlada',detail:'O realizado está dentro de uma faixa controlada frente ao orçamento.'}}
+function executiveDashboardHTML(a){
+  const wk=weekly(a),diff=a.actualTotal-a.forecastTotal,exec=a.forecastTotal?a.actualTotal/a.forecastTotal*100:0,unexpectedTotal=sum(a.unexpected||[],r=>r.amount),pending=pendingForecastTotal(a),status=executiveStatus(a),cats=executiveTopCategories(a,10),worst=[...cats].sort((x,y)=>y.diff-x.diff)[0],largestUnexpected=[...(a.unexpected||[])].sort((x,y)=>y.amount-x.amount).slice(0,8);
+  return `<section class="execHero"><div class="execHeroMain"><span class="eyebrow">PAINEL EXECUTIVO · DANE-SE FINANCEIRO</span><h2>${esc(selectedMonthText())}</h2><p>Visão gerencial do orçamento e dos pagamentos efetivamente realizados, com foco em desvios, previsibilidade e decisões de fechamento.</p><div class="heroMeta"><span><b>${a.forecast.length}</b> previstos</span><span><b>${a.actual.length}</b> pagos</span><span><b>${a.unexpected.length}</b> não previstos</span></div></div><div class="execHeroSide"><div class="execSignal"><small>Status da competência</small><b>${esc(status.label)}</b><p>${esc(status.detail)}</p></div><div class="execSignal"><small>Maior pressão</small><b>${worst?esc(worst.name):'Sem dados'}</b><p>${worst?`${money(worst.actual)} realizado · desvio ${money(worst.diff)}`:'Sem base suficiente.'}</p></div></div></section><div class="kpis exec6">${kpi('Orçamento previsto',money(a.forecastTotal),'Base aprovada')}${kpi('Total realizado',money(a.actualTotal),'Somente pagamentos efetivos','green')}${kpi('Desvio orçamentário',money(diff),diff>0?'Acima do previsto':'Dentro/abaixo do previsto',diff>0?'red':'green')}${kpi('Execução',pct(exec),'Realizado ÷ previsto','cyan')}${kpi('Não previstos',money(unexpectedTotal),a.unexpected.length+' pagamentos','amber')}${kpi('Previsto pendente',money(pending),'Acompanhar até fechamento','cyan')}</div><div class="grid2">${card('Evolução semanal','<div class="chartBox"><canvas id="execWeekChart"></canvas></div>','Previsto x realizado')}${card('Composição do realizado','<div class="chartBox"><canvas id="execCatChart"></canvas></div>','10 maiores categorias')}</div><div class="grid2">${card('Categorias que mais pressionam o orçamento',`<div class="tableWrap execMiniTable"><table><thead><tr><th>Categoria</th><th class="num">Previsto</th><th class="num">Realizado</th><th class="num">Desvio</th><th class="num">Execução</th></tr></thead><tbody>${cats.map(x=>`<tr><td><b>${esc(x.name)}</b></td><td class="num">${money(x.forecast)}</td><td class="num">${money(x.actual)}</td><td class="num ${x.diff>0?'positive':'negative'}">${money(x.diff)}</td><td class="num">${pct(x.forecast?x.actual/x.forecast*100:0)}</td></tr>`).join('')}</tbody></table></div>`,'Ordenado pelo maior valor realizado')}${card('Maiores pagamentos não previstos',`<div class="tableWrap execMiniTable"><table><thead><tr><th>Data</th><th>Fornecedor</th><th>Descrição</th><th class="num">Valor</th></tr></thead><tbody>${largestUnexpected.map(r=>`<tr><td>${dateText(r.date)}</td><td>${esc(r.party)}</td><td>${esc(r.description)}</td><td class="num"><b>${money(r.amount)}</b></td></tr>`).join('')||'<tr><td colspan="4">Nenhum pagamento não previsto.</td></tr>'}</tbody></table></div>`,'Prioridade de revisão')}</div>${card('Resumo semanal para fechamento',`<div class="tableWrap"><table><thead><tr><th>Semana</th><th class="num">Previsto</th><th class="num">Realizado</th><th class="num">Desvio</th><th class="num">Não previsto</th><th class="num">Execução</th></tr></thead><tbody>${wk.map(x=>`<tr><td>${esc(x.label)}</td><td class="num">${money(x.forecast)}</td><td class="num">${money(x.actual)}</td><td class="num ${x.actual-x.forecast>0?'positive':'negative'}">${money(x.actual-x.forecast)}</td><td class="num">${money(x.unexpected)}</td><td class="num">${pct(x.forecast?x.actual/x.forecast*100:0)}</td></tr>`).join('')}</tbody></table></div>`,'Leitura semanal da competência')}`
+}
+function drawExecutiveCharts(a){if(!window.Chart)return;const wk=weekly(a),cats=executiveTopCategories(a,10),wc=$('#execWeekChart'),cc=$('#execCatChart');if(wc)charts.push(new Chart(wc,{type:'bar',data:{labels:wk.map(x=>'S'+x.week),datasets:[{label:'Previsto',data:wk.map(x=>x.forecast),backgroundColor:'#c7c7c7',borderRadius:5},{label:'Realizado',data:wk.map(x=>x.actual),backgroundColor:'#222',borderRadius:5}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{boxWidth:9,font:{size:9}}}},scales:{x:{grid:{display:false}},y:{grid:{color:'#ededed'},ticks:{callback:v=>'R$ '+Number(v/1000).toLocaleString('pt-BR')+' mil'}}}}}));if(cc)charts.push(new Chart(cc,{type:'doughnut',data:{labels:cats.map(x=>x.name),datasets:[{data:cats.map(x=>x.actual),backgroundColor:['#111','#333','#555','#777','#999','#bbb','#d0d0d0','#444','#666','#888'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'66%',plugins:{legend:{position:'right',labels:{boxWidth:9,font:{size:8}}}}}}))}
+
+
+function vendorRanking(a,limit=10){
+  return [...group(a.actual,r=>r.party)].map(([name,rows])=>({
+    name,rows,value:sum(rows,r=>r.amount)
+  })).sort((x,y)=>y.value-x.value).slice(0,limit);
+}
+
+function pendingRows(a){
+  const linked=new Set((a.links||[]).filter(x=>x.forecast).map(x=>rowLocator(x.forecast)));
+  return (a.forecast||[]).filter(f=>{
+    if(forecastFopag(f)||forecastService(f)||salaryAdvance(f)||vacationPayment(f))return false;
+    return !linked.has(rowLocator(f));
+  });
+}
+
+function managementActions(a){
+  const cats=executiveTopCategories(a,20);
+  const over=cats.filter(x=>x.diff>0).sort((x,y)=>y.diff-x.diff);
+  const unexpected=[...(a.unexpected||[])].sort((x,y)=>y.amount-x.amount);
+  const pending=pendingRows(a).sort((x,y)=>y.amount-x.amount);
+  return {over,unexpected,pending};
+}
+
+function rowsByCategory(a,name){
+  return [...a.forecast,...a.actual].filter(r=>norm(reportingCategory(r,a))===norm(name));
+}
+
+function openReportRows(title,rows){
+  $('#detailTitle').textContent=title;
+  $('#detailSub').textContent=`${rows.length} lançamentos · ${money(sum(rows,r=>r.amount))}`;
+  $('#detailBody').innerHTML=table(rows,{status:true,max:true,actions:true});
+  bindRowInteractions();
+  $('#detailModal').classList.add('open');
+}
+
+function openSingleRow(month,key){
+  const base=monthRecord(month);
+  if(!base)return notice('Competência não encontrada.');
+  const row=[...(base.forecast||[]),...(base.actual||[])].find(r=>stableRowKey(r)===key);
+  if(!row)return notice('Lançamento não encontrado.');
+  if(session)return openDirectEditor(month,key);
+  $('#detailTitle').textContent='Detalhamento do lançamento';
+  $('#detailSub').textContent=monthText(month);
+  $('#detailBody').innerHTML=`<div class="detailGrid">
+    <div class="detailField"><small>Origem</small><b>${esc(row.source)}</b></div>
+    <div class="detailField"><small>Data</small><b>${dateText(row.date)}</b></div>
+    <div class="detailField"><small>Fornecedor / colaborador</small><b>${esc(row.party)}</b></div>
+    <div class="detailField"><small>Descrição</small><b>${esc(row.description)}</b></div>
+    <div class="detailField"><small>Categoria</small><b>${esc(row.category)}</b></div>
+    <div class="detailField"><small>Centro de custo</small><b>${esc(row.costCenter)}</b></div>
+    <div class="detailField"><small>Status</small><b>${esc(row.status||'—')}</b></div>
+    <div class="detailField"><small>Valor</small><b>${money(row.amount)}</b></div>
+  </div>`;
+  $('#detailModal').classList.add('open');
+}
+
+
+async function persistUniversalRow(month,oldKey,values){
+  if(!session)return notice('Entre como administrador.');
+  const base=monthRecord(month);
+  if(!base)return notice('Competência não encontrada.');
+
+  let sourceName=null,index=-1,oldRow=null;
+  for(const name of ['forecast','actual']){
+    const i=(base[name]||[]).findIndex(r=>stableRowKey(r)===oldKey);
+    if(i>=0){sourceName=name;index=i;oldRow=base[name][i];break}
+  }
+  if(!oldRow)return notice('Lançamento não encontrado.');
+
+  const updated={
+    ...oldRow,
+    party:values.party,
+    description:values.description,
+    date:values.date,
+    amount:Number(values.amount)||0,
+    category:values.category||'Sem categoria',
+    subcategory:values.subcategory||'',
+    costCenter:values.costCenter||'Não informado',
+    status:values.status||'',
+    classificationOverride:{
+      ...(oldRow.classificationOverride||{}),
+      paymentType:values.paymentType||'automatic',
+      category:values.category||'Sem categoria',
+      subcategory:values.subcategory||'',
+      costCenter:values.costCenter||'Não informado'
+    }
+  };
+
+  base[sourceName]=[...(base[sourceName]||[])];
+  base[sourceName][index]=updated;
+
+  const newKey=stableRowKey(updated);
+  const metadata={...(base.metadata||{})};
+  const links={...(metadata.manualLinks||{})};
+
+  // If the edited row was an ACTUAL, move its existing link to the new key.
+  if(sourceName==='actual'){
+    const oldLink=links[oldKey];
+    delete links[oldKey];
+    if(values.forecastKey)links[newKey]=values.forecastKey;
+    else if(oldLink && values.keepExistingLink)links[newKey]=oldLink;
+  }
+
+  // If the edited row was a FORECAST, migrate any payment links that pointed to its old key.
+  if(sourceName==='forecast'){
+    Object.keys(links).forEach(actualKey=>{
+      if(links[actualKey]===oldKey)links[actualKey]=newKey;
+    });
+
+    const selected=new Set(values.actualKeys||[]);
+    Object.keys(links).forEach(actualKey=>{
+      if(links[actualKey]===newKey && !selected.has(actualKey))delete links[actualKey];
+    });
+    selected.forEach(actualKey=>links[actualKey]=newKey);
+  }
+
+  metadata.manualLinks=links;
+  metadata.catalogCategories=[...new Set([...(metadata.catalogCategories||[]),updated.category])];
+  metadata.catalogCostCenters=[...new Set([...(metadata.catalogCostCenters||[]),updated.costCenter])];
+  base.metadata=metadata;
+
+  try{
+    await persistRecordForMonth(month,base,'Lançamento e vínculos atualizados em todas as abas.');
+    $('#detailModal').classList.remove('open');
+  }catch(e){
+    notice('Erro ao salvar: '+e.message);
+  }
+}
+
+async function deleteUniversalRow(month,key){
+  if(!session)return;
+  if(!confirm('Excluir este lançamento da competência?'))return;
+  const base=monthRecord(month);
+  if(!base)return;
+  for(const name of ['forecast','actual']){
+    const before=(base[name]||[]).length;
+    base[name]=(base[name]||[]).filter(r=>stableRowKey(r)!==key);
+    if(base[name].length!==before)break;
+  }
+  const links={...(base.metadata?.manualLinks||{})};
+  delete links[key];
+  Object.keys(links).forEach(k=>{if(links[k]===key)delete links[k]});
+  base.metadata={...(base.metadata||{}),manualLinks:links};
+  try{
+    await persistRecordForMonth(month,base,'Lançamento excluído e dashboard recalculado.');
+    $('#detailModal').classList.remove('open');
+  }catch(e){notice('Erro ao excluir: '+e.message)}
+}
+
+function openDirectEditor(month,key){
+  if(!session)return notice('Entre como administrador para editar.');
+  const base=monthRecord(month);
+  if(!base)return notice('Competência não encontrada.');
+
+  let row=null;
+  for(const name of ['forecast','actual']){
+    row=(base[name]||[]).find(r=>stableRowKey(r)===key);
+    if(row)break;
+  }
+  if(!row)return notice('Lançamento não encontrado.');
+
+  const cats=catalogCategories(),ccs=catalogCostCenters();
+  const typeSaved=row.classificationOverride?.paymentType||'automatic';
+  const links=base.metadata?.manualLinks||{};
+  const currentForecastLink=row.source==='realizado'?(links[key]||''):'';
+  const forecasts=forecastOptionsForMonth(month);
+  const actuals=actualOptionsForMonth(month);
+  const selectedActuals=row.source==='previsto'?new Set(linkedActualKeysForForecast(month,key)):new Set();
+
+  $('#detailTitle').textContent=row.source==='previsto'?'Editar previsão':'Editar pagamento';
+  $('#detailSub').textContent='Tudo que for alterado aqui recalcula automaticamente Visão Executiva, FOPAG, categorias, semanas e relatório gerencial.';
+
+  $('#detailBody').innerHTML=`<div class="systemEditor">
+    <div class="systemHint"><b>Edição centralizada:</b> este é o cadastro principal do lançamento. Não existe uma cópia diferente em cada aba; todas as telas leem este mesmo registro.</div>
+    <div class="systemEditorGrid">
+      <label>Competência<input value="${esc(monthText(month))}" disabled></label>
+      <label>Origem<input value="${row.source==='previsto'?'Previsão':'Pagamento realizado'}" disabled></label>
+      <label>Fornecedor / colaborador<input id="sysParty" value="${esc(row.party)}"></label>
+      <label>Data<input id="sysDate" type="date" value="${esc(row.date||'')}"></label>
+      <label class="full">Descrição<input id="sysDescription" value="${esc(row.description)}"></label>
+      <label>Valor<input id="sysAmount" value="${esc(Number(row.amount||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}))}"></label>
+      <label>Status<input id="sysStatus" value="${esc(row.status||'')}"></label>
+      <label>Categoria<input id="sysCategory" list="sysCategories" value="${esc(row.category||'Sem categoria')}"><datalist id="sysCategories">${cats.map(x=>`<option value="${esc(x)}"></option>`).join('')}</datalist></label>
+      <label>Subcategoria<input id="sysSubcategory" value="${esc(row.subcategory||row.classificationOverride?.subcategory||'')}"></label>
+      <label>Centro de custo<input id="sysCostCenter" list="sysCostCenters" value="${esc(row.costCenter||'Não informado')}"><datalist id="sysCostCenters">${ccs.map(x=>`<option value="${esc(x)}"></option>`).join('')}</datalist></label>
+      <label>Tipo financeiro<select id="sysPaymentType">
+        <option value="automatic" ${typeSaved==='automatic'?'selected':''}>Automático</option>
+        <option value="fopag" ${typeSaved==='fopag'?'selected':''}>FOPAG / Salário</option>
+        <option value="salaryAdvance" ${typeSaved==='salaryAdvance'?'selected':''}>Adiantamento Salarial</option>
+        <option value="vacation" ${typeSaved==='vacation'?'selected':''}>Férias</option>
+        <option value="service" ${typeSaved==='service'?'selected':''}>Prestação de Serviço</option>
+        <option value="profitAdvance" ${typeSaved==='profitAdvance'?'selected':''}>Antecipação de Lucros</option>
+        <option value="other" ${typeSaved==='other'?'selected':''}>Outros</option>
+      </select></label>
+      ${row.source==='realizado'?`
+      <label class="full">Vincular este pagamento a uma previsão
+        <select id="sysForecastLink">
+          <option value="">Sem vínculo manual · usar conciliação automática</option>
+          ${forecasts.map(p=>`<option value="${esc(rowStorageKey(p))}" ${rowStorageKey(p)===currentForecastLink?'selected':''}>${esc(`${dateText(p.date)} · ${p.party} · ${p.description} · ${p.category} · ${money(p.amount)}`)}</option>`).join('')}
+        </select>
+      </label>`:''}
+      ${row.source==='previsto'?`
+      <label class="full">Pagamentos vinculados a esta previsão
+        <select id="sysActualLinks" multiple>
+          ${actuals.map(a=>`<option value="${esc(rowStorageKey(a))}" ${selectedActuals.has(rowStorageKey(a))?'selected':''}>${esc(`${dateText(a.date)} · ${a.party} · ${a.description} · ${money(a.amount)}`)}</option>`).join('')}
+        </select>
+      </label>`:''}
+    </div>
+    <div class="linkSummary">${row.source==='previsto'
+      ?`Esta previsão possui <b>${selectedActuals.size}</b> pagamento(s) vinculado(s). Você pode selecionar vários pagamentos.`
+      :currentForecastLink
+        ?`Este pagamento possui vínculo manual com uma previsão. Alterar o vínculo muda o previsto x realizado em todas as telas.`
+        :`Este pagamento está usando conciliação automática. Você pode escolher manualmente a previsão correta.`}</div>
+    <div class="systemActions">
+      <button type="button" class="control danger left" id="sysDelete">Excluir lançamento</button>
+      <button type="button" class="control" id="sysCancel">Cancelar</button>
+      <button type="button" class="control primary" id="sysSave">Salvar e atualizar tudo</button>
+    </div>
+  </div>`;
+
+  $('#sysCancel').onclick=()=>$('#detailModal').classList.remove('open');
+  $('#sysDelete').onclick=()=>deleteUniversalRow(month,key);
+  $('#sysSave').onclick=()=>persistUniversalRow(month,key,{
+    party:$('#sysParty').value.trim()||'Não informado',
+    description:$('#sysDescription').value.trim()||'Sem descrição',
+    date:$('#sysDate').value,
+    amount:num($('#sysAmount').value),
+    category:$('#sysCategory').value.trim()||'Sem categoria',
+    subcategory:$('#sysSubcategory').value.trim(),
+    costCenter:$('#sysCostCenter').value.trim()||'Não informado',
+    status:$('#sysStatus').value.trim(),
+    paymentType:$('#sysPaymentType').value,
+    forecastKey:$('#sysForecastLink')?.value||'',
+    actualKeys:$('#sysActualLinks')?[...$('#sysActualLinks').selectedOptions].map(o=>o.value):[],
+    keepExistingLink:false
+  });
+
+  $('#detailModal').classList.add('open');
+}
+
+
+function openNewRowEditor(defaultSource='previsto'){
+  if(!session)return notice('Entre como administrador.');
+  const month=$('#month').value;
+  const cats=catalogCategories(),ccs=catalogCostCenters();
+
+  $('#detailTitle').textContent='Criar novo lançamento';
+  $('#detailSub').textContent='Crie uma previsão ou pagamento diretamente no dashboard.';
+  $('#detailBody').innerHTML=`<div class="systemEditor">
+    <div class="systemHint">O lançamento será salvo na competência escolhida e aparecerá imediatamente em todas as abas correspondentes.</div>
+    <div class="systemEditorGrid">
+      <label>Competência<input id="newMonth" type="month" value="${esc(month)}"></label>
+      <label>Origem<select id="newSource"><option value="previsto" ${defaultSource==='previsto'?'selected':''}>Previsão</option><option value="realizado" ${defaultSource==='realizado'?'selected':''}>Pagamento realizado</option></select></label>
+      <label>Fornecedor / colaborador<input id="newParty" placeholder="Nome"></label>
+      <label>Data<input id="newDate" type="date"></label>
+      <label class="full">Descrição<input id="newDescription" placeholder="Descrição do lançamento"></label>
+      <label>Valor<input id="newAmount" placeholder="0,00"></label>
+      <label>Status<input id="newStatus" placeholder="Opcional"></label>
+      <label>Categoria<input id="newCategory" list="newCategories"><datalist id="newCategories">${cats.map(x=>`<option value="${esc(x)}"></option>`).join('')}</datalist></label>
+      <label>Subcategoria<input id="newSubcategory"></label>
+      <label>Centro de custo<input id="newCostCenter" list="newCostCenters"><datalist id="newCostCenters">${ccs.map(x=>`<option value="${esc(x)}"></option>`).join('')}</datalist></label>
+      <label>Tipo financeiro<select id="newPaymentType">
+        <option value="automatic">Automático</option>
+        <option value="fopag">FOPAG / Salário</option>
+        <option value="salaryAdvance">Adiantamento Salarial</option>
+        <option value="vacation">Férias</option>
+        <option value="service">Prestação de Serviço</option>
+        <option value="profitAdvance">Antecipação de Lucros</option>
+        <option value="other">Outros</option>
+      </select></label>
+      <label class="full hidden" id="newLinkWrap">Vincular pagamento a uma previsão<select id="newForecastLink"></select></label>
+    </div>
+    <div class="systemActions">
+      <button type="button" class="control" id="newCancel">Cancelar</button>
+      <button type="button" class="control primary" id="newSave">Criar e atualizar dashboard</button>
+    </div>
+  </div>`;
+
+  const refreshLinks=()=>{
+    const source=$('#newSource').value,comp=$('#newMonth').value,wrap=$('#newLinkWrap');
+    wrap.classList.toggle('hidden',source!=='realizado');
+    if(source==='realizado'){
+      const opts=forecastOptionsForMonth(comp);
+      $('#newForecastLink').innerHTML='<option value="">Sem vínculo manual</option>'+opts.map(p=>`<option value="${esc(rowStorageKey(p))}">${esc(`${dateText(p.date)} · ${p.party} · ${p.description} · ${money(p.amount)}`)}</option>`).join('');
+    }
+  };
+  $('#newSource').onchange=refreshLinks;
+  $('#newMonth').onchange=refreshLinks;
+  refreshLinks();
+
+  $('#newCancel').onclick=()=>$('#detailModal').classList.remove('open');
+  $('#newSave').onclick=async()=>{
+    const competence=$('#newMonth').value,source=$('#newSource').value;
+    if(!competence)return notice('Escolha a competência.');
+    let base=monthRecord(competence);
+    if(!base)base={forecast:[],actual:[],metadata:{}};
+
+    const row={
+      source,
+      party:$('#newParty').value.trim()||'Não informado',
+      description:$('#newDescription').value.trim()||'Sem descrição',
+      date:$('#newDate').value,
+      amount:num($('#newAmount').value),
+      category:$('#newCategory').value.trim()||'Sem categoria',
+      subcategory:$('#newSubcategory').value.trim(),
+      costCenter:$('#newCostCenter').value.trim()||'Não informado',
+      status:$('#newStatus').value.trim(),
+      externalId:'',
+      allocations:[],
+      raw:{createdInDashboard:true},
+      classificationOverride:{
+        paymentType:$('#newPaymentType').value,
+        category:$('#newCategory').value.trim()||'Sem categoria',
+        subcategory:$('#newSubcategory').value.trim(),
+        costCenter:$('#newCostCenter').value.trim()||'Não informado'
+      }
+    };
+    row.id=rowId(row,(base[source==='previsto'?'forecast':'actual']||[]).length);
+
+    const arrName=source==='previsto'?'forecast':'actual';
+    base[arrName]=[...(base[arrName]||[]),row];
+    base.metadata={
+      ...(base.metadata||{}),
+      catalogCategories:[...new Set([...(base.metadata?.catalogCategories||[]),row.category])],
+      catalogCostCenters:[...new Set([...(base.metadata?.catalogCostCenters||[]),row.costCenter])]
+    };
+    if(source==='realizado'){
+      const fkey=$('#newForecastLink').value;
+      if(fkey){
+        const akey=stableRowKey(row);
+        base.metadata.manualLinks={...(base.metadata.manualLinks||{}),[akey]:fkey};
+      }
+    }
+    try{
+      await persistRecordForMonth(competence,base,'Novo lançamento criado e refletido em todas as abas.');
+      $('#detailModal').classList.remove('open');
+    }catch(e){notice('Erro ao criar: '+e.message)}
+  };
+
+  $('#detailModal').classList.add('open');
+}
+
+async function createCatalogValue(kind,value){
+  value=String(value||'').trim();
+  if(!value)return;
+  const changes={};
+  const months=[...new Set([...availableMonths,$('#month').value])].filter(Boolean);
+  if(!months.length)months.push($('#month').value);
+  for(const month of months){
+    const base=monthRecord(month)||{forecast:[],actual:[],metadata:{}};
+    const key=kind==='category'?'catalogCategories':'catalogCostCenters';
+    base.metadata={...(base.metadata||{}),[key]:[...new Set([...(base.metadata?.[key]||[]),value])]};
+    changes[month]=base;
+  }
+  await persistManyMonths(changes,kind==='category'?'Categoria criada para todo o dashboard.':'Centro de custo criado para todo o dashboard.');
+}
+
+async function renameCatalogValue(kind,oldValue,newValue){
+  oldValue=String(oldValue||'').trim();newValue=String(newValue||'').trim();
+  if(!oldValue||!newValue||oldValue===newValue)return;
+  const changes={};
+  Object.entries(recordsByMonth).forEach(([month,base])=>{
+    const clone={forecast:[...(base.forecast||[])],actual:[...(base.actual||[])],metadata:{...(base.metadata||{})}};
+    const field=kind==='category'?'category':'costCenter';
+    for(const arr of ['forecast','actual']){
+      clone[arr]=clone[arr].map(r=>{
+        if(norm(r[field])!==norm(oldValue))return r;
+        return {...r,[field]:newValue,classificationOverride:r.classificationOverride?{...r.classificationOverride,[field]:newValue}:r.classificationOverride};
+      });
+    }
+    const key=kind==='category'?'catalogCategories':'catalogCostCenters';
+    clone.metadata[key]=[...new Set((clone.metadata[key]||[]).filter(x=>norm(x)!==norm(oldValue)).concat(newValue))];
+    changes[month]=clone;
+  });
+  await persistManyMonths(changes,kind==='category'?'Categoria renomeada em todas as competências e abas.':'Centro de custo renomeado em todas as competências e abas.');
+}
+
+function openCatalogManager(){
+  if(!session)return notice('Entre como administrador.');
+  const cats=catalogCategories(),ccs=catalogCostCenters();
+  $('#detailTitle').textContent='Cadastros financeiros';
+  $('#detailSub').textContent='Cadastros globais usados por todas as abas e competências.';
+  $('#detailBody').innerHTML=`<div class="systemEditor"><div class="systemHint">Ao renomear uma categoria ou centro de custo, o sistema altera os lançamentos de todas as competências carregadas e recalcula o dashboard inteiro.</div>
+  <div class="catalogGrid">
+    <div class="catalogBox"><h3>Categorias</h3><div class="catalogList">${cats.map(x=>`<div class="catalogItem"><span>${esc(x)}</span><button class="control miniBtn" data-rename-category="${esc(x)}">Renomear</button></div>`).join('')}</div><div class="catalogCreate"><input id="newCatalogCategory" placeholder="Nova categoria"><button class="control primary" id="addCatalogCategory">Criar</button></div></div>
+    <div class="catalogBox"><h3>Centros de custo</h3><div class="catalogList">${ccs.map(x=>`<div class="catalogItem"><span>${esc(x)}</span><button class="control miniBtn" data-rename-cost="${esc(x)}">Renomear</button></div>`).join('')}</div><div class="catalogCreate"><input id="newCatalogCost" placeholder="Novo centro de custo"><button class="control primary" id="addCatalogCost">Criar</button></div></div>
+  </div></div>`;
+
+  $('#addCatalogCategory').onclick=async()=>{try{await createCatalogValue('category',$('#newCatalogCategory').value);openCatalogManager()}catch(e){notice(e.message)}};
+  $('#addCatalogCost').onclick=async()=>{try{await createCatalogValue('costCenter',$('#newCatalogCost').value);openCatalogManager()}catch(e){notice(e.message)}};
+  $$('[data-rename-category]').forEach(b=>b.onclick=async()=>{const nv=prompt('Novo nome da categoria:',b.dataset.renameCategory);if(nv&&nv!==b.dataset.renameCategory){try{await renameCatalogValue('category',b.dataset.renameCategory,nv);openCatalogManager()}catch(e){notice(e.message)}}});
+  $$('[data-rename-cost]').forEach(b=>b.onclick=async()=>{const nv=prompt('Novo nome do centro de custo:',b.dataset.renameCost);if(nv&&nv!==b.dataset.renameCost){try{await renameCatalogValue('costCenter',b.dataset.renameCost,nv);openCatalogManager()}catch(e){notice(e.message)}}});
+  $('#detailModal').classList.add('open');
+}
+
+
+function bindRowInteractions(){
+  $$('[data-row-drill]').forEach(el=>el.onclick=e=>{
+    if(e.target.closest('button'))return;
+    openSingleRow(el.dataset.rowMonth,el.dataset.rowDrill);
+  });
+}
+
 function reportHTML(a){
-  const diff=a.actualTotal-a.forecastTotal,exec=a.forecastTotal?a.actualTotal/a.forecastTotal*100:0,unexpectedTotal=sum(a.unexpected,r=>r.amount);
-  return `<section class="reportHero"><span class="eyebrow">RELATÓRIO EXECUTIVO AUTOMÁTICO</span><h2>Análise financeira de ${esc(selectedMonthText())}</h2><p>Visão consolidada das competências selecionadas. O relatório considera somente pagamentos efetivamente realizados, preserva as competências históricas e mantém FOPAG, Na Praia e antecipações em grupos separados.</p><div class="reportStamp">Gerado em ${new Date().toLocaleString('pt-BR')}</div></section>
-  <div class="kpis">${kpi('Previsto',money(a.forecastTotal),a.forecast.length+' lançamentos')}${kpi('Realizado',money(a.actualTotal),a.actual.length+' pagamentos','green')}${kpi('Diferença',money(diff),diff>0?'Acima do previsto':'Dentro/abaixo do previsto',diff>0?'red':'green')}${kpi('Execução',pct(exec),'Realizado ÷ previsto','cyan')}${kpi('Não previstos',money(unexpectedTotal),a.unexpected.length+' ocorrências','amber')}</div>
-  ${card('Parecer gerencial',`<div class="analysisBlock"><p>O total realizado é de <b>${money(a.actualTotal)}</b> frente a <b>${money(a.forecastTotal)}</b> previstos. ${diff>0?`O realizado está <b>${money(diff)}</b> acima do orçamento.`:`O realizado está <b>${money(Math.abs(diff))}</b> dentro/abaixo do orçamento.`}</p><div class="insight ${diff>0?'risk':''}"><b>Controle de qualidade:</b> contas sem valor efetivamente pago não são consideradas no realizado. Tarifas PIX não entram em FOPAG e lançamentos Na Praia só conciliam com previsões do mesmo grupo.</div></div>`)}
-  ${fopagSummaryHTML(a)}`;
+  const diff=a.actualTotal-a.forecastTotal,
+        execution=a.forecastTotal?a.actualTotal/a.forecastTotal*100:0,
+        unexpectedTotal=sum(a.unexpected||[],r=>r.amount),
+        unexpectedPct=a.actualTotal?unexpectedTotal/a.actualTotal*100:0,
+        pending=pendingRows(a),
+        pendingTotal=sum(pending,r=>r.amount),
+        cats=executiveTopCategories(a,12),
+        vendors=vendorRanking(a,10),
+        actions=managementActions(a),
+        weeks=weekly(a),
+        worstWeek=[...weeks].sort((x,y)=>(y.actual-y.forecast)-(x.actual-x.forecast))[0],
+        fopag=fopagBlocks(a),
+        npPayrollPlans=(a.naPraiaPlans||[]).filter(r=>['salario','adiantamento','ferias'].includes(naPraiaBucket(r))),
+        npPayrollActual=(a.naPraiaActual||[]).filter(r=>['salario','adiantamento','ferias'].includes(naPraiaBucket(r))),
+        fopagForecast=sum(fopag.flatMap(x=>x.plans),r=>r.amount)+sum(npPayrollPlans,r=>r.amount),
+        fopagActual=sum(fopag.flatMap(x=>x.actual),r=>r.amount)+sum(npPayrollActual,r=>r.amount);
+
+  const headline = diff>0
+    ? `O realizado está ${money(diff)} acima do orçamento.`
+    : `O realizado está ${money(Math.abs(diff))} dentro/abaixo do orçamento.`;
+
+  return `<div class="execBoard">
+    <section class="execHeader">
+      <div class="execHeaderMain">
+        <span class="eyebrow">RELATÓRIO GERENCIAL · FECHAMENTO FINANCEIRO</span>
+        <h2>${esc(selectedMonthText())}</h2>
+        <p>${esc(headline)} A leitura abaixo organiza apenas o que precisa ser acompanhado pela gestão: desvios, não previstos, compromissos pendentes, pressão por fornecedor e FOPAG.</p>
+        <div class="meta">
+          <span>Execução <b>${pct(execution)}</b></span>
+          <span>Não previstos <b>${pct(unexpectedPct)}</b> do realizado</span>
+          <span>Previsto pendente <b>${money(pendingTotal)}</b></span>
+          <span>FOPAG realizado <b>${money(fopagActual)}</b></span>
+        </div>
+      </div>
+      <div class="execDecision">
+        <div class="execDecisionCard" data-report-action="over"><small>Prioridade 01</small><b>${actions.over.length?esc(actions.over[0].name):'Sem estouro relevante'}</b><p>${actions.over.length?`${money(actions.over[0].diff)} acima do previsto`:'Nenhuma categoria crítica identificada.'}</p></div>
+        <div class="execDecisionCard" data-report-action="unexpected"><small>Prioridade 02</small><b>${actions.unexpected.length?money(actions.unexpected[0].amount):'R$ 0,00'}</b><p>${actions.unexpected.length?`Maior pagamento não previsto · ${esc(actions.unexpected[0].party)}`:'Sem pagamentos não previstos.'}</p></div>
+        <div class="execDecisionCard" data-report-action="pending"><small>Prioridade 03</small><b>${money(pendingTotal)}</b><p>Previsto ainda sem pagamento vinculado.</p></div>
+      </div>
+    </section>
+
+    <div class="kpis exec6">
+      ${kpi('Orçamento aprovado',money(a.forecastTotal),`${a.forecast.length} lançamentos`)}
+      ${kpi('Realizado',money(a.actualTotal),`${a.actual.length} pagamentos`,'green')}
+      ${kpi('Desvio',money(diff),diff>0?'Desfavorável':'Favorável',diff>0?'red':'green')}
+      ${kpi('Execução',pct(execution),'Realizado ÷ previsto','cyan')}
+      ${kpi('Não previstos',money(unexpectedTotal),`${a.unexpected.length} pagamentos`,'amber')}
+      ${kpi('Previsto pendente',money(pendingTotal),`${pending.length} compromissos`,'cyan')}
+    </div>
+
+    <div class="boardTitle"><h3>O que exige ação</h3><span>Clique em qualquer bloco para abrir a composição</span></div>
+    <section class="actionGrid">
+      <article class="actionCard" data-report-action="over"><span class="n">Categorias acima do previsto</span><strong>${actions.over.length}</strong><p>${actions.over.length?`Maior desvio: ${esc(actions.over[0].name)} · ${money(actions.over[0].diff)}`:'Nenhum desvio positivo relevante.'}</p></article>
+      <article class="actionCard" data-report-action="unexpected"><span class="n">Pagamentos não previstos</span><strong>${a.unexpected.length}</strong><p>${money(unexpectedTotal)} fora da previsão · ${pct(unexpectedPct)} do realizado.</p></article>
+      <article class="actionCard" data-report-action="pending"><span class="n">Compromissos pendentes</span><strong>${pending.length}</strong><p>${money(pendingTotal)} previstos ainda sem pagamento conciliado.</p></article>
+    </section>
+
+    <section class="mgmtGrid">
+      ${card('Desvios por categoria',`<div class="tableWrap mgmtTable"><table><thead><tr><th>Categoria</th><th class="num">Previsto</th><th class="num">Realizado</th><th class="num">Desvio</th><th class="num">Execução</th></tr></thead><tbody>${cats.map(x=>`<tr data-drill="category" data-name="${esc(x.name)}"><td><b>${esc(x.name)}</b><span class="pillAction">abrir</span></td><td class="num">${money(x.forecast)}</td><td class="num">${money(x.actual)}</td><td class="num ${x.diff>0?'positive':'negative'}">${money(x.diff)}</td><td class="num">${pct(x.forecast?x.actual/x.forecast*100:0)}</td></tr>`).join('')}</tbody></table></div>`,'Ordenado pelo maior realizado')}
+      ${card('Fornecedores com maior desembolso',`<div class="tableWrap mgmtTable"><table><thead><tr><th>Fornecedor</th><th class="num">Pagamentos</th><th class="num">Realizado</th><th class="num">Participação</th></tr></thead><tbody>${vendors.map(v=>`<tr data-drill="vendor" data-name="${esc(v.name)}"><td><b>${esc(v.name)}</b><span class="pillAction">abrir</span></td><td class="num">${v.rows.length}</td><td class="num">${money(v.value)}</td><td class="num">${pct(a.actualTotal?v.value/a.actualTotal*100:0)}</td></tr>`).join('')}</tbody></table></div>`,'Participação sobre o realizado')}
+    </section>
+
+    <section class="mgmtGrid">
+      ${card('Controle semanal',`<div class="tableWrap mgmtTable"><table><thead><tr><th>Semana</th><th class="num">Previsto</th><th class="num">Realizado</th><th class="num">Desvio</th><th class="num">Não previsto</th></tr></thead><tbody>${weeks.map(w=>`<tr data-drill="week" data-name="${w.week}"><td><b>${esc(w.label)}</b><span class="pillAction">abrir</span></td><td class="num">${money(w.forecast)}</td><td class="num">${money(w.actual)}</td><td class="num ${w.actual-w.forecast>0?'positive':'negative'}">${money(w.actual-w.forecast)}</td><td class="num">${money(w.unexpected)}</td></tr>`).join('')}</tbody></table></div>`,`Maior pressão: ${worstWeek?worstWeek.label:'—'}`)}
+      ${card('FOPAG · checkpoint gerencial',`<div class="tableWrap mgmtTable"><table><thead><tr><th>Componente</th><th class="num">Previsto</th><th class="num">Realizado</th><th class="num">Diferença</th></tr></thead><tbody>${[
+        ...fopag.map(b=>({name:b.name,plans:b.plans,actual:b.actual})),
+        {name:'FOPAG Na Praia',plans:npPayrollPlans,actual:npPayrollActual}
+      ].map(b=>{const p=sum(b.plans,r=>r.amount),r=sum(b.actual,x=>x.amount);return`<tr data-fopag-drill="${esc(b.name)}"><td><b>${esc(b.name)}</b><span class="pillAction">abrir</span></td><td class="num">${money(p)}</td><td class="num">${money(r)}</td><td class="num ${r-p>0?'positive':'negative'}">${money(r-p)}</td></tr>`}).join('')}</tbody></table></div>`,`Total previsto ${money(fopagForecast)} · realizado ${money(fopagActual)}`)}
+    </section>
+  </div>`;
 }
 
 function render(){
@@ -567,10 +1142,8 @@ function render(){
   let h=filterBar(a);
 
   if(view==='dashboard'){
-    const wk=weekly(a);
-    h+=`<div class="kpis">${kpi('Total previsto',money(a.forecastTotal),a.forecast.length+' lançamentos válidos')}${kpi('Total realizado',money(a.actualTotal),a.actual.length+' pagamentos','green')}${kpi('Diferença',money(diff),diff>0?'Acima do orçamento':'Abaixo do orçamento',diff>0?'red':'green')}${kpi('Execução',pct(exec),'Realizado ÷ previsto','cyan')}${kpi('Não previstos',money(unexpectedTotal),a.unexpected.length+' lançamentos','amber')}</div>
-    ${card('Resumo semanal',`<div class="tableWrap"><table><thead><tr><th>Semana</th><th class="num">Previsto</th><th class="num">Realizado</th><th class="num">Diferença</th><th class="num">Não previsto</th><th class="num">Execução</th></tr></thead><tbody>${wk.map(x=>`<tr><td>${esc(x.label)}</td><td class="num">${money(x.forecast)}</td><td class="num">${money(x.actual)}</td><td class="num ${x.actual-x.forecast>0?'positive':'negative'}">${money(x.actual-x.forecast)}</td><td class="num">${money(x.unexpected)}</td><td class="num">${pct(x.forecast?x.actual/x.forecast*100:0)}</td></tr>`).join('')}</tbody></table></div>`)}
-    ${card('Lançamentos da seleção',table(rows))}`;
+    h+=executiveDashboardHTML(a);
+    setTimeout(()=>drawExecutiveCharts(a),0);
   }
   else if(view==='report'){
     h+=reportHTML(a);
@@ -595,24 +1168,18 @@ function render(){
       card('Lista completa',table(a.unexpected,{actions:true}));
   }
   else if(view==='fopag'){
-    const blocks=fopagBlocks(a),plannedTotal=sum(blocks.flatMap(x=>x.plans),r=>r.amount),realizedTotal=sum(blocks.flatMap(x=>x.actual),r=>r.amount),totalDiff=realizedTotal-plannedTotal;
-    h+=intro('FOPAG','Folha, adiantamentos salariais, férias e prestação de serviço. Antecipação de lucros fica fora da FOPAG e Na Praia permanece separado.')+
-      `<div class="kpis">${kpi('Total previsto',money(plannedTotal),sum(blocks,x=>x.plans.length)+' previsões')}${kpi('Total realizado',money(realizedTotal),sum(blocks,x=>x.actual.length)+' pagamentos','green')}${kpi('Diferença',money(totalDiff),totalDiff>0?'Acima do previsto':'Dentro/abaixo do previsto',totalDiff>0?'red':'green')}${kpi('Adiantamentos',money(sum(a.salaryAdvanceActual||[],r=>r.amount)),(a.salaryAdvanceActual||[]).length+' pagamentos','cyan')}${kpi('Férias',money(sum(a.vacationActual||[],r=>r.amount)),(a.vacationActual||[]).length+' pagamentos','amber')}</div>`+
+    const blocks=fopagBlocks(a),
+          npPlans=(a.naPraiaPlans||[]).filter(r=>['salario','adiantamento','ferias'].includes(naPraiaBucket(r))),
+          npActual=(a.naPraiaActual||[]).filter(r=>['salario','adiantamento','ferias'].includes(naPraiaBucket(r))),
+          allBlocks=[...blocks,{name:'FOPAG Na Praia',plans:npPlans,actual:npActual}],
+          plannedTotal=sum(allBlocks.flatMap(x=>x.plans),r=>r.amount),
+          realizedTotal=sum(allBlocks.flatMap(x=>x.actual),r=>r.amount),
+          totalDiff=realizedTotal-plannedTotal;
+
+    h+=intro('FOPAG','Folha regular e FOPAG Na Praia no mesmo painel, porém separados gerencialmente. Adiantamentos, férias e prestação de serviço aparecem como componentes próprios.')+
+      `<div class="kpis">${kpi('Total previsto FOPAG',money(plannedTotal),allBlocks.reduce((n,b)=>n+b.plans.length,0)+' previsões')}${kpi('Total realizado FOPAG',money(realizedTotal),allBlocks.reduce((n,b)=>n+b.actual.length,0)+' pagamentos','green')}${kpi('Diferença',money(totalDiff),totalDiff>0?'Acima do previsto':'Dentro/abaixo do previsto',totalDiff>0?'red':'green')}${kpi('Adiantamento salarial',money(sum(a.salaryAdvanceActual||[],r=>r.amount)),`${(a.salaryAdvancePlans||[]).length} previsto(s) · ${(a.salaryAdvanceActual||[]).length} pago(s)`,'cyan')}${kpi('Férias',money(sum(a.vacationActual||[],r=>r.amount)),(a.vacationActual||[]).length+' pagamentos','amber')}</div>`+
       fopagSummaryHTML(a)+
-      blocks.map(block=>{const planned=sum(block.plans,r=>r.amount),realized=sum(block.actual,r=>r.amount);return card(block.name+' — realizados',table(block.actual,{actions:true}),`Previsto ${money(planned)} · Realizado ${money(realized)} · Diferença ${money(realized-planned)}`)}).join('');
-  }
-  else if(view==='naPraia'){
-    const planned=sum(a.naPraiaPlans||[],r=>r.amount),paid=sum(a.naPraiaActual||[],r=>r.amount),difference=paid-planned;
-    const bucketOrder=['salario','adiantamento','ferias','faccao','locacao','logistica','fornecedor','outros'];
-    const bucketNames={salario:'Salário / FOPAG',adiantamento:'Adiantamento',ferias:'Férias',faccao:'Facção',locacao:'Locação',logistica:'Logística',fornecedor:'Fornecedores',outros:'Outros'};
-    h+=intro('Na Praia','Área exclusiva. Facção, salário, adiantamento, férias e demais despesas não conciliam entre grupos diferentes.')+
-      `<div class="kpis">${kpi('Valor previsto',money(planned),(a.naPraiaPlans||[]).length+' lançamentos')}${kpi('Valor pago',money(paid),(a.naPraiaActual||[]).length+' pagamentos','green')}${kpi('Diferença',money(difference),difference>0?'Acima do previsto':'Dentro/abaixo do previsto',difference>0?'red':'green')}${kpi('Execução',pct(planned?paid/planned*100:0),'Realizado ÷ previsto','cyan')}</div>`+
-      bucketOrder.map(bucket=>{
-        const p=(a.naPraiaPlans||[]).filter(r=>naPraiaBucket(r)===bucket),
-              r=(a.naPraiaActual||[]).filter(x=>naPraiaBucket(x)===bucket);
-        if(!p.length&&!r.length)return'';
-        return card('Na Praia · '+bucketNames[bucket],table(r,{actions:true}),`Previsto ${money(sum(p,x=>x.amount))} · Realizado ${money(sum(r,x=>x.amount))} · Diferença ${money(sum(r,x=>x.amount)-sum(p,x=>x.amount))}`);
-      }).join('');
+      allBlocks.map(block=>{const p=sum(block.plans,r=>r.amount),r=sum(block.actual,x=>x.amount);return card(block.name,table([...block.plans,...block.actual],{actions:true}),`Previsto ${money(p)} · Realizado ${money(r)} · Diferença ${money(r-p)}`)}).join('');
   }
   else if(view==='services'){
     const planned=sum(a.servicePlans||[],x=>x.amount),serviceTotal=sum(a.serviceOnlyActual||[],x=>x.amount),advanceTotal=sum(a.profitAdvanceActual||[],x=>x.amount),realized=serviceTotal+advanceTotal;
@@ -631,10 +1198,10 @@ function render(){
       <section class="card rule"><b>Pagamentos realizados</b><p>Somente linhas com valor efetivamente pago acima de zero entram no realizado. Valor original não substitui valor pago igual a zero.</p></section>
       <section class="card rule"><b>TAR PIX</b><p>Tarifas PIX são tratadas como tarifas bancárias e nunca podem herdar FOPAG ou bonificação.</p></section>
       <section class="card rule"><b>FOPAG</b><p>Folha, adiantamento salarial, férias e prestação de serviço aparecem separadamente. Antecipação de lucros fica fora da FOPAG.</p></section>
-      <section class="card rule"><b>Na Praia</b><p>Salário, facção, adiantamento, férias, locação, logística, fornecedores e outros ficam em grupos próprios.</p></section>
+      <section class="card rule"><b>FOPAG Na Praia</b><p>Não existe aba separada. Salários, adiantamentos e férias do Na Praia aparecem dentro da FOPAG em um bloco gerencial próprio.</p></section>
       <section class="card rule"><b>Competências</b><p>Cada mês possui seu próprio registro no Supabase. Importar setembro não substitui agosto.</p></section>
       <section class="card rule"><b>Data do realizado</b><p>A data de pagamento tem prioridade sobre data prevista ou vencimento no relatório de realizados.</p></section>
-    </div>`;
+    <section class="card rule"><b>Edição centralizada</b><p>Alterações de valor, data, fornecedor, categoria, centro de custo, tipo ou vínculo são feitas no registro principal e recalculam todas as abas.</p></section><section class="card rule"><b>Vínculos manuais</b><p>Um pagamento pode ser vinculado à previsão correta e uma previsão pode receber vários pagamentos. O vínculo manual prevalece sobre a conciliação automática.</p></section><section class="card rule"><b>Cadastros</b><p>Administradores podem criar previsões, pagamentos, categorias e centros de custo sem editar o código.</p></section></div>`;
   }
 
   $('#app').innerHTML=h;
@@ -646,6 +1213,38 @@ function render(){
   $('#footer').textContent=latestUpdate?'Última atualização confirmada: '+new Date(latestUpdate).toLocaleString('pt-BR')+' · todas as abas recalculadas':'';
 
   const d=$('#deleteMonth');if(d)d.onclick=deleteMonth;
+  bindReportInteractions(a);
+}
+
+function bindReportInteractions(a){
+  $$('[data-report-action]').forEach(el=>el.onclick=()=>{
+    const type=el.dataset.reportAction,actions=managementActions(a);
+    if(type==='over'){
+      const rows=actions.over.flatMap(x=>rowsByCategory(a,x.name));
+      return openReportRows('Categorias acima do previsto',rows);
+    }
+    if(type==='unexpected')return openReportRows('Pagamentos não previstos',actions.unexpected);
+    if(type==='pending')return openReportRows('Compromissos previstos pendentes',actions.pending);
+  });
+
+  $$('[data-drill="category"]').forEach(el=>el.onclick=()=>openReportRows('Categoria · '+el.dataset.name,rowsByCategory(a,el.dataset.name)));
+  $$('[data-drill="vendor"]').forEach(el=>el.onclick=()=>openReportRows('Fornecedor · '+el.dataset.name,a.actual.filter(r=>norm(r.party)===norm(el.dataset.name))));
+  $$('[data-drill="week"]').forEach(el=>el.onclick=()=>openReportRows(weekLabel(Number(el.dataset.name)),[...a.forecast,...a.actual].filter(r=>analysisWeek(r,a)===Number(el.dataset.name))));
+  $$('[data-fopag-drill]').forEach(el=>el.onclick=()=>{
+    const name=el.dataset.fopagDrill;
+    if(name==='FOPAG Na Praia'){
+      const rows=[...(a.naPraiaPlans||[]),...(a.naPraiaActual||[])].filter(r=>['salario','adiantamento','ferias'].includes(naPraiaBucket(r)));
+      return openReportRows(name,rows);
+    }
+    const block=fopagBlocks(a).find(b=>b.name===name);
+    if(block)return openReportRows(name,[...block.plans,...block.actual]);
+  });
+
+  bindRowInteractions();
+  $$('[data-edit-direct]').forEach(btn=>btn.onclick=e=>{
+    e.stopPropagation();
+    openDirectEditor(btn.dataset.rowMonth,btn.dataset.editDirect);
+  });
 }
 
 function bindFilters(a){
@@ -662,7 +1261,7 @@ function bindFilters(a){
     filters[key]=$$(`[data-multi="${key}"] input:checked`).map(x=>x.value);
     render();
   });
-  $('#clearFilters').onclick=()=>{FILTER_STATE[view]=freshFilters();filters=FILTER_STATE[view];render()};
+  $('#clearFilters').onclick=()=>{FILTER_STATE[view]=freshFilters();filters=FILTER_STATE[view];render()};const qf=$('#quickNewForecast');if(qf)qf.onclick=()=>openNewRowEditor('previsto');const qp=$('#quickNewPayment');if(qp)qp.onclick=()=>openNewRowEditor('realizado');
 }
 
 function notice(t){
@@ -766,6 +1365,8 @@ document.addEventListener('click',e=>{
 });
 
 $$('[data-file]').forEach(b=>b.onclick=()=>$('#'+b.dataset.file).click());
+$('#newRowBtn').onclick=()=>openNewRowEditor('previsto');
+$('#catalogBtn').onclick=openCatalogManager;
 
 $('#forecastFile').onchange=e=>{
   const f=e.target.files[0];e.target.value='';
