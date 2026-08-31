@@ -387,6 +387,22 @@ aside{
  .compareCharts{grid-template-columns:1fr}
 }
 
+
+.inlineSelection{
+ display:flex;align-items:center;justify-content:space-between;gap:12px;
+ padding:9px 11px;background:#f7f8f9;border:1px solid #e4e6e8;border-bottom:0;
+ border-radius:9px 9px 0 0;color:#666
+}
+.inlineSelection>div:first-child{display:flex;align-items:center;gap:10px;min-width:0}
+.inlineSelection small{font-size:6.5px;letter-spacing:.08em;color:#999;font-weight:800}
+.inlineSelection strong{font-size:8px;color:#555}
+.inlineSelectionValue{font-size:12px!important;font-weight:800;color:#111!important}
+.inlineSelectionActions{display:flex;gap:6px}
+.inlineSelectionActions button{border:1px solid #ddd;background:#fff;border-radius:6px;padding:6px 8px;font-size:7px;color:#444}
+.tableBlock.hasSelection .inlineSelection{background:#f0f8f6;border-color:#bddbd3}
+.tableBlock.hasSelection .inlineSelectionValue{color:#176c5b!important}
+.tableBlock>.tableWrap{border-radius:0 0 9px 9px}
+
 </style>
 </head>
 <body>
@@ -420,21 +436,13 @@ aside{
   <div class="topbar">
     <div class="pageTitle"><h1 id="pageTitle">Visão Executiva</h1><p id="pageSub">Fechamento financeiro para diretoria</p></div>
     <div class="toolbar noPrint">
-      <select id="month"></select><span id="monthStatusSlot"></span>
-      <button id="importForecast">Importar Previsto</button>
-      <button id="importActual">Importar Pagamentos</button>
-      
-<button id="editForecastBtn">Editar previsões</button>
-<button id="editActualBtn">Editar pagamentos</button>
-<button id="closeMonthBtn">Salvar fechamento</button>
-<button class="primary" id="adminBtn">ADM</button>
-<button id="printBtn">Imprimir / PDF</button>
-      
+      <select id="month" title="Competência"></select>
+      <button class="primary" id="adminBtn">ADM</button>
       <input id="forecastFile" class="hidden" type="file" accept=".xlsx,.xls,.csv">
       <input id="actualFile" class="hidden" type="file" accept=".xlsx,.xls,.csv">
     </div>
   </div>
-  <div class="content"><div id="monthHistory"></div><div class="selectionBar noPrint" id="selectionBar"></div><div id="app"></div></div>
+  <div class="content"><div id="app"></div></div>
   <div class="foot" id="footer"></div>
 </main>
 </div>
@@ -457,6 +465,9 @@ let db=null, session=null;
 
 let selectedRows=new Set();
 let compareMonths={m1:null,m2:null};
+let DATA_REV=0;
+const analyticsCache=new Map();
+function invalidateAnalytics(){DATA_REV++;analyticsCache.clear()}
 let undoStack=[];
 function audit(action,details,before=null,after=null){const r=rec();r.auditLog??=[];r.auditLog.unshift({at:new Date().toISOString(),action,details,before:before?deep(before):null,after:after?deep(after):null});if(r.auditLog.length>300)r.auditLog=r.auditLog.slice(0,300)}
 function pushUndo(label){undoStack.push({label,state:deep(state)});if(undoStack.length>30)undoStack.shift()}
@@ -481,7 +492,7 @@ function uid(prefix='R'){return prefix+'-'+Date.now().toString(36)+'-'+Math.rand
 function deep(x){return JSON.parse(JSON.stringify(x))}
 function num(v){if(typeof v==='number')return v;let s=String(v||'').replace(/[R$\s]/g,'');if(s.includes(',')&&s.includes('.'))s=s.replace(/\./g,'').replace(',','.');else if(s.includes(','))s=s.replace(',','.');return Number(s)||0}
 function loadState(){try{const s=JSON.parse(localStorage.getItem(STORAGE_KEY));if(s&&Object.keys(s).length)return s}catch(e){}return deep(SEED)}
-function saveState(msg='Alterações salvas.'){localStorage.setItem(STORAGE_KEY,JSON.stringify(state));render();if(msg)toast(msg)}
+function saveState(msg='Alterações salvas.'){invalidateAnalytics();localStorage.setItem(STORAGE_KEY,JSON.stringify(state));render();if(msg)toast(msg)}
 
 function monthRecord(month=null){
   const m=month||$('#month')?.value;
@@ -693,7 +704,7 @@ function reconcile(){
   for(const [aid,pid] of Object.entries(links))(byForecast[pid]??=[]).push(aid);
   return {links,reasons,byForecast,forecasts,actuals};
 }
-function analytics(){
+function computeAnalytics(){
   const R=reconcile(), f=R.forecasts,a=R.actuals;
   const fTotal=f.reduce((s,x)=>s+x.amount,0),aTotal=a.reduce((s,x)=>s+x.amount,0);
   const unexpected=a.filter(x=>!R.links[x.id]);
@@ -705,6 +716,13 @@ function analytics(){
     if(remaining>.01)pending.push({...p,remaining,paid});
   }
   return {R,f,a,fTotal,aTotal,diff:aTotal-fTotal,unexpected,unexpectedTotal:unexpected.reduce((s,x)=>s+x.amount,0),pending,pendingTotal:pending.reduce((s,x)=>s+x.remaining,0),planStatus};
+}
+function analytics(){
+  const key=($('#month')?.value||'')+'|'+DATA_REV;
+  if(analyticsCache.has(key))return analyticsCache.get(key);
+  const value=computeAnalytics();
+  analyticsCache.set(key,value);
+  return value;
 }
 function byCategory(A){
   const m={};
@@ -803,39 +821,83 @@ function premiumCard(title,body,sub=''){
 function card(title,body,sub=''){return `<section class="card"><div class="cardHead"><div><h3>${esc(title)}</h3>${sub?`<small>${esc(sub)}</small>`:''}</div></div><div class="cardBody">${body}</div></section>`}
 function tableRows(rows,cols){
   if(!rows.length)return'<div class="empty">Nenhum lançamento neste recorte.</div>';
-  return `<div class="tableWrap"><table><thead><tr><th class="selectCell"><input type="checkbox" class="rowCheck checkAllVisible"></th>${cols.map(c=>`<th class="${c.num?'num':''}">${esc(c.label)}</th>`).join('')}<th>Ações</th></tr></thead><tbody>${rows.map(r=>`<tr class="clickrow ${selectedRows.has(r.id)?'selectedRow':''}" data-row="${esc(r.id)}"><td class="selectCell"><input type="checkbox" class="rowCheck rowSelect" data-select="${esc(r.id)}" ${selectedRows.has(r.id)?'checked':''}></td>${cols.map(c=>`<td class="${c.num?'num':''}">${c.render(r)}</td>`).join('')}<td><button class="rowActionBtn" data-edit="${esc(r.id)}">Editar</button></td></tr>`).join('')}</tbody></table></div>`;
+  const blockId='tb-'+Math.random().toString(36).slice(2,8);
+  return `<div class="tableBlock" id="${blockId}">
+    <div class="inlineSelection noPrint">
+      <div><small>SELEÇÃO DESTA TABELA</small><strong class="inlineSelectionCount">0 lançamentos</strong><span class="inlineSelectionValue">${money(0)}</span></div>
+      <div class="inlineSelectionActions">
+        <button class="inlineBulkEdit" type="button">Editar selecionados</button>
+        <button class="inlineLink" type="button">Vincular</button>
+        <button class="inlineClear" type="button">Limpar</button>
+      </div>
+    </div>
+    <div class="tableWrap"><table><thead><tr><th class="selectCell"><input type="checkbox" class="rowCheck checkAllVisible"></th>${cols.map(c=>`<th class="${c.num?'num':''}">${esc(c.label)}</th>`).join('')}<th>Ações</th></tr></thead><tbody>${rows.map(r=>`<tr class="clickrow ${selectedRows.has(r.id)?'selectedRow':''}" data-row="${esc(r.id)}"><td class="selectCell"><input type="checkbox" class="rowCheck rowSelect" data-select="${esc(r.id)}" ${selectedRows.has(r.id)?'checked':''}></td>${cols.map(c=>`<td class="${c.num?'num':''}">${c.render(r)}</td>`).join('')}<td><button class="rowActionBtn" data-edit="${esc(r.id)}">Editar</button></td></tr>`).join('')}</tbody></table></div>
+  </div>`;
+}
+
+
+function updateInlineSelection(block){
+  if(!block)return;
+  const ids=[...block.querySelectorAll('.rowSelect:checked')].map(x=>x.dataset.select);
+  const data=rows().filter(r=>ids.includes(r.id));
+  const total=data.reduce((s,r)=>s+Number(r.amount||0),0);
+  const count=block.querySelector('.inlineSelectionCount');
+  const value=block.querySelector('.inlineSelectionValue');
+  if(count)count.textContent=`${data.length} lançamento${data.length===1?'':'s'}`;
+  if(value)value.textContent=money(total);
+  block.classList.toggle('hasSelection',data.length>0);
+}
+function setSelectionFromBlock(block){
+  selectedRows.clear();
+  [...block.querySelectorAll('.rowSelect:checked')].forEach(x=>selectedRows.add(x.dataset.select));
 }
 
 function bindSelectionControls(){
+  document.querySelectorAll('.tableBlock').forEach(block=>updateInlineSelection(block));
+
   document.querySelectorAll('.rowSelect').forEach(cb=>{
     cb.onclick=e=>{
       e.stopPropagation();
-      const id=cb.dataset.select;
-      if(cb.checked) selectedRows.add(id); else selectedRows.delete(id);
+      const block=cb.closest('.tableBlock');
+      if(cb.checked)selectedRows.add(cb.dataset.select);else selectedRows.delete(cb.dataset.select);
       cb.closest('tr')?.classList.toggle('selectedRow',cb.checked);
-      renderSelectionBar();
+      updateInlineSelection(block);
     };
   });
 
   document.querySelectorAll('.checkAllVisible').forEach(master=>{
     master.onclick=e=>{
       e.stopPropagation();
-      const table=master.closest('table');
-      const boxes=table?[...table.querySelectorAll('.rowSelect')]:[];
+      const block=master.closest('.tableBlock');
+      const boxes=block?[...block.querySelectorAll('.rowSelect')]:[];
       boxes.forEach(cb=>{
         cb.checked=master.checked;
         if(master.checked)selectedRows.add(cb.dataset.select);else selectedRows.delete(cb.dataset.select);
         cb.closest('tr')?.classList.toggle('selectedRow',master.checked);
       });
-      renderSelectionBar();
+      updateInlineSelection(block);
     };
   });
 
+  document.querySelectorAll('.inlineBulkEdit').forEach(btn=>btn.onclick=e=>{
+    e.stopPropagation();const block=btn.closest('.tableBlock');setSelectionFromBlock(block);
+    if(!selectedRows.size)return toast('Selecione lançamentos nesta tabela.');
+    openBulkEdit();
+  });
+  document.querySelectorAll('.inlineLink').forEach(btn=>btn.onclick=e=>{
+    e.stopPropagation();const block=btn.closest('.tableBlock');setSelectionFromBlock(block);
+    if(!selectedRows.size)return toast('Selecione pagamentos nesta tabela.');
+    openBulkLink();
+  });
+  document.querySelectorAll('.inlineClear').forEach(btn=>btn.onclick=e=>{
+    e.stopPropagation();const block=btn.closest('.tableBlock');
+    block.querySelectorAll('.rowSelect').forEach(cb=>{selectedRows.delete(cb.dataset.select);cb.checked=false;cb.closest('tr')?.classList.remove('selectedRow')});
+    const master=block.querySelector('.checkAllVisible');if(master)master.checked=false;
+    updateInlineSelection(block);
+  });
+
   document.querySelectorAll('[data-edit]').forEach(btn=>{
-    btn.onclick=e=>{
-      e.stopPropagation();
-      openRow(btn.dataset.edit);
-    };
+    btn.onclick=e=>{e.stopPropagation();openRow(btn.dataset.edit)};
   });
 }
 
@@ -1051,7 +1113,7 @@ function bindMonthComparison(){
 function destroyCharts(){charts.forEach(c=>{try{c.destroy()}catch(e){}});charts=[]}
 function render(){
   destroyCharts();
-  const A=analytics(), cats=byCategory(A), groups=groupRows(A), vendors=bySupplier(A), wk=weeks(A), fop=fopagData(A);
+  const A=analytics();let cats=null,groups=null,vendors=null,wk=null,fop=null;
   const exec=A.fTotal?A.aTotal/A.fTotal*100:0, unpct=A.aTotal?A.unexpectedTotal/A.aTotal*100:0;
   const accuracy=A.fTotal?Math.max(0,100-Math.abs(A.diff)/A.fTotal*100):0;
   let h='';
@@ -1059,6 +1121,7 @@ function render(){
     h=monthComparisonHTML();
     setTimeout(()=>{drawMonthComparison();bindMonthComparison()},0);
   }else if(view==='executive'){
+    cats=byCategory(A);groups=groupRows(A);wk=weeks(A);
     const over=[...cats].filter(x=>x.diff>0).sort((a,b)=>b.diff-a.diff);
     const exec=A.fTotal?A.aTotal/A.fTotal*100:0;
     const pendingPct=A.fTotal?A.pendingTotal/A.fTotal*100:0;
@@ -1090,7 +1153,7 @@ function render(){
     <div class="executiveGrid">
       ${premiumCard('Execução do orçamento',`<div class="donutWrap"><canvas id="budgetDonut"></canvas><div class="donutCenter"><div><small>Executado</small><strong>${pct(exec)}</strong></div></div></div>`,'Previsto x realizado')}
       ${premiumCard('Composição dos gastos',`<div class="donutWrap"><canvas id="groupDonut"></canvas></div><div class="miniList">${topGroups.map((g,i)=>`<div class="miniLine"><span class="miniDot" style="background:${colorPalette(10)[i]}"></span><b>${esc(g.name)}</b><strong>${money(g.actual)}</strong></div>`).join('')}</div>`,'Grupos gerenciais')}
-      ${premiumCard('Qualidade do planejamento',`<div class="donutWrap"><canvas id="qualityDonut"></canvas><div class="donutCenter"><div><small>Não previsto</small><strong>${pct(unPct)}</strong></div></div></div><div class="miniList"><div class="miniLine"><span class="miniDot" style="background:#d74747"></span><b>Pagamentos não previstos</b><strong>${money(A.unexpectedTotal)}</strong></div><div class="miniLine"><span class="miniDot" style="background:#f28c28"></span><b>Previsto pendente</b><strong>${money(A.pendingTotal)}</strong></div></div>`,'Previsibilidade e fechamento')}
+      ${premiumCard('Qualidade do planejamento',`<div class="donutWrap"><canvas id="qualityDonut"></canvas><div class="donutCenter"><div><small>Não previsto</small><strong>${pct(unPct)}</strong></div></div></div><div class="miniList"><div class="miniLine"><span class="miniDot" style="background:#2a9d8f"></span><b>Dentro da previsão</b><strong>${money(Math.max(A.aTotal-A.unexpectedTotal,0))}</strong></div><div class="miniLine"><span class="miniDot" style="background:#e76f51"></span><b>Não previsto</b><strong>${money(A.unexpectedTotal)}</strong></div></div>`,'Previsibilidade e fechamento')}
     </div>
 
     <div class="executiveGrid two">
@@ -1109,6 +1172,7 @@ function render(){
     </div>`;
     setTimeout(()=>drawPremiumExecutive(A,cats,groups,wk),0);
   }else if(view==='report'){
+    cats=byCategory(A);vendors=bySupplier(A);wk=weeks(A);fop=fopagData(A);
     const N=reportNarrative(A,cats,vendors,wk,fop);
     const topOver=N.topOver;
     h=`<section class="reportExecutive">
@@ -1206,16 +1270,20 @@ function render(){
   }else if(view==='comparison'){
     h=filtersHTML()+`<div class="kpis"><article class="kpi"><small>Previsto</small><strong>${money(A.fTotal)}</strong></article><article class="kpi good"><small>Pago</small><strong>${money(A.aTotal)}</strong></article><article class="kpi ${A.diff>0?'risk':'good'}"><small>Diferença</small><strong>${money(A.diff)}</strong></article><article class="kpi"><small>Execução</small><strong>${pct(exec)}</strong></article><article class="kpi warn"><small>Pendente</small><strong>${money(A.pendingTotal)}</strong></article><article class="kpi warn"><small>Não previsto</small><strong>${money(A.unexpectedTotal)}</strong></article></div>${comparisonTable(A)}`;
   }else if(view==='differences'){
+    cats=byCategory(A);
     const list=cats.slice().sort((a,b)=>Math.abs(b.diff)-Math.abs(a.diff));
     h=filtersHTML()+card('Análise de diferenças',`<div class="tableWrap"><table><thead><tr><th>Categoria</th><th class="num">Previsto</th><th class="num">Pago</th><th class="num">Diferença R$</th><th class="num">Diferença %</th><th>Status</th></tr></thead><tbody>${list.map(x=>`<tr class="clickrow categoryRow" data-cat="${esc(x.name)}"><td><b>${esc(x.name)}</b></td><td class="num">${money(x.forecast)}</td><td class="num">${money(x.actual)}</td><td class="num ${x.diff>0?'positive':'negative'}">${money(x.diff)}</td><td class="num">${pct(x.forecast?x.diff/x.forecast*100:0)}</td><td>${x.diff>0?'<span class="badge risk">Acima</span>':x.diff<0?'<span class="badge good">Abaixo</span>':'<span class="badge">No orçamento</span>'}</td></tr>`).join('')}</tbody></table></div>`,'Clique em qualquer categoria para ver subcategorias e todos os lançamentos');
   }else if(view==='weeks'){
+    wk=weeks(A);
     h=filtersHTML()+`<div class="grid2">${card('Previsto x pago por semana','<div class="chart"><canvas id="weekOnlyChart"></canvas></div>','Visão de caixa')}${card('Resumo semanal',`<div class="tableWrap"><table><thead><tr><th>Semana</th><th class="num">Previsto</th><th class="num">Pago</th><th class="num">Diferença</th><th class="num">Não previsto</th></tr></thead><tbody>${wk.map(w=>`<tr class="clickrow" data-week="${w.week}"><td><b>${w.label}</b></td><td class="num">${money(w.forecast)}</td><td class="num">${money(w.actual)}</td><td class="num ${w.actual-w.forecast>0?'positive':'negative'}">${money(w.actual-w.forecast)}</td><td class="num">${money(w.unexpected)}</td></tr>`).join('')}</tbody></table></div>`,'Clique para detalhar')}</div>`;
     setTimeout(()=>drawWeekOnly(wk),0);
   }else if(view==='categories'){
+    cats=byCategory(A);
     h=filtersHTML()+card('Categorias',`<div class="tableWrap"><table><thead><tr><th>Categoria</th><th class="num">Previsto</th><th class="num">Pago</th><th class="num">Diferença</th><th class="num">Execução</th></tr></thead><tbody>${cats.map(x=>`<tr class="clickrow categoryRow" data-cat="${esc(x.name)}"><td><b>${esc(x.name)}</b></td><td class="num">${money(x.forecast)}</td><td class="num">${money(x.actual)}</td><td class="num ${x.diff>0?'positive':'negative'}">${money(x.diff)}</td><td class="num">${pct(x.execution)}</td></tr>`).join('')}</tbody></table></div>`,'Clique em qualquer categoria para abrir subcategorias, centros de custo, fornecedores e lançamentos');
   }else if(view==='unexpected'){
     h=filtersHTML()+`<div class="kpis"><article class="kpi warn"><small>Total não previsto</small><strong>${money(A.unexpectedTotal)}</strong><span>${A.unexpected.length} pagamentos</span></article><article class="kpi"><small>% do realizado</small><strong>${pct(unpct)}</strong></article></div>`+card('Pagamentos sem previsão vinculada',tableRows(A.unexpected.slice().sort((a,b)=>b.amount-a.amount),basicCols()),'Clique no pagamento para vincular uma previsão ou criar uma');
   }else if(view==='fopag'){
+    fop=fopagData(A);
     h=`<div class="reportIntro"><b>Regra FOPAG.</b> Folha/salários + adiantamentos salariais + férias + prestação de serviços. Antecipações de lucros ficam fora. FOPAG Na Praia aparece apenas como bloco interno desta aba, nunca como aba separada.</div>${fopagSummary(fop)}`;
     for(const b of fop)h+=card(b.name,`<div class="grid2"><div>${tableRows(b.forecast,basicCols())}</div><div>${tableRows(b.actual,basicCols())}</div></div>`,`Previsto ${money(b.forecast.reduce((s,x)=>s+x.amount,0))} · Pago ${money(b.actual.reduce((s,x)=>s+x.amount,0))}`);
   }else if(view==='base'){
@@ -1238,11 +1306,9 @@ function render(){
     </div>`;
   }
   $('#app').innerHTML=h;
-  renderMonthHistory();
   if($('#monthStatusSlot'))$('#monthStatusSlot').innerHTML=monthStatusHTML();
   bindInteractive(A);
-  renderSelectionBar();
-  $('#footer').textContent=`Base atual: Pasta1.xlsx como previsto · Pasta2.xlsx como pagamentos · ${A.f.length} previsões válidas · ${A.a.length} pagamentos válidos`;
+  $('#footer').textContent=`${monthText($('#month').value)} · ${A.f.length} previsões · ${A.a.length} pagamentos`;
 }
 function basicCols(){return[
  {label:'Data',render:r=>dateText(r.date)},
@@ -1712,6 +1778,15 @@ async function openAdminPanel(){
         <div class="adminActions">${!currentUser?`<button class="primary" id="admLogin">Entrar</button>`:`<button id="admLogout">Sair</button>`}</div>
       </div>
 
+
+      <div class="adminCard">
+        <h4>Importação de dados</h4>
+        <p>Importe o previsto da competência e atualize os pagamentos realizados. Outros meses permanecem salvos.</p>
+        <div class="adminActions">
+          <button class="primary" id="admImportForecast">Importar previsto</button>
+          <button id="admImportActual">Importar pagamentos</button>
+        </div>
+      </div>
       <div class="adminCard">
         <h4>Competência atual · ${esc(monthText(m))}</h4>
         <p>Status: <b>${r.closedAt?'Fechada':'Aberta'}</b>${r.closedAt?` · fechamento salvo em ${new Date(r.closedAt).toLocaleString('pt-BR')}`:''}.</p>
@@ -1743,6 +1818,8 @@ async function openAdminPanel(){
 
   $('#admLogin')?.addEventListener('click',adminSignIn);
   $('#admLogout')?.addEventListener('click',adminSignOut);
+  $('#admImportForecast')?.addEventListener('click',()=>$('#forecastFile')?.click());
+  $('#admImportActual')?.addEventListener('click',()=>$('#actualFile')?.click());
   $('#admSaveMonth')?.addEventListener('click',()=>saveMonthToSupabase(false));
   $('#admCloseMonth')?.addEventListener('click',()=>saveMonthToSupabase(true));
   $('#admReopen')?.addEventListener('click',reopenMonth);
@@ -1818,7 +1895,7 @@ async function loadHistoricalMonthsFromSupabase(){
       }
     }
     if(changed){
-      localStorage.setItem(STORAGE_KEY,JSON.stringify(state));
+      invalidateAnalytics();localStorage.setItem(STORAGE_KEY,JSON.stringify(state));
       populateMonths($('#month')?.value);
       render();
     }
@@ -1865,7 +1942,7 @@ async function importWorkbook(file,source){
    state[m].auditLog??=[];
    state[m].auditLog.unshift({at:new Date().toISOString(),action:'Importação mensal',details:`${source==='forecast'?'Previsão':'Pagamentos'} importados em ${m} sem apagar outras competências.`});
  }
- localStorage.setItem(STORAGE_KEY,JSON.stringify(state));
+ invalidateAnalytics();localStorage.setItem(STORAGE_KEY,JSON.stringify(state));
  const targetMonth=importedMonths[importedMonths.length-1];
  populateMonths(targetMonth);$('#month').value=targetMonth;selectedRows.clear();render();
  toast(`${source==='forecast'?'Previsão':'Pagamentos'} de ${monthText(targetMonth)} importados. Meses anteriores preservados.`);
@@ -1881,14 +1958,17 @@ async function saveSupabase(){
  }catch(e){toast('Erro Supabase: '+e.message)}
 }
 function exportJSON(){const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='previsto-realizado-danese.json';a.click();URL.revokeObjectURL(a.href)}
-$$('#nav button[data-view]').forEach(b=>b.onclick=()=>{$$('#nav button[data-view]').forEach(x=>x.classList.remove('active'));b.classList.add('active');view=b.dataset.view;$('#pageTitle').textContent=b.textContent;$('#pageSub').textContent=view==='executive'?'Posição financeira consolidada para diretoria':view==='report'?'Fechamento gerencial e pontos de decisão':view==='monthcompare'?'Comparação entre competências':'Controle financeiro detalhado';render()});
+$$('#nav button[data-view]').forEach(b=>b.onclick=()=>{
+ const next=b.dataset.view;if(next===view)return;
+ $$('#nav button[data-view]').forEach(x=>x.classList.remove('active'));b.classList.add('active');view=next;
+ $('#pageTitle').textContent=b.textContent;
+ $('#pageSub').textContent=view==='executive'?'Posição financeira consolidada para diretoria':view==='report'?'Fechamento gerencial e pontos de decisão':view==='monthcompare'?'Comparação entre competências':'Controle financeiro detalhado';
+ requestAnimationFrame(render);
+});
+$('#forecastFile').onchange=async e=>{const file=e.target.files?.[0];if(!file)return;try{await importWorkbook(file,'forecast')}catch(err){console.error(err);toast('Erro ao importar previsto: '+err.message)}finally{e.target.value=''}};
+$('#actualFile').onchange=async e=>{const file=e.target.files?.[0];if(!file)return;try{await importWorkbook(file,'actual')}catch(err){console.error(err);toast('Erro ao importar pagamentos: '+err.message)}finally{e.target.value=''}};
 $('#month').onchange=()=>{selectedRows.clear();render()};$('#closeModal').onclick=()=>$('#modal').classList.remove('open');$('#modal').onclick=e=>{if(e.target===$('#modal'))$('#modal').classList.remove('open')};
-$('#undoBtn').onclick=undoLast;
- $('#editForecastBtn')?.addEventListener('click',()=>openEditableList('forecast'));
- $('#editActualBtn')?.addEventListener('click',()=>openEditableList('actual'));
- $('#closeMonthBtn')?.addEventListener('click',()=>saveMonthToSupabase(true));
- $('#adminBtn')?.addEventListener('click',openAdminPanel);$('#auditBtn').onclick=openAuditLog;$('#printBtn').onclick=()=>window.print();
-populateMonths();render();setTimeout(loadHistoricalMonthsFromSupabase,250);
+$('#undoBtn').onclick=undoLast; $('#adminBtn')?.addEventListener('click',openAdminPanel);$('#auditBtn').onclick=openAuditLog;populateMonths();render();setTimeout(loadHistoricalMonthsFromSupabase,250);
 </script>
 </body>
 </html>
