@@ -352,6 +352,36 @@
   .bankTopMeta{grid-template-columns:1fr 1fr}
 }
 
+
+.viewIdentity{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+  margin-bottom:14px;
+}
+.viewIdentityItem{
+  background:#fff;
+  border:1px solid #d8e1e9;
+  border-radius:11px;
+  padding:11px 12px;
+  box-shadow:0 6px 18px rgba(15,39,66,.04);
+}
+.viewIdentityItem small{
+  display:block;
+  color:#728495;
+  font-size:7px;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.07em;
+}
+.viewIdentityItem b{
+  display:block;
+  margin-top:5px;
+  color:#17334f;
+  font-size:10px;
+}
+@media(max-width:800px){.viewIdentity{grid-template-columns:1fr 1fr}}
+
 </style>
 </head>
 <body>
@@ -360,6 +390,7 @@
 <div class="brand"><div><b>DANE-SE</b><small>INTELIGÊNCIA FINANCEIRA</small></div></div>
 <nav class="nav" id="nav">
 <button class="active" data-view="dashboard"><span class="text">Visão Executiva</span></button>
+<button data-view="report"><span class="text">Relatório Gerencial</span></button>
 <button data-view="comparison"><span class="text">Previsto x Realizado</span></button>
 <button data-view="weeks"><span class="text">Evolução Semanal</span></button>
 <button data-view="categories"><span class="text">Despesas por Categoria</span></button>
@@ -1656,17 +1687,31 @@ function reportHTML(a){
   </div>`;
 }
 
-function render(){
+
+function executiveIdentityStrip(a){
+  const unexpected=sum(a.unexpected||[],r=>r.amount);
+  const pending=pendingForecastTotal(a);
+  return `<div class="viewIdentity">
+    <div class="viewIdentityItem"><small>Visão</small><b>Posição financeira consolidada</b></div>
+    <div class="viewIdentityItem"><small>Orçamento x realizado</small><b>${money(a.forecastTotal)} · ${money(a.actualTotal)}</b></div>
+    <div class="viewIdentityItem"><small>Não previstos</small><b>${money(unexpected)}</b></div>
+    <div class="viewIdentityItem"><small>Previsto pendente</small><b>${money(pending)}</b></div>
+  </div>`;
+}
+
+function renderCore(){
   charts.forEach(c=>c.destroy());charts=[];
   const a=analyze();lastAnalysis=a;
   const rows=filtered(a),diff=a.actualTotal-a.forecastTotal,exec=a.forecastTotal?a.actualTotal/a.forecastTotal*100:0,unexpectedTotal=sum(a.unexpected,x=>x.amount);
   let h=filterBar(a);
 
   if(view==='dashboard'){
+    h+=executiveIdentityStrip(a);
     h+=executiveDashboardHTML(a);
     setTimeout(()=>drawExecutiveCharts(a),0);
   }
   else if(view==='report'){
+    h+=executiveIdentityStrip(a);
     h+=reportHTML(a);
   }
   else if(view==='comparison'){
@@ -1736,6 +1781,25 @@ function render(){
   const d=$('#deleteMonth');if(d)d.onclick=deleteMonth;
   bindReportInteractions(a);
 }
+
+function render(){
+  try{
+    renderCore();
+  }catch(err){
+    console.error('Falha ao renderizar dashboard:',err);
+    const app=$('#app');
+    if(app){
+      app.innerHTML=`<section class="card" style="border-left:4px solid #a54444">
+        <div class="cardHead"><div><h3>Não foi possível montar esta visão</h3><small>Os dados não foram apagados.</small></div></div>
+        <div style="padding:18px;font-size:10px;line-height:1.65;color:#52677b">
+          O dashboard encontrou um erro de apresentação nesta tela. Troque de aba ou atualize a página.
+          <br><b style="color:#17334f">Detalhe técnico:</b> ${esc(err?.message||String(err))}
+        </div>
+      </section>`;
+    }
+  }
+}
+
 
 function bindReportInteractions(a){
   $$('[data-report-action]').forEach(el=>el.onclick=()=>{
@@ -1879,12 +1943,6 @@ function adminUI(){
   $('#adminStatus').textContent=on?'Administrador conectado':'Visualização pública';
 }
 
-/* Relatório gerencial */
-const reportButton=document.createElement('button');
-reportButton.dataset.view='report';
-reportButton.innerHTML='<span class="text">Relatório Gerencial</span>';
-$('#nav').insertBefore(reportButton,$('#nav').children[1]);
-
 /* Eventos */
 document.addEventListener('click',e=>{
   if(!e.target.closest('.multi'))$$('.multi').forEach(x=>x.classList.remove('open'));
@@ -1913,6 +1971,11 @@ $('#nav').onclick=e=>{
   if(!selectedMonths.length){selectedMonths=[$('#month').value];MONTH_STATE[view]=selectedMonths}
   $$('#nav button').forEach(x=>x.classList.toggle('active',x===b));
   $('#pageTitle').textContent=b.innerText.trim();
+  $('#pageSub').textContent=view==='dashboard'
+    ?'Posição financeira consolidada · orçamento, realizado, riscos e decisões'
+    :view==='report'
+      ?'Fechamento gerencial · desvios, previsibilidade, concentração e plano de ação'
+      :'DANE-SE · Filtros e competências independentes em cada aba';
   $('#side').classList.remove('open');
   renderMonthPicker();
   render();
