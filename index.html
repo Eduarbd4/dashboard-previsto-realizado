@@ -296,6 +296,27 @@ aside{
 .selectionBar{position:sticky;top:68px;z-index:18;display:none;align-items:center;gap:8px;flex-wrap:wrap;background:#111;color:#fff;padding:10px 14px;border-radius:10px;margin-bottom:12px;box-shadow:0 10px 24px rgba(0,0,0,.18)}
 .selectionBar.show{display:flex}.selectionBar strong{font-size:10px}.selectionBar span{font-size:8px;color:#c8c8c8}.selectionBar button{border:1px solid #393939;background:#1b1b1b;color:#fff;border-radius:7px;padding:7px 9px;font-size:8px}.selectionBar button:hover{background:#2a2a2a}.selectionBar .danger{border-color:#733;background:#2a1515}.selectionBar .accent{background:#fff;color:#111;border-color:#fff}.selectCell{width:30px;text-align:center!important}.rowCheck{width:14px;height:14px;accent-color:#111;cursor:pointer}.selectedRow td{background:#f0f2f4!important}.rowActionBtn{border:1px solid #ddd;background:#fff;border-radius:6px;font-size:7px;padding:5px 6px}.bulkGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.bulkGrid label{display:grid;gap:5px;font-size:7px;text-transform:uppercase;letter-spacing:.05em;color:#777;font-weight:800}.bulkGrid input,.bulkGrid select{border:1px solid #ddd;border-radius:8px;padding:9px;font-size:9px}.bulkSummary{padding:12px;border:1px solid #e1e3e6;border-radius:9px;background:#fafafa;margin-bottom:12px}.bulkSummary strong{display:block;font-size:16px;color:#111}.bulkSummary span{font-size:8px;color:#777}.auditRow{padding:10px 0;border-bottom:1px solid #eee;font-size:8px;color:#666}.auditRow b{display:block;color:#222;margin-bottom:3px}.auditRow small{color:#999}.actionTiles{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.actionTile{border:1px solid #e1e3e6;background:#fff;border-radius:9px;padding:12px;text-align:left;cursor:pointer}.actionTile:hover{border-color:#999;background:#fafafa}.actionTile b{display:block;font-size:8.5px;color:#222}.actionTile span{display:block;font-size:7.5px;color:#777;margin-top:4px;line-height:1.4}@media(max-width:900px){.bulkGrid,.actionTiles{grid-template-columns:1fr}.selectionBar{top:0}}
 
+
+.monthHistory{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin:0 0 12px;font-size:8px;color:#777}
+.monthHistory b{color:#222}
+.monthPill{border:1px solid #e1e3e6;background:#fff;border-radius:999px;padding:6px 9px;cursor:pointer;color:#555}
+.monthPill.active{background:#111;color:#fff;border-color:#111}
+.drillHero{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:12px}
+.drillMetric{border:1px solid #e5e7e9;background:#fff;border-radius:10px;padding:12px}
+.drillMetric small{display:block;font-size:7px;text-transform:uppercase;color:#888;letter-spacing:.07em;font-weight:800}
+.drillMetric strong{display:block;font-size:16px;margin-top:5px;color:#111}
+.drillGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+.drillTable{max-height:330px;overflow:auto;border:1px solid #e7e9ec;border-radius:9px}
+.drillTable table{width:100%;border-collapse:collapse}
+.drillTable th{background:#fafafa;color:#888;font-size:7px;text-transform:uppercase;position:sticky;top:0}
+.drillTable td{font-size:8px;border-bottom:1px solid #eee;padding:8px}
+.drillLink{cursor:pointer}
+.drillLink:hover td{background:#f5f6f7}
+.drillSection{margin-top:14px}
+.drillSection h4{margin:0 0 8px;font-size:9px;color:#222}
+.sumHint{font-size:8px;color:#777;align-self:center}
+@media(max-width:900px){.drillHero{grid-template-columns:1fr 1fr}.drillGrid{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -337,7 +358,7 @@ aside{
       <input id="actualFile" class="hidden" type="file" accept=".xlsx,.xls,.csv">
     </div>
   </div>
-  <div class="content"><div class="selectionBar noPrint" id="selectionBar"></div><div id="app"></div></div>
+  <div class="content"><div id="monthHistory"></div><div class="selectionBar noPrint" id="selectionBar"></div><div id="app"></div></div>
   <div class="foot" id="footer"></div>
 </main>
 </div>
@@ -701,7 +722,7 @@ function render(){
 
     <div class="executiveGrid two">
       ${premiumCard('Distribuição por categoria',`<div class="donutWrap"><canvas id="categoryDonut"></canvas></div>`,'Categorias com maior realizado')}
-      ${premiumCard('Fluxo semanal',`<div class="donutWrap"><canvas id="weekDonut"></canvas></div><div class="miniList">${wk.map((w,i)=>`<div class="miniLine"><span class="miniDot" style="background:${colorPalette(8)[i]}"></span><b>${esc(w.label)}</b><strong>${money(w.actual)}</strong></div>`).join('')}</div>`,'Participação de cada semana no desembolso')}
+      ${premiumCard('Fluxo semanal',`<div class="donutWrap"><canvas id="weekDonut"></canvas></div><div class="miniList">${wk.map((w,i)=>`<div class="miniLine clickrow" data-week="${w.week}"><span class="miniDot" style="background:${colorPalette(8)[i]}"></span><b>${esc(w.label)}</b><strong>${money(w.actual)}</strong></div>`).join('')}</div>`,'Participação de cada semana no desembolso')}
     </div>`;
     setTimeout(()=>drawPremiumExecutive(A,cats,groups,wk),0);
   }else if(view==='report'){
@@ -815,7 +836,7 @@ function render(){
     h=`<div class="reportIntro"><b>Regra FOPAG.</b> Folha/salários + adiantamentos salariais + férias + prestação de serviços. Antecipações de lucros ficam fora. FOPAG Na Praia aparece apenas como bloco interno desta aba, nunca como aba separada.</div>${fopagSummary(fop)}`;
     for(const b of fop)h+=card(b.name,`<div class="grid2"><div>${tableRows(b.forecast,basicCols())}</div><div>${tableRows(b.actual,basicCols())}</div></div>`,`Previsto ${money(b.forecast.reduce((s,x)=>s+x.amount,0))} · Pago ${money(b.actual.reduce((s,x)=>s+x.amount,0))}`);
   }else if(view==='base'){
-    h=filtersHTML()+`<div class="controls noPrint" style="margin-bottom:10px"><button class="btn primary" id="baseNewForecast">Criar previsão</button><button class="btn" id="baseNewActual">Criar pagamento</button></div>`+card('Base única de lançamentos',tableRows(filteredRows(A),[
+    h=filtersHTML()+`<div class="controls noPrint" style="margin-bottom:10px"><button class="btn primary" id="baseNewForecast">Criar previsão</button><button class="btn" id="baseNewActual">Criar pagamento</button><span class="sumHint">Marque vários lançamentos para somar e usar ações em massa.</span></div>`+card('Base única de lançamentos',tableRows(filteredRows(A),[
       {label:'Origem',render:r=>r.source==='forecast'?'<span class="badge blue">Previsto</span>':'<span class="badge good">Pago</span>'},
       {label:'Grupo',render:r=>{ensureClassification(r);return `<span class="groupChip">${esc(r.managementGroup)}</span>`}},
       {label:'Subcategoria',render:r=>{ensureClassification(r);return esc(r.subcategory)}},
@@ -834,7 +855,9 @@ function render(){
     </div>`;
   }
   $('#app').innerHTML=h;
+  renderMonthHistory();
   bindInteractive(A);
+  bindSelectionControls();
   renderSelectionBar();
   $('#footer').textContent=`Base atual: Pasta1.xlsx como previsto · Pasta2.xlsx como pagamentos · ${A.f.length} previsões válidas · ${A.a.length} pagamentos válidos`;
 }
@@ -993,6 +1016,93 @@ function drawWeekOnly(wk){
    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'}},scales:{x:{grid:{display:false}},y:{grid:{color:'#e7e7e7'}}}}
  }))
 }
+
+function aggregateBy(list,keyFn){
+  const m={};
+  for(const r of list){
+    ensureClassification(r);
+    const k=keyFn(r)||'Não informado';
+    m[k]??={name:k,forecast:0,actual:0,count:0,rows:[]};
+    if(r.source==='forecast')m[k].forecast+=r.amount;else m[k].actual+=r.amount;
+    m[k].count++;m[k].rows.push(r);
+  }
+  return Object.values(m).map(x=>({...x,diff:x.actual-x.forecast})).sort((a,b)=>Math.max(b.actual,b.forecast)-Math.max(a.actual,a.forecast));
+}
+function openCategoryDrill(category){
+  const A=analytics();
+  const list=[...A.f,...A.a].filter(r=>r.category===category);
+  const forecast=list.filter(r=>r.source==='forecast').reduce((s,r)=>s+r.amount,0);
+  const actual=list.filter(r=>r.source==='actual').reduce((s,r)=>s+r.amount,0);
+  const subs=aggregateBy(list,r=>r.subcategory);
+  const centers=aggregateBy(list,r=>r.costCenter);
+  const parties=aggregateBy(list,r=>r.party);
+
+  $('#modalTitle').textContent='Categoria · '+category;
+  $('#modalSub').textContent='Abra subcategorias, centros de custo ou fornecedores e desça até cada lançamento.';
+  $('#modalBody').innerHTML=`
+    <div class="drillHero">
+      <div class="drillMetric"><small>Previsto</small><strong>${money(forecast)}</strong></div>
+      <div class="drillMetric"><small>Pago</small><strong>${money(actual)}</strong></div>
+      <div class="drillMetric"><small>Diferença</small><strong>${money(actual-forecast)}</strong></div>
+      <div class="drillMetric"><small>Execução</small><strong>${pct(forecast?actual/forecast*100:0)}</strong></div>
+      <div class="drillMetric"><small>Lançamentos</small><strong>${list.length}</strong></div>
+    </div>
+    <div class="drillGrid">
+      <div><div class="drillSection"><h4>Subcategorias dentro de ${esc(category)}</h4>
+        <div class="drillTable"><table><thead><tr><th>Subcategoria</th><th class="num">Previsto</th><th class="num">Pago</th><th class="num">Dif.</th></tr></thead><tbody>
+        ${subs.map(x=>`<tr class="drillLink" data-sub="${esc(x.name)}"><td><b>${esc(x.name)}</b></td><td class="num">${money(x.forecast)}</td><td class="num">${money(x.actual)}</td><td class="num">${money(x.diff)}</td></tr>`).join('')}
+        </tbody></table></div></div></div>
+      <div><div class="drillSection"><h4>Centros de custo</h4>
+        <div class="drillTable"><table><thead><tr><th>Centro</th><th class="num">Previsto</th><th class="num">Pago</th></tr></thead><tbody>
+        ${centers.map(x=>`<tr class="drillLink" data-ccdrill="${esc(x.name)}"><td><b>${esc(x.name)}</b></td><td class="num">${money(x.forecast)}</td><td class="num">${money(x.actual)}</td></tr>`).join('')}
+        </tbody></table></div></div></div>
+    </div>
+    <div class="drillSection"><h4>Todos os lançamentos da categoria</h4>${tableRows(list,basicCols())}</div>`;
+  $('#modal').classList.add('open');
+  $$('[data-sub]').forEach(el=>el.onclick=()=>openRows(`${category} · ${el.dataset.sub}`,list.filter(r=>r.subcategory===el.dataset.sub)));
+  $$('[data-ccdrill]').forEach(el=>el.onclick=()=>openRows(`${category} · ${el.dataset.ccdrill}`,list.filter(r=>r.costCenter===el.dataset.ccdrill)));
+  bindSelectionControls();
+}
+function openWeekDrill(week){
+  const A=analytics(),R=A.R;
+  const f=A.f.filter(r=>weekOf(r.date)==week),a=A.a.filter(r=>weekOf(r.date)==week);
+  const ids=new Set(a.map(r=>r.id));
+  const unexpected=A.unexpected.filter(r=>weekOf(r.date)==week);
+  const forecastTotal=f.reduce((s,r)=>s+r.amount,0),actualTotal=a.reduce((s,r)=>s+r.amount,0);
+  const diff=actualTotal-forecastTotal;
+  const execution=forecastTotal?actualTotal/forecastTotal*100:0;
+  const pending=A.pending.filter(r=>weekOf(r.date)==week);
+  const pendingTotal=pending.reduce((s,r)=>s+(r.remaining||0),0);
+  const cats=aggregateBy([...f,...a],r=>r.category);
+
+  $('#modalTitle').textContent=`Semana ${week} · Previsto x Realizado`;
+  $('#modalSub').textContent='Detalhamento financeiro completo da semana.';
+  $('#modalBody').innerHTML=`
+    <div class="drillHero">
+      <div class="drillMetric"><small>Previsto</small><strong>${money(forecastTotal)}</strong></div>
+      <div class="drillMetric"><small>Realizado</small><strong>${money(actualTotal)}</strong></div>
+      <div class="drillMetric"><small>Diferença</small><strong>${money(diff)}</strong></div>
+      <div class="drillMetric"><small>Execução</small><strong>${pct(execution)}</strong></div>
+      <div class="drillMetric"><small>Não previsto</small><strong>${money(unexpected.reduce((s,r)=>s+r.amount,0))}</strong></div>
+    </div>
+    <div class="drillGrid">
+      <div><div class="drillSection"><h4>Categorias da semana</h4>
+        <div class="drillTable"><table><thead><tr><th>Categoria</th><th class="num">Previsto</th><th class="num">Pago</th><th class="num">Dif.</th></tr></thead><tbody>
+        ${cats.map(x=>`<tr class="drillLink" data-week-cat="${esc(x.name)}"><td><b>${esc(x.name)}</b></td><td class="num">${money(x.forecast)}</td><td class="num">${money(x.actual)}</td><td class="num">${money(x.diff)}</td></tr>`).join('')}
+        </tbody></table></div></div></div>
+      <div><div class="drillSection"><h4>Fechamento da semana</h4>
+        <div class="reportTextBlock ${diff>0?'risk':'good'}"><h4>Leitura</h4><p>${diff>0?`A semana ficou ${money(diff)} acima do previsto.`:`A semana ficou ${money(Math.abs(diff))} abaixo do previsto.`} Existem ${pending.length} previsões ainda pendentes, somando ${money(pendingTotal)}, e ${unexpected.length} pagamentos sem previsão vinculada.</p></div>
+      </div></div>
+    </div>
+    <div class="drillSection"><h4>Pagamentos previstos da semana</h4>${tableRows(f,basicCols())}</div>
+    <div class="drillSection"><h4>Pagamentos realizados da semana</h4>${tableRows(a,basicCols())}</div>
+    <div class="drillSection"><h4>Não previstos da semana</h4>${tableRows(unexpected,basicCols())}</div>`;
+  $('#modal').classList.add('open');
+  $$('[data-week-cat]').forEach(el=>el.onclick=()=>openCategoryDrill(el.dataset.weekCat));
+  $$('[data-row]').forEach(el=>el.onclick=e=>{if(e.target.closest('.rowSelect')||e.target.closest('[data-edit]'))return;openRow(el.dataset.row)});
+  bindSelectionControls();
+}
+
 function openRows(title,list){
  $('#modalTitle').textContent=title;$('#modalSub').textContent=`${list.length} lançamento(s) · total ${money(list.reduce((s,x)=>s+(x.remaining??x.amount??0),0))}`;
  $('#modalBody').innerHTML=tableRows(list,basicCols());$('#modal').classList.add('open');
@@ -1085,8 +1195,65 @@ function openCatalog(){
  $('#modal').classList.add('open');
 }
 function toast(msg){$('#footer').textContent=msg+' · '+new Date().toLocaleTimeString('pt-BR')}
-function populateMonths(){
- const current=$('#month').value;const months=Object.keys(state).sort().reverse();$('#month').innerHTML=months.map(m=>`<option value="${m}">${monthText(m)}</option>`).join('');$('#month').value=months.includes(current)?current:(months[0]||'2026-08')
+
+function emptyMonthRecord(){
+  return {forecast:[],actual:[],links:{},catalog:{categories:[],costCenters:[]},auditLog:[],updatedAt:null};
+}
+function normalizeMonthRecord(r){
+  const out={...emptyMonthRecord(),...(r||{})};
+  out.forecast=Array.isArray(out.forecast)?out.forecast:[];
+  out.actual=Array.isArray(out.actual)?out.actual:[];
+  out.links=out.links||{};
+  out.catalog=out.catalog||{categories:[],costCenters:[]};
+  out.catalog.categories=Array.isArray(out.catalog.categories)?out.catalog.categories:[];
+  out.catalog.costCenters=Array.isArray(out.catalog.costCenters)?out.catalog.costCenters:[];
+  out.auditLog=Array.isArray(out.auditLog)?out.auditLog:[];
+  return out;
+}
+function renderMonthHistory(){
+  const box=$('#monthHistory');if(!box)return;
+  const current=$('#month')?.value;
+  const months=Object.keys(state).filter(m=>/^\d{4}-\d{2}$/.test(m)).sort().reverse();
+  box.innerHTML=`<div class="monthHistory noPrint"><b>Histórico:</b>${months.map(m=>`<button class="monthPill ${m===current?'active':''}" data-month-pill="${m}">${esc(monthText(m))}</button>`).join('')}</div>`;
+  $$('[data-month-pill]').forEach(b=>b.onclick=()=>{$('#month').value=b.dataset.monthPill;selectedRows.clear();render()});
+}
+async function loadHistoricalMonthsFromSupabase(){
+  if(!db)return;
+  try{
+    const {data,error}=await db.from('financial_months').select('competence,forecast,actual,metadata,updated_at').order('competence',{ascending:false});
+    if(error)throw error;
+    if(!Array.isArray(data))return;
+    let changed=false;
+    for(const row of data){
+      const m=String(row.competence||'').slice(0,7);
+      if(!/^\d{4}-\d{2}$/.test(m))continue;
+      if(!state[m]){
+        const meta=row.metadata||{};
+        state[m]=normalizeMonthRecord({
+          forecast:row.forecast||[],
+          actual:row.actual||[],
+          links:meta.links||{},
+          catalog:meta.catalog||{categories:[],costCenters:[]},
+          auditLog:meta.auditLog||[],
+          updatedAt:row.updated_at||null
+        });
+        changed=true;
+      }
+    }
+    if(changed){
+      localStorage.setItem(STORAGE_KEY,JSON.stringify(state));
+      populateMonths($('#month')?.value);
+      render();
+    }
+  }catch(e){console.warn('Histórico Supabase:',e)}
+}
+
+function populateMonths(preferredMonth=null){
+ const select=$('#month');
+ const current=preferredMonth||select.value;
+ const months=Object.keys(state).filter(m=>/^\d{4}-\d{2}$/.test(m)).sort().reverse();
+ select.innerHTML=months.map(m=>`<option value="${m}">${monthText(m)}</option>`).join('');
+ select.value=(current&&months.includes(current))?current:(months[0]||'2026-08');
 }
 async function importWorkbook(file,source){
  const data=await file.arrayBuffer(),wb=XLSX.read(data),sheet=wb.Sheets[wb.SheetNames[0]],raw=XLSX.utils.sheet_to_json(sheet,{defval:''});
@@ -1103,9 +1270,28 @@ async function importWorkbook(file,source){
   const costCenter=String(pick(source==='forecast'?['Centro de Custo ','Centro de Custo','Centro de Custo 1']:['Centro de Custo 1','Centro de Custo','Centro de custo']))||'Não informado';
   const rr={id:uid(source==='forecast'?'F':'A'),source,date,party:String(pick(['Nome do fornecedor','Fornecedor','Fornecedor / Cliente','Pessoa']))||'Não informado',description:String(pick(['Descrição','Descricao','Histórico','Historico','Observação']))||'Sem descrição',amount,category,costCenter,status:source==='forecast'?'Previsto':status,paymentMethod:String(pick(['Forma de pagamento']))||'',bank:String(pick(['Conta bancária']))||'',excluded:false,manualType:'automatic',createdBy:file.name};ensureClassification(rr,false);out.push(rr)
  }
- const grouped={};out.forEach(r=>{const m=r.date.slice(0,7);if(m)(grouped[m]??=[]).push(r)});
- for(const [m,list] of Object.entries(grouped)){state[m]??={forecast:[],actual:[],links:{},catalog:{categories:[],costCenters:[]}};state[m][source==='forecast'?'forecast':'actual']=list;if(source==='actual')state[m].links={}}
- saveState(`${source==='forecast'?'Previsões':'Pagamentos'} importados de ${file.name}.`);populateMonths();render();
+ const grouped={};out.forEach(r=>{const m=r.date.slice(0,7);if(/^\d{4}-\d{2}$/.test(m))(grouped[m]??=[]).push(r)});
+ const importedMonths=Object.keys(grouped).sort();
+ if(!importedMonths.length){toast('Nenhuma competência válida encontrada no arquivo.');return;}
+ pushUndo(source==='forecast'?'importar previsão mensal':'importar pagamentos mensais');
+ for(const [m,list] of Object.entries(grouped)){
+   state[m]=normalizeMonthRecord(state[m]);
+   const field=source==='forecast'?'forecast':'actual';
+   state[m][field]=list;
+   state[m].updatedAt=new Date().toISOString();
+   if(source==='actual'){
+     const validIds=new Set(list.map(x=>x.id));
+     const kept={};
+     for(const [aid,pid] of Object.entries(state[m].links||{}))if(validIds.has(aid))kept[aid]=pid;
+     state[m].links=kept;
+   }
+   state[m].auditLog??=[];
+   state[m].auditLog.unshift({at:new Date().toISOString(),action:'Importação mensal',details:`${source==='forecast'?'Previsão':'Pagamentos'} importados em ${m} sem apagar outras competências.`});
+ }
+ localStorage.setItem(STORAGE_KEY,JSON.stringify(state));
+ const targetMonth=importedMonths[importedMonths.length-1];
+ populateMonths(targetMonth);$('#month').value=targetMonth;selectedRows.clear();render();
+ toast(`${source==='forecast'?'Previsão':'Pagamentos'} de ${monthText(targetMonth)} importados. Meses anteriores preservados.`);
 }
 async function saveSupabase(){
  if(!db)return toast('Supabase não configurado.');
@@ -1119,11 +1305,11 @@ async function saveSupabase(){
 }
 function exportJSON(){const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='previsto-realizado-danese.json';a.click();URL.revokeObjectURL(a.href)}
 $$('#nav button[data-view]').forEach(b=>b.onclick=()=>{$$('#nav button[data-view]').forEach(x=>x.classList.remove('active'));b.classList.add('active');view=b.dataset.view;$('#pageTitle').textContent=b.textContent;$('#pageSub').textContent=view==='executive'?'Posição financeira consolidada para diretoria':view==='report'?'Fechamento gerencial e pontos de decisão':'Controle financeiro detalhado';render()});
-$('#month').onchange=render;$('#closeModal').onclick=()=>$('#modal').classList.remove('open');$('#modal').onclick=e=>{if(e.target===$('#modal'))$('#modal').classList.remove('open')};
+$('#month').onchange=()=>{selectedRows.clear();render()};$('#closeModal').onclick=()=>$('#modal').classList.remove('open');$('#modal').onclick=e=>{if(e.target===$('#modal'))$('#modal').classList.remove('open')};
 $('#undoBtn').onclick=undoLast;$('#auditBtn').onclick=openAuditLog;$('#newForecast').onclick=()=>openNew('forecast');$('#newActual').onclick=()=>openNew('actual');$('#catalogBtn').onclick=openCatalog;$('#exportBtn').onclick=exportJSON;
 $('#importForecast').onclick=()=>$('#forecastFile').click();$('#importActual').onclick=()=>$('#actualFile').click();$('#forecastFile').onchange=e=>e.target.files[0]&&importWorkbook(e.target.files[0],'forecast');$('#actualFile').onchange=e=>e.target.files[0]&&importWorkbook(e.target.files[0],'actual');
 $('#printBtn').onclick=()=>window.print();$('#syncBtn').onclick=saveSupabase;
-populateMonths();render();
+populateMonths();render();setTimeout(loadHistoricalMonthsFromSupabase,250);
 </script>
 </body>
 </html>
