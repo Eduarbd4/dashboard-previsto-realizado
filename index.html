@@ -65,6 +65,233 @@ body{background:#f3f3f3;color:#151515}
 .subtle{font-size:8px;color:#757575}
 .classificationNote{padding:12px 14px;border:1px solid #ddd;border-left:4px solid #111;border-radius:9px;background:#fafafa;font-size:9px;line-height:1.65;color:#555}
 
+
+/* =========================================================
+   PREMIUM FINANCIAL UI — banking-grade
+   ========================================================= */
+:root{
+  --black:#0b0b0c;
+  --charcoal:#1d1f22;
+  --paper:#ffffff;
+  --canvas:#f5f6f7;
+  --line2:#e7e9ec;
+  --muted2:#7c8289;
+  --green2:#0f8a63;
+  --orange2:#f28c28;
+  --red2:#d74747;
+  --blue3:#3a78c2;
+  --purple2:#7d5bbe;
+  --teal2:#2aa198;
+}
+body{background:var(--canvas);color:#17191c}
+.shell{grid-template-columns:232px 1fr}
+aside{
+  background:#0b0b0c;
+  border-right:1px solid #1d1d1d;
+  padding:24px 14px;
+}
+.brand{padding:4px 10px 20px;border-bottom:1px solid #272727}
+.brand strong{font-size:17px;letter-spacing:-.02em}
+.brand small{color:#8d8d8d;font-size:9px}
+.nav{gap:3px}
+.nav button{
+  color:#bdbdbd;
+  padding:10px 11px;
+  border-radius:7px;
+  font-size:10px;
+  font-weight:650
+}
+.nav button:hover,.nav button.active{background:#202020;color:#fff}
+.nav .section{font-size:7px;color:#666;letter-spacing:.15em;padding:18px 11px 6px}
+.sideBottom{border-top:1px solid #272727}
+.sideBottom button{
+  background:#151515;border-color:#2e2e2e;color:#d2d2d2;border-radius:7px
+}
+.topbar{
+  height:68px;
+  background:rgba(255,255,255,.96);
+  backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--line2);
+  padding:0 26px
+}
+.pageTitle h1{font-size:16px;letter-spacing:-.02em}
+.pageTitle p{font-size:8.5px;color:#858b91}
+.toolbar select,.toolbar button{
+  border-color:#e0e3e6;
+  border-radius:7px;
+  background:#fff;
+  padding:8px 10px
+}
+.toolbar .primary{background:#111;color:#fff;border-color:#111}
+.content{padding:24px 28px 34px;max-width:1660px}
+
+.executiveHeader{
+  background:#fff;
+  border:1px solid var(--line2);
+  border-radius:16px;
+  padding:24px 25px 22px;
+  margin-bottom:14px;
+}
+.executiveHeaderTop{
+  display:flex;justify-content:space-between;align-items:flex-start;gap:20px
+}
+.executiveHeader .eyebrow{
+  font-size:7px;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:#8a8f94;
+  font-weight:800
+}
+.executiveHeader h2{
+  margin:6px 0 5px;
+  font-size:25px;
+  letter-spacing:-.045em;
+  color:#111
+}
+.executiveHeader p{
+  margin:0;
+  font-size:9.5px;
+  line-height:1.65;
+  color:#676d73;
+  max-width:920px
+}
+.executiveStatus{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  border-radius:999px;
+  padding:7px 10px;
+  background:#f3f4f5;
+  color:#2f3337;
+  font-size:8px;
+  font-weight:800;
+  white-space:nowrap
+}
+.executiveStatus:before{content:"";width:7px;height:7px;border-radius:50%;background:#111}
+.execKpis{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:0;
+  margin-top:22px;
+  border-top:1px solid var(--line2)
+}
+.execMetric{
+  padding:17px 18px 2px 0;
+  border-right:1px solid var(--line2);
+  cursor:pointer
+}
+.execMetric:not(:first-child){padding-left:18px}
+.execMetric:last-child{border-right:0}
+.execMetric small{
+  display:block;color:#8a8f94;font-size:7px;text-transform:uppercase;letter-spacing:.08em;font-weight:800
+}
+.execMetric strong{
+  display:block;font-size:23px;letter-spacing:-.045em;margin-top:6px;color:#111
+}
+.execMetric span{display:block;font-size:8px;color:#83888d;margin-top:4px}
+.execMetric .up{color:var(--red2)}
+.execMetric .down{color:var(--green2)}
+
+.executiveGrid{
+  display:grid;
+  grid-template-columns:1.15fr .85fr .85fr;
+  gap:14px;
+  margin-bottom:14px
+}
+.executiveGrid.two{grid-template-columns:1.15fr .85fr}
+.premiumCard{
+  background:#fff;
+  border:1px solid var(--line2);
+  border-radius:15px;
+  overflow:hidden
+}
+.premiumCardHead{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:16px 17px 0
+}
+.premiumCardHead h3{
+  margin:0;font-size:10px;color:#202327;letter-spacing:-.01em
+}
+.premiumCardHead small{font-size:7.5px;color:#979ca1}
+.premiumCardBody{padding:12px 17px 17px}
+.donutWrap{height:250px;position:relative}
+.donutCenter{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none
+}
+.donutCenter div{text-align:center}
+.donutCenter small{display:block;font-size:7px;text-transform:uppercase;color:#999;letter-spacing:.07em}
+.donutCenter strong{display:block;font-size:20px;margin-top:4px;color:#111}
+.miniList{display:grid;gap:9px;margin-top:8px}
+.miniLine{
+  display:grid;grid-template-columns:10px 1fr auto;gap:8px;align-items:center;
+  font-size:8px;color:#666
+}
+.miniDot{width:8px;height:8px;border-radius:50%}
+.miniLine b{color:#272a2d;font-size:8px}
+.miniLine strong{color:#17191c;font-size:8px}
+
+.attentionList{display:grid;gap:0}
+.attentionItem{
+  display:grid;
+  grid-template-columns:34px 1fr auto;
+  gap:10px;
+  align-items:center;
+  padding:13px 0;
+  border-bottom:1px solid #edf0f2;
+  cursor:pointer
+}
+.attentionItem:last-child{border-bottom:0}
+.attentionIndex{
+  width:28px;height:28px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  background:#f1f2f3;color:#333;font-size:8px;font-weight:800
+}
+.attentionItem b{display:block;font-size:8.5px;color:#222}
+.attentionItem p{margin:3px 0 0;font-size:8px;color:#83888d;line-height:1.45}
+.attentionItem strong{font-size:9px;color:#222;white-space:nowrap}
+
+.premiumTable{overflow:auto;max-height:450px}
+.premiumTable table{width:100%;border-collapse:collapse}
+.premiumTable th{
+  background:#fafafa;color:#92979c;font-size:7px;text-transform:uppercase;letter-spacing:.06em;
+  position:sticky;top:0;z-index:2
+}
+.premiumTable td{font-size:8.4px}
+.premiumTable tr:hover td{background:#fafbfc}
+
+.reportExecutive{
+  background:#fff;border:1px solid var(--line2);border-radius:16px;padding:23px 24px;margin-bottom:14px
+}
+.reportExecutive .tag{
+  display:inline-block;font-size:7px;color:#777;text-transform:uppercase;letter-spacing:.14em;font-weight:800
+}
+.reportExecutive h2{font-size:23px;margin:6px 0;color:#111;letter-spacing:-.04em}
+.reportExecutive p{font-size:9.5px;line-height:1.7;color:#666;margin:0;max-width:1050px}
+.reportSection{margin:18px 0 8px}
+.reportSection h3{font-size:11px;margin:0;color:#202226}
+.reportSection span{font-size:7.5px;color:#959aa0}
+.reportNarrative{gap:9px}
+.reportTextBlock{
+  border-radius:10px;
+  border:1px solid #e7e9ec;
+  background:#fff;
+  padding:13px 14px
+}
+.reportTextBlock h4{font-size:9px}
+.reportTextBlock p{font-size:8.8px}
+.execConclusion{background:#fff;border:1px solid #e3e5e8}
+
+@media(max-width:1200px){
+  .executiveGrid,.executiveGrid.two{grid-template-columns:1fr 1fr}
+}
+@media(max-width:850px){
+  .executiveGrid,.executiveGrid.two{grid-template-columns:1fr}
+  .execKpis{grid-template-columns:1fr 1fr}
+  .execMetric:nth-child(2){border-right:0}
+}
+
 </style>
 </head>
 <body>
@@ -393,6 +620,14 @@ function reportNarrative(A,cats,vendors,wk,fop){
   return {budgetText,predictText,pendingText,supplierText,fopagText,weeklyText,conclusion,accuracy,exec,unpct,topOver,topUnder,top5pct};
 }
 
+
+function premiumCard(title,body,sub=''){
+  return `<section class="premiumCard">
+    <div class="premiumCardHead"><div><h3>${esc(title)}</h3>${sub?`<small>${esc(sub)}</small>`:''}</div></div>
+    <div class="premiumCardBody">${body}</div>
+  </section>`;
+}
+
 function card(title,body,sub=''){return `<section class="card"><div class="cardHead"><div><h3>${esc(title)}</h3>${sub?`<small>${esc(sub)}</small>`:''}</div></div><div class="cardBody">${body}</div></section>`}
 function tableRows(rows,cols){
   if(!rows.length)return'<div class="empty">Nenhum lançamento neste recorte.</div>';
@@ -406,48 +641,86 @@ function render(){
   const accuracy=A.fTotal?Math.max(0,100-Math.abs(A.diff)/A.fTotal*100):0;
   let h='';
   if(view==='executive'){
-    const topOver=[...cats].filter(x=>x.diff>0).sort((a,b)=>b.diff-a.diff)[0];
+    const over=[...cats].filter(x=>x.diff>0).sort((a,b)=>b.diff-a.diff);
+    const exec=A.fTotal?A.aTotal/A.fTotal*100:0;
+    const pendingPct=A.fTotal?A.pendingTotal/A.fTotal*100:0;
+    const unPct=A.aTotal?A.unexpectedTotal/A.aTotal*100:0;
     const largestGroup=groups[0];
-    h=`<section class="hero"><span class="eyebrow">DANE-SE · FINANCIAL CONTROL</span><h2>${esc(monthText($('#month').value))}</h2><p>${A.diff>0?`O realizado está ${money(A.diff)} acima do orçamento.`:`O realizado está ${money(Math.abs(A.diff))} abaixo do orçamento.`} A leitura abaixo mostra o que aconteceu no mês, onde o orçamento desviou, o que ainda está pendente e quais pontos precisam de decisão.</p><div class="heroMeta"><div><small>Orçamento</small><b>${money(A.fTotal)}</b></div><div><small>Realizado</small><b>${money(A.aTotal)}</b></div><div><small>Execução</small><b>${pct(exec)}</b></div><div><small>Aderência</small><b>${pct(accuracy)}</b></div></div></section>
-    <div class="kpis">
-      <article class="kpi" data-open="forecast"><small>Previsto</small><strong>${money(A.fTotal)}</strong><span>${A.f.length} lançamentos</span></article>
-      <article class="kpi good" data-open="actual"><small>Pago</small><strong>${money(A.aTotal)}</strong><span>${A.a.length} pagamentos</span></article>
-      <article class="kpi ${A.diff>0?'risk':'good'}" data-open="difference"><small>Desvio</small><strong>${money(A.diff)}</strong><span>${A.diff>0?'Acima do orçamento':'Abaixo do orçamento'}</span></article>
-      <article class="kpi ${unpct>5?'warn':'good'}" data-open="unexpected"><small>Não previstos</small><strong>${money(A.unexpectedTotal)}</strong><span>${pct(unpct)} do realizado</span></article>
-      <article class="kpi ${A.pendingTotal>0?'warn':'good'}" data-open="pending"><small>Previsto pendente</small><strong>${money(A.pendingTotal)}</strong><span>Ainda sem pagamento</span></article>
-      <article class="kpi" data-open="groups"><small>Maior grupo de despesas</small><strong>${largestGroup?money(largestGroup.actual):money(0)}</strong><span>${largestGroup?esc(largestGroup.name):'Sem dados'}</span></article>
-    </div>
-    <div class="grid3">
-      <div class="action ${topOver?'risk':'good'}"><b>Maior pressão orçamentária</b><p>${topOver?`${esc(topOver.name)} · ${money(topOver.diff)} acima do previsto`:'Nenhuma categoria acima do previsto.'}</p></div>
-      <div class="action ${A.unexpected.length?'warn':'good'}"><b>Previsibilidade</b><p>${A.unexpected.length} pagamentos não previstos somando ${money(A.unexpectedTotal)}.</p></div>
-      <div class="action ${A.pending.length?'warn':'good'}"><b>Fechamento</b><p>${A.pending.length} previsões ainda possuem saldo pendente de ${money(A.pendingTotal)}.</p></div>
-    </div>
-    <div class="grid2">${card('Execução semanal','<div class="chart"><canvas id="weekChart"></canvas></div>','Previsto, pago e não previsto')}${card('Previsto x realizado por categoria','<div class="chart"><canvas id="catChart"></canvas></div>','Gráfico vertical e colorido')}</div>
-    <div class="grid2">${card('Composição dos gastos por grupo','<div class="chart"><canvas id="groupChart"></canvas></div>','Alimentação, Pessoas, Produção, Logística, Tecnologia e demais grupos')}${card('Categorias com maior impacto',`<div class="tableWrap"><table><thead><tr><th>Categoria</th><th>Grupo</th><th class="num">Previsto</th><th class="num">Pago</th><th class="num">Diferença</th></tr></thead><tbody>${cats.slice(0,16).map(x=>{const sample=x.rows[0],g=sample?.managementGroup||managementClassification(sample||{}).group;return`<tr class="clickrow" data-cat="${esc(x.name)}"><td><b>${esc(x.name)}</b></td><td><span class="groupChip">${esc(g)}</span></td><td class="num">${money(x.forecast)}</td><td class="num">${money(x.actual)}</td><td class="num ${x.diff>0?'positive':'negative'}">${money(x.diff)}</td></tr>`}).join('')}</tbody></table></div>`,'Clique para abrir os lançamentos')}</div>`;
-    setTimeout(()=>drawExecutive(A,cats,groups,wk),0);
-  }else if(view==='report'){
-    const N=reportNarrative(A,cats,vendors,wk,fop);
-    const topOver=N.topOver;
-    h=`<section class="hero">
-      <span class="eyebrow">RELATÓRIO GERENCIAL · FECHAMENTO FINANCEIRO</span>
-      <h2>${esc(monthText($('#month').value))}</h2>
-      <p>Leitura financeira preparada para diretoria. O objetivo desta página é explicar o que aconteceu no mês, onde o orçamento desviou, quais pontos afetam o caixa e o que precisa de decisão.</p>
-      <div class="heroMeta">
-        <div><small>Previsto</small><b>${money(A.fTotal)}</b></div>
-        <div><small>Pago</small><b>${money(A.aTotal)}</b></div>
-        <div><small>Desvio</small><b>${money(A.diff)}</b></div>
-        <div><small>Aderência ao plano</small><b>${pct(N.accuracy)}</b></div>
+    const topGroups=groups.slice(0,6);
+    const topCats=[...cats].sort((a,b)=>Math.abs(b.diff)-Math.abs(a.diff)).slice(0,8);
+    const statusLabel=A.diff>0?'Atenção ao orçamento':A.pendingTotal>0?'Fechamento em andamento':'Execução controlada';
+
+    h=`<section class="executiveHeader">
+      <div class="executiveHeaderTop">
+        <div>
+          <span class="eyebrow">POSIÇÃO FINANCEIRA · ${esc(monthText($('#month').value))}</span>
+          <h2>Previsto x Realizado</h2>
+          <p>${A.diff>0
+            ?`O realizado está ${money(A.diff)} acima do orçamento. A prioridade é entender quais categorias e pagamentos explicam esse excesso.`
+            :`O realizado está ${money(Math.abs(A.diff))} abaixo do orçamento. Antes de interpretar como economia, é preciso considerar ${money(A.pendingTotal)} ainda previstos e não totalmente pagos.`}</p>
+        </div>
+        <span class="executiveStatus">${esc(statusLabel)}</span>
+      </div>
+      <div class="execKpis">
+        <div class="execMetric" data-open="forecast"><small>Previsto</small><strong>${money(A.fTotal)}</strong><span>${A.f.length} previsões válidas</span></div>
+        <div class="execMetric" data-open="actual"><small>Realizado</small><strong>${money(A.aTotal)}</strong><span>${A.a.length} pagamentos efetivos</span></div>
+        <div class="execMetric" data-open="difference"><small>Desvio</small><strong class="${A.diff>0?'up':'down'}">${money(A.diff)}</strong><span>${pct(exec)} de execução</span></div>
+        <div class="execMetric" data-open="pending"><small>Pendente</small><strong>${money(A.pendingTotal)}</strong><span>${A.pending.length} previsões ainda abertas</span></div>
       </div>
     </section>
 
-    <div class="sectionTitle"><h3>1. Resumo executivo</h3><span>Leitura do mês em linguagem gerencial</span></div>
+    <div class="executiveGrid">
+      ${premiumCard('Execução do orçamento',`<div class="donutWrap"><canvas id="budgetDonut"></canvas><div class="donutCenter"><div><small>Executado</small><strong>${pct(exec)}</strong></div></div></div>`,'Previsto x realizado')}
+      ${premiumCard('Composição dos gastos',`<div class="donutWrap"><canvas id="groupDonut"></canvas></div><div class="miniList">${topGroups.map((g,i)=>`<div class="miniLine"><span class="miniDot" style="background:${colorPalette(10)[i]}"></span><b>${esc(g.name)}</b><strong>${money(g.actual)}</strong></div>`).join('')}</div>`,'Grupos gerenciais')}
+      ${premiumCard('Qualidade do planejamento',`<div class="donutWrap"><canvas id="qualityDonut"></canvas><div class="donutCenter"><div><small>Não previsto</small><strong>${pct(unPct)}</strong></div></div></div><div class="miniList"><div class="miniLine"><span class="miniDot" style="background:#d74747"></span><b>Pagamentos não previstos</b><strong>${money(A.unexpectedTotal)}</strong></div><div class="miniLine"><span class="miniDot" style="background:#f28c28"></span><b>Previsto pendente</b><strong>${money(A.pendingTotal)}</strong></div></div>`,'Previsibilidade e fechamento')}
+    </div>
+
+    <div class="executiveGrid two">
+      ${premiumCard('Pontos que exigem atenção',`<div class="attentionList">
+        <div class="attentionItem" data-open="unexpected"><span class="attentionIndex">01</span><div><b>Pagamentos fora do orçamento</b><p>${A.unexpected.length} lançamentos precisam de justificativa, classificação ou inclusão futura na previsão.</p></div><strong>${money(A.unexpectedTotal)}</strong></div>
+        <div class="attentionItem" data-open="pending"><span class="attentionIndex">02</span><div><b>Compromissos ainda em aberto</b><p>Valores previstos que ainda não possuem pagamento integral vinculado.</p></div><strong>${money(A.pendingTotal)}</strong></div>
+        <div class="attentionItem" data-open="groups"><span class="attentionIndex">03</span><div><b>Maior grupo de desembolso</b><p>${largestGroup?esc(largestGroup.name):'Sem dados'} concentra a maior parcela do realizado no recorte.</p></div><strong>${largestGroup?money(largestGroup.actual):money(0)}</strong></div>
+        <div class="attentionItem"><span class="attentionIndex">04</span><div><b>Maior desvio por categoria</b><p>${over[0]?esc(over[0].name):'Nenhuma categoria acima do orçamento.'}</p></div><strong>${over[0]?money(over[0].diff):money(0)}</strong></div>
+      </div>`,'Leitura para decisão')}
+      ${premiumCard('Desvios relevantes',`<div class="premiumTable"><table><thead><tr><th>Categoria</th><th class="num">Previsto</th><th class="num">Pago</th><th class="num">Desvio</th></tr></thead><tbody>${topCats.map(x=>`<tr class="clickrow" data-cat="${esc(x.name)}"><td><b>${esc(x.name)}</b></td><td class="num">${money(x.forecast)}</td><td class="num">${money(x.actual)}</td><td class="num ${x.diff>0?'positive':'negative'}">${money(x.diff)}</td></tr>`).join('')}</tbody></table></div>`,'Clique para abrir os lançamentos')}
+    </div>
+
+    <div class="executiveGrid two">
+      ${premiumCard('Distribuição por categoria',`<div class="donutWrap"><canvas id="categoryDonut"></canvas></div>`,'Categorias com maior realizado')}
+      ${premiumCard('Fluxo semanal',`<div class="donutWrap"><canvas id="weekDonut"></canvas></div><div class="miniList">${wk.map((w,i)=>`<div class="miniLine"><span class="miniDot" style="background:${colorPalette(8)[i]}"></span><b>${esc(w.label)}</b><strong>${money(w.actual)}</strong></div>`).join('')}</div>`,'Participação de cada semana no desembolso')}
+    </div>`;
+    setTimeout(()=>drawPremiumExecutive(A,cats,groups,wk),0);
+  }else if(view==='report'){
+    const N=reportNarrative(A,cats,vendors,wk,fop);
+    const topOver=N.topOver;
+    h=`<section class="reportExecutive">
+      <span class="tag">RELATÓRIO GERENCIAL · FECHAMENTO FINANCEIRO</span>
+      <h2>${esc(monthText($('#month').value))}</h2>
+      <p>Este relatório explica a execução financeira da competência, os desvios em relação ao orçamento, os pagamentos fora da previsão, os compromissos pendentes e os principais pontos que precisam de decisão gerencial.</p>
+    </section>
+    <div class="execKpis" style="background:#fff;border:1px solid var(--line2);border-radius:14px;padding:0 18px;margin-bottom:14px">
+      <div class="execMetric"><small>Previsto</small><strong>${money(A.fTotal)}</strong><span>Base orçamentária</span></div>
+      <div class="execMetric"><small>Realizado</small><strong>${money(A.aTotal)}</strong><span>Pagamentos efetivos</span></div>
+      <div class="execMetric"><small>Desvio</small><strong class="${A.diff>0?'up':'down'}">${money(A.diff)}</strong><span>${pct(N.exec)} de execução</span></div>
+      <div class="execMetric"><small>Aderência</small><strong>${pct(N.accuracy)}</strong><span>Qualidade do planejamento</span></div>
+    </div>
+
+
+    <div class="reportSection"><h3>Visão gráfica da composição</h3><span>Distribuição do realizado</span></div>
+    <div class="executiveGrid">
+      ${premiumCard('Orçamento executado',`<div class="donutWrap"><canvas id="reportBudgetDonut"></canvas><div class="donutCenter"><div><small>Execução</small><strong>${pct(N.exec)}</strong></div></div></div>`,'Previsto x realizado')}
+      ${premiumCard('Composição por grupo',`<div class="donutWrap"><canvas id="reportGroupDonut"></canvas></div>`,'Distribuição gerencial')}
+      ${premiumCard('Pagamentos fora da previsão',`<div class="donutWrap"><canvas id="reportQualityDonut"></canvas><div class="donutCenter"><div><small>Não previsto</small><strong>${pct(N.unpct)}</strong></div></div></div>`,'Qualidade do planejamento')}
+    </div>
+
+    <div class="reportSection"><h3>1. Resumo executivo</h3><span>Leitura do mês em linguagem gerencial</span></div>
     <div class="reportNarrative">
       <div class="reportTextBlock ${A.diff>0?'risk':'good'}"><h4>Posição orçamentária</h4><p>${N.budgetText}</p></div>
       <div class="reportTextBlock ${A.unexpected.length?'warn':'good'}"><h4>Qualidade da previsão</h4><p>${N.predictText}</p></div>
       <div class="reportTextBlock ${A.pending.length?'warn':'good'}"><h4>Compromissos ainda em aberto</h4><p>${N.pendingText}</p></div>
     </div>
 
-    <div class="sectionTitle"><h3>2. O que mais pressionou o orçamento</h3><span>Desvios que merecem explicação</span></div>
+    <div class="reportSection"><h3>2. O que mais pressionou o orçamento</h3><span>Desvios que merecem explicação</span></div>
     <div class="grid2">
       ${card('Maiores desvios por categoria',`<div class="tableWrap"><table>
         <thead><tr><th>Categoria</th><th class="num">Previsto</th><th class="num">Pago</th><th class="num">Desvio</th><th class="num">Execução</th></tr></thead>
@@ -459,7 +732,7 @@ function render(){
       </div>`,'Análise qualitativa')}
     </div>
 
-    <div class="sectionTitle"><h3>3. Previsibilidade do caixa</h3><span>Pagamentos fora do orçamento e compromissos pendentes</span></div>
+    <div class="reportSection"><h3>3. Previsibilidade do caixa</h3><span>Pagamentos fora do orçamento e compromissos pendentes</span></div>
     <div class="grid2">
       ${card('Pagamentos não previstos prioritários',tableRows(A.unexpected.slice().sort((a,b)=>b.amount-a.amount).slice(0,20),basicCols()),`${A.unexpected.length} itens · ${money(A.unexpectedTotal)}`)}
       ${card('Compromissos previstos ainda pendentes',tableRows(A.pending.slice().sort((a,b)=>b.remaining-a.remaining).slice(0,20),[
@@ -477,7 +750,7 @@ function render(){
       <div class="reportTextBlock ${A.pending.length?'warn':'good'}"><h4>Interpretação dos pendentes</h4><p>${N.pendingText}</p></div>
     </div>
 
-    <div class="sectionTitle"><h3>4. Composição dos gastos</h3><span>Leitura gerencial dos lançamentos</span></div>
+    <div class="reportSection"><h3>4. Composição dos gastos</h3><span>Leitura gerencial dos lançamentos</span></div>
     <div class="grid2">
       ${card('Grupos gerenciais',`<div class="tableWrap"><table>
         <thead><tr><th>Grupo</th><th class="num">Previsto</th><th class="num">Pago</th><th class="num">Desvio</th></tr></thead>
@@ -489,7 +762,7 @@ function render(){
       </div>`,'Classificação editável')}
     </div>
 
-    <div class="sectionTitle"><h3>5. FOPAG</h3><span>Folha, adiantamentos, férias e serviços</span></div>
+    <div class="reportSection"><h3>5. FOPAG</h3><span>Folha, adiantamentos, férias e serviços</span></div>
     ${fopagSummary(fop)}
     <div class="reportNarrative">
       <div class="reportTextBlock ${fop.reduce((s,b)=>s+b.actual.reduce((t,x)=>t+x.amount,0),0)>fop.reduce((s,b)=>s+b.forecast.reduce((t,x)=>t+x.amount,0),0)?'warn':'info'}">
@@ -497,7 +770,7 @@ function render(){
       </div>
     </div>
 
-    <div class="sectionTitle"><h3>6. Pressão semanal de caixa</h3><span>Quando os desembolsos se concentraram</span></div>
+    <div class="reportSection"><h3>6. Pressão semanal de caixa</h3><span>Quando os desembolsos se concentraram</span></div>
     <div class="grid2">
       ${card('Execução semanal',`<div class="tableWrap"><table>
         <thead><tr><th>Semana</th><th class="num">Previsto</th><th class="num">Pago</th><th class="num">Diferença</th><th class="num">Não previsto</th></tr></thead>
@@ -506,11 +779,12 @@ function render(){
       ${card('Leitura semanal',`<div class="reportTextBlock info"><h4>Concentração temporal</h4><p>${N.weeklyText}</p></div>`,'Análise da competência')}
     </div>
 
-    <div class="sectionTitle"><h3>7. Conclusão e recomendações</h3><span>O que eu levaria para a reunião com a diretoria</span></div>
+    <div class="reportSection"><h3>7. Conclusão e recomendações</h3><span>O que eu levaria para a reunião com a diretoria</span></div>
     <div class="execConclusion">
       <h4>Recomendações do analista financeiro</h4>
       <ul>${N.conclusion.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>
     </div>`;
+    setTimeout(()=>drawReportDonuts(A,groups),0);
   }else if(view==='comparison'){
     h=filtersHTML()+`<div class="kpis"><article class="kpi"><small>Previsto</small><strong>${money(A.fTotal)}</strong></article><article class="kpi good"><small>Pago</small><strong>${money(A.aTotal)}</strong></article><article class="kpi ${A.diff>0?'risk':'good'}"><small>Diferença</small><strong>${money(A.diff)}</strong></article><article class="kpi"><small>Execução</small><strong>${pct(exec)}</strong></article><article class="kpi warn"><small>Pendente</small><strong>${money(A.pendingTotal)}</strong></article><article class="kpi warn"><small>Não previsto</small><strong>${money(A.unexpectedTotal)}</strong></article></div>${comparisonTable(A)}`;
   }else if(view==='differences'){
@@ -576,6 +850,88 @@ function comparisonTable(A){
 function fopagSummary(blocks){
  return card('Resumo FOPAG',`<div class="tableWrap"><table><thead><tr><th>Componente</th><th class="num">Previsto</th><th class="num">Pago</th><th class="num">Diferença</th><th class="num">Execução</th></tr></thead><tbody>${blocks.map(b=>{const p=b.forecast.reduce((s,x)=>s+x.amount,0),a=b.actual.reduce((s,x)=>s+x.amount,0),d=a-p;return`<tr class="clickrow" data-fopag="${esc(b.type)}"><td><b>${esc(b.name)}</b></td><td class="num">${money(p)}</td><td class="num">${money(a)}</td><td class="num ${d>0?'positive':'negative'}">${money(d)}</td><td class="num">${pct(p?a/p*100:0)}</td></tr>`}).join('')}</tbody></table></div>`,'Clique para abrir os lançamentos');
 }
+
+function donutOptions(cutout='72%'){
+  return {
+    responsive:true,
+    maintainAspectRatio:false,
+    cutout,
+    plugins:{
+      legend:{display:false},
+      tooltip:{callbacks:{label:(ctx)=>`${ctx.label}: ${money(ctx.raw)}`}}
+    }
+  };
+}
+
+function drawReportDonuts(A,groups){
+  const linked=Math.max(A.aTotal-A.unexpectedTotal,0);
+  const executed=Math.min(A.aTotal,A.fTotal),remaining=Math.max(A.fTotal-A.aTotal,0),over=Math.max(A.aTotal-A.fTotal,0);
+  const b=$('#reportBudgetDonut');
+  if(b)charts.push(new Chart(b,{type:'doughnut',data:{labels:['Realizado','Saldo previsto','Acima'],datasets:[{data:[executed,remaining,over],backgroundColor:['#111','#e8e9eb','#d74747'],borderWidth:0,spacing:2}]},options:donutOptions('76%')}));
+  const g=$('#reportGroupDonut');
+  if(g){const d=groups.filter(x=>x.actual>0).slice(0,8);charts.push(new Chart(g,{type:'doughnut',data:{labels:d.map(x=>x.name),datasets:[{data:d.map(x=>x.actual),backgroundColor:colorPalette(d.length),borderWidth:0,spacing:2}]},options:donutOptions('68%')}))}
+  const q=$('#reportQualityDonut');
+  if(q)charts.push(new Chart(q,{type:'doughnut',data:{labels:['Dentro da previsão','Não previsto'],datasets:[{data:[linked,A.unexpectedTotal],backgroundColor:['#111','#d74747'],borderWidth:0,spacing:2}]},options:donutOptions('76%')}));
+}
+
+function drawPremiumExecutive(A,cats,groups,wk){
+  const colors=colorPalette(20);
+  const execActual=Math.min(A.aTotal,A.fTotal);
+  const execRemain=Math.max(A.fTotal-A.aTotal,0);
+  const over=Math.max(A.aTotal-A.fTotal,0);
+
+  const b=$('#budgetDonut');
+  if(b)charts.push(new Chart(b,{
+    type:'doughnut',
+    data:{labels:['Realizado','Saldo previsto','Acima do orçamento'],datasets:[{
+      data:[execActual,execRemain,over],
+      backgroundColor:['#111111','#e9eaec','#d74747'],
+      borderWidth:0,
+      spacing:2
+    }]},
+    options:donutOptions('76%')
+  }));
+
+  const g=$('#groupDonut');
+  if(g){
+    const d=groups.filter(x=>x.actual>0).slice(0,8);
+    charts.push(new Chart(g,{
+      type:'doughnut',
+      data:{labels:d.map(x=>x.name),datasets:[{data:d.map(x=>x.actual),backgroundColor:colorPalette(d.length),borderWidth:0,spacing:2}]},
+      options:donutOptions('68%')
+    }))
+  }
+
+  const q=$('#qualityDonut');
+  if(q){
+    const linked=Math.max(A.aTotal-A.unexpectedTotal,0);
+    charts.push(new Chart(q,{
+      type:'doughnut',
+      data:{labels:['Dentro da previsão','Não previsto'],datasets:[{data:[linked,A.unexpectedTotal],backgroundColor:['#111111','#d74747'],borderWidth:0,spacing:2}]},
+      options:donutOptions('76%')
+    }))
+  }
+
+  const c=$('#categoryDonut');
+  if(c){
+    const d=cats.filter(x=>x.actual>0).slice(0,10);
+    charts.push(new Chart(c,{
+      type:'doughnut',
+      data:{labels:d.map(x=>x.name),datasets:[{data:d.map(x=>x.actual),backgroundColor:colorPalette(d.length),borderWidth:0,spacing:2}]},
+      options:{...donutOptions('64%'),plugins:{legend:{display:true,position:'right',labels:{boxWidth:8,font:{size:8},usePointStyle:true}},tooltip:{callbacks:{label:(ctx)=>`${ctx.label}: ${money(ctx.raw)}`}}}}
+    }))
+  }
+
+  const w=$('#weekDonut');
+  if(w){
+    charts.push(new Chart(w,{
+      type:'doughnut',
+      data:{labels:wk.map(x=>x.label),datasets:[{data:wk.map(x=>x.actual),backgroundColor:colorPalette(wk.length),borderWidth:0,spacing:2}]},
+      options:donutOptions('68%')
+    }))
+  }
+}
+
 function drawExecutive(A,cats,groups,wk){
  const colors=colorPalette(20);
  const wc=$('#weekChart');
