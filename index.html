@@ -403,6 +403,10 @@ aside{
 .tableBlock.hasSelection .inlineSelectionValue{color:#176c5b!important}
 .tableBlock>.tableWrap{border-radius:0 0 9px 9px}
 
+
+.sourceBadge.open{background:#fff7e8;color:#9a6200;border-color:#f0d29c}
+.openSummary{border-left:3px solid #e9a23b}
+
 </style>
 </head>
 <body>
@@ -440,6 +444,7 @@ aside{
       <button class="primary" id="adminBtn">ADM</button>
       <input id="forecastFile" class="hidden" type="file" accept=".xlsx,.xls,.csv">
       <input id="actualFile" class="hidden" type="file" accept=".xlsx,.xls,.csv">
+      <input id="openFile" class="hidden" type="file" accept=".xlsx,.xls,.csv">
     </div>
   </div>
   <div class="content"><div id="app"></div></div>
@@ -526,8 +531,10 @@ async function saveMonthToSupabase(forceClose=false){
       competence:m,
       forecast:r.forecast||[],
       actual:r.actual||[],
+      open:r.open||[],
       metadata:{
         links:r.links||{},
+        openLinks:r.openLinks||{},
         catalog:r.catalog||{},
         auditLog:r.auditLog||[],
         closedAt:r.closedAt||null,
@@ -721,6 +728,13 @@ function analytics(){
   const key=($('#month')?.value||'')+'|'+DATA_REV;
   if(analyticsCache.has(key))return analyticsCache.get(key);
   const value=computeAnalytics();
+  const O=openCommitmentSummary();
+  value.o=O.open;
+  value.openTotal=O.total;
+  value.openFitted=O.fitted;
+  value.openUnmatched=O.unmatched;
+  value.openMatches=O.matches;
+  value.openUnmatchedRows=O.unmatched;
   analyticsCache.set(key,value);
   return value;
 }
@@ -951,6 +965,7 @@ function bindInteractive(A){
     else if(type==='actual')openRows('Todos os pagamentos realizados',A.a);
     else if(type==='pending')openRows('Previsões pendentes',A.pending);
     else if(type==='unexpected')openRows('Pagamentos não previstos',A.unexpected);
+    else if(type==='open')openOpenItems();
     else if(type==='difference'){
       const list=[...A.f,...A.a].sort((a,b)=>b.amount-a.amount);
       openRows('Composição da diferença',list);
@@ -1108,6 +1123,87 @@ function bindMonthComparison(){
     render();
   });
   $$('[data-cmp-cat]').forEach(el=>el.onclick=()=>openComparisonCategory(el.dataset.cmpCat,compareMonths.m1,compareMonths.m2));
+}
+
+
+function openMatchScore(o,p){
+  let score=0;
+  const O=norm([o.party,o.description,o.category,o.costCenter].join(' '));
+  const P=norm([p.party,p.description,p.category,p.costCenter].join(' '));
+  if(norm(o.category)&&norm(o.category)===norm(p.category))score+=3;
+  if(norm(o.costCenter)&&norm(o.costCenter)===norm(p.costCenter))score+=1.5;
+  if(norm(o.party)&&norm(o.party)!=='NAO INFORMADO'&&norm(o.party)===norm(p.party))score+=2.5;
+
+  const ot=norm(o.description).split(' ').filter(x=>x.length>3);
+  const pt=new Set(norm(p.description).split(' ').filter(x=>x.length>3));
+  let common=0;ot.forEach(x=>pt.has(x)&&common++);
+  if(ot.length)score+=Math.min(2.5,common/ot.length*2.5);
+
+  const pa=Math.abs(Number(o.amount)||0),pp=Math.abs(Number(p.amount)||0);
+  if(pa&&pp){
+    const ratio=Math.abs(pa-pp)/Math.max(pa,pp);
+    if(ratio<=.01)score+=2;
+    else if(ratio<=.05)score+=1.5;
+    else if(ratio<=.15)score+=.8;
+  }
+  return score;
+}
+function reconcileOpen(){
+  const r=rec(),plans=r.forecast.filter(x=>!x.excluded),opens=(r.open||[]).filter(x=>!x.excluded);
+  const matches=[],unmatched=[];
+  r.openLinks=r.openLinks||{};
+
+  for(const o of opens){
+    let p=null,score=0,manual=false;
+    const manualId=r.openLinks[o.id];
+    if(manualId){
+      p=plans.find(x=>x.id===manualId)||null;
+      if(p){score=99;manual=true;}
+    }
+    if(!p){
+      for(const candidate of plans){
+        const s=openMatchScore(o,candidate);
+        if(s>score){score=s;p=candidate;}
+      }
+      if(score<4.5)p=null;
+    }
+    if(p)matches.push({open:o,forecast:p,score,manual});
+    else unmatched.push(o);
+  }
+  return {matches,unmatched};
+}
+function openCommitmentSummary(){
+  const r=rec(),open=(r.open||[]).filter(x=>!x.excluded);
+  const reconciled=reconcileOpen();
+  const total=open.reduce((s,x)=>s+Number(x.amount||0),0);
+  const fitted=reconciled.matches.reduce((s,x)=>s+Number(x.open.amount||0),0);
+  const unmatched=reconciled.unmatched.reduce((s,x)=>s+Number(x.amount||0),0);
+  return {open,total,fitted,unmatched,...reconciled};
+}
+function openOpenItems(){
+  const S=openCommitmentSummary();
+  $('#modalTitle').textContent='Contas em aberto';
+  $('#modalSub').textContent='Compromissos ainda não pagos. O painel tenta encaixar cada item na previsão mais compatível.';
+  $('#modalBody').innerHTML=`
+    <div class="drillHero">
+      <div class="drillMetric"><small>Total em aberto</small><strong>${money(S.total)}</strong></div>
+      <div class="drillMetric"><small>Encaixado em previsão</small><strong>${money(S.fitted)}</strong></div>
+      <div class="drillMetric"><small>Sem encaixe</small><strong>${money(S.unmatched)}</strong></div>
+      <div class="drillMetric"><small>Itens</small><strong>${S.open.length}</strong></div>
+    </div>
+    <div class="drillSection"><h4>Em aberto encaixados</h4>
+      <div class="drillTable"><table><thead><tr><th>Vencimento</th><th>Fornecedor</th><th>Descrição</th><th>Previsão sugerida</th><th class="num">Valor</th><th>Aderência</th></tr></thead><tbody>
+      ${S.matches.map(x=>`<tr class="drillLink" data-open-row="${esc(x.open.id)}"><td>${dateText(x.open.date)}</td><td>${esc(x.open.party)}</td><td>${esc(x.open.description)}</td><td>${esc(x.forecast.description)}</td><td class="num">${money(x.open.amount)}</td><td>${x.manual?'Manual':Math.round(Math.min(100,x.score/11.5*100))+'%'}</td></tr>`).join('')||'<tr><td colspan="6">Nenhum item encaixado.</td></tr>'}
+      </tbody></table></div>
+    </div>
+    <div class="drillSection"><h4>Em aberto sem encaixe</h4>${tableRows(S.unmatched,basicCols())}</div>`;
+  $('#modal').classList.add('open');
+  $$('[data-open-row]').forEach(el=>el.onclick=()=>openRow(el.dataset.openRow));
+  $$('[data-row]').forEach(el=>el.onclick=e=>{
+    if(e.target.closest('.rowSelect')||e.target.closest('[data-edit]'))return;
+    openRow(el.dataset.row);
+  });
+  bindSelectionControls();
 }
 
 function destroyCharts(){charts.forEach(c=>{try{c.destroy()}catch(e){}});charts=[]}
@@ -1308,7 +1404,7 @@ function render(){
   $('#app').innerHTML=h;
   if($('#monthStatusSlot'))$('#monthStatusSlot').innerHTML=monthStatusHTML();
   bindInteractive(A);
-  $('#footer').textContent=`${monthText($('#month').value)} · ${A.f.length} previsões · ${A.a.length} pagamentos`;
+  $('#footer').textContent=`${monthText($('#month').value)} · ${A.f.length} previsões · ${A.a.length} pagamentos · ${(A.o||[]).length} em aberto`;
 }
 function basicCols(){return[
  {label:'Data',render:r=>dateText(r.date)},
@@ -1649,7 +1745,7 @@ function openRow(id){
  const forecasts=rec().forecast.filter(x=>!x.excluded);
  const linkedActuals=r.source==='forecast'?Object.entries(rec().links||{}).filter(([,pid])=>pid===r.id).map(([aid])=>aid):[];
  $('#modalBody').innerHTML=`<div class="formGrid">
-  <label>Origem<select id="eSource"><option value="forecast" ${r.source==='forecast'?'selected':''}>Previsto</option><option value="actual" ${r.source==='actual'?'selected':''}>Pagamento</option></select></label>
+  <label>Origem<select id="eSource"><option value="forecast" ${r.source==='forecast'?'selected':''}>Previsto</option><option value="actual" ${r.source==='actual'?'selected':''}>Pagamento</option><option value="open" ${r.source==='open'?'selected':''}>Em aberto</option></select></label>
   <label>Data<input id="eDate" type="date" value="${esc(r.date)}"></label>
   <label>Fornecedor / colaborador<input id="eParty" value="${esc(r.party)}"></label>
   <label>Valor<input id="eAmount" value="${esc(r.amount.toLocaleString('pt-BR',{minimumFractionDigits:2}))}"></label>
@@ -1733,7 +1829,7 @@ function openBulkEdit(){const s=selectionStats();if(!s.count)return;$('#modalTit
 function openBulkLink(){const s=selectionStats();if(!s.actual.length)return toast('Selecione pelo menos um pagamento.');$('#modalTitle').textContent='Vincular pagamentos à previsão';$('#modalSub').textContent=`${s.actual.length} pagamento(s) · ${money(s.actual.reduce((a,r)=>a+r.amount,0))}`;const options=rec().forecast.filter(x=>!x.excluded);$('#modalBody').innerHTML=`<div class="bulkSummary"><strong>${money(s.actual.reduce((a,r)=>a+r.amount,0))}</strong><span>Total dos pagamentos selecionados</span></div><div class="formGrid"><label class="full">Previsão de destino<select id="bulkLinkTarget"><option value="">Selecione...</option>${options.map(p=>`<option value="${p.id}">${esc(`${dateText(p.date)} · ${p.description} · ${money(p.amount)}`)}</option>`).join('')}</select></label></div><div class="modalActions"><button class="btn" id="bulkUnlink">Desvincular</button><button class="btn primary" id="bulkLinkApply">Vincular</button></div>`;$('#bulkLinkApply').onclick=()=>{const pid=$('#bulkLinkTarget').value;if(!pid)return;pushUndo('vínculo em massa');const before=deep(rec().links||{});rec().links??={};s.actual.forEach(a=>rec().links[a.id]=pid);audit('Vínculo em massa',`${s.actual.length} pagamentos vinculados à previsão ${pid}`,before,rec().links);saveState('Pagamentos vinculados.');$('#modal').classList.remove('open')};$('#bulkUnlink').onclick=()=>{pushUndo('desvincular pagamentos');const before=deep(rec().links||{});s.actual.forEach(a=>delete rec().links[a.id]);audit('Desvinculação em massa',`${s.actual.length} pagamentos desvinculados`,before,rec().links);saveState('Pagamentos desvinculados.');$('#modal').classList.remove('open')};$('#modal').classList.add('open')}
 function mergeSelectedForecasts(){const s=selectionStats();if(s.forecast.length<2||s.actual.length)return toast('Selecione apenas duas ou mais previsões.');if(!confirm(`Mesclar ${s.forecast.length} previsões em ${money(s.forecast.reduce((a,r)=>a+r.amount,0))}?`))return;pushUndo('mesclar previsões');const before=deep(s.forecast),base=deep(s.forecast[0]);base.id=uid('F');base.amount=s.forecast.reduce((a,r)=>a+r.amount,0);base.description=`Previsão consolidada · ${s.forecast.length} lançamentos`;base.createdBy='Mesclagem no Dashboard';rec().forecast=rec().forecast.filter(r=>!selectedRows.has(r.id));rec().forecast.push(base);Object.keys(rec().links||{}).forEach(aid=>{if(selectedRows.has(rec().links[aid]))rec().links[aid]=base.id});audit('Mesclar previsões',`${s.forecast.length} previsões consolidadas`,before,[base]);selectedRows.clear();saveState('Previsões mescladas e vínculos preservados.')}
 function duplicateSelected(){const s=selectionStats();if(!s.count)return;pushUndo('duplicar lançamentos');const created=[];selectedList().forEach(r=>{const c=deep(r);c.id=uid(r.source==='forecast'?'F':'A');c.description+=' · Cópia';c.createdBy='Duplicação no Dashboard';rec()[r.source==='forecast'?'forecast':'actual'].push(c);created.push(c)});audit('Duplicar lançamentos',`${created.length} cópias criadas`,null,created);selectedRows.clear();saveState(`${created.length} lançamento(s) duplicado(s).`)}
-function convertSelected(){const s=selectionStats();if(!s.count)return;const target=s.actual.length&&!s.forecast.length?'forecast':s.forecast.length&&!s.actual.length?'actual':prompt('Digite forecast para previsto ou actual para pagamento:');if(!['forecast','actual'].includes(target))return;pushUndo('transformar origem');const before=deep(selectedList()),ids=[...selectedRows];ids.forEach(id=>{const r=rows().find(x=>x.id===id);if(!r||r.source===target)return;rec()[r.source==='forecast'?'forecast':'actual']=rec()[r.source==='forecast'?'forecast':'actual'].filter(x=>x.id!==id);r.source=target;r.status=target==='forecast'?'Previsto':'Quitado';rec()[target==='forecast'?'forecast':'actual'].push(r);delete rec().links[id];Object.keys(rec().links||{}).forEach(aid=>{if(rec().links[aid]===id)delete rec().links[aid]})});audit('Transformar origem',`${ids.length} lançamento(s) transformado(s)`,before,null);selectedRows.clear();saveState('Origem alterada.')}
+function convertSelected(){const s=selectionStats();if(!s.count)return;const target=s.actual.length&&!s.forecast.length?'forecast':s.forecast.length&&!s.actual.length?'actual':prompt('Digite forecast para previsto ou actual para pagamento:');if(!['forecast','actual'].includes(target))return;pushUndo('transformar origem');const before=deep(selectedList()),ids=[...selectedRows];ids.forEach(id=>{const r=rows().find(x=>x.id===id);if(!r||r.source===target)return;rec()[r.source==='forecast'?'forecast':'actual']=rec()[r.source==='forecast'?'forecast':'actual'].filter(x=>x.id!==id);r.source=target;r.status=target==='forecast'?'Previsto':'Quitado';rec()[target==='forecast'?'forecast':'actual'].push(r);delete rec().links[id];Object.keys(rec().links||{}).forEach(aid=>{if(rec().links[aid]===id)delete rec().links[aid]})});invalidateAnalytics();audit('Transformar origem',`${ids.length} lançamento(s) transformado(s)`,before,null);selectedRows.clear();saveState('Origem alterada.')}
 function createForecastFromSelectedActuals(){const s=selectionStats();if(!s.actual.length)return toast('Selecione pagamentos.');pushUndo('criar previsão a partir de pagamentos');const amount=s.actual.reduce((a,r)=>a+r.amount,0),first=s.actual[0],f=deep(first);f.id=uid('F');f.source='forecast';f.amount=amount;f.status='Previsto';f.description=`Previsão criada a partir de ${s.actual.length} pagamento(s)`;f.createdBy='Gerada a partir de pagamentos';rec().forecast.push(f);rec().links??={};s.actual.forEach(a=>rec().links[a.id]=f.id);audit('Criar previsão por pagamentos',`${s.actual.length} pagamentos consolidados`,s.actual,[f]);selectedRows.clear();saveState('Previsão criada e pagamentos vinculados.')}
 function deleteSelected(){const s=selectionStats();if(!s.count)return;if(!confirm(`Excluir ${s.count} lançamento(s), total ${money(s.total)}?`))return;pushUndo('excluir selecionados');const before=deep(selectedList()),ids=new Set(selectedRows);rec().forecast=rec().forecast.filter(r=>!ids.has(r.id));rec().actual=rec().actual.filter(r=>!ids.has(r.id));Object.keys(rec().links||{}).forEach(aid=>{if(ids.has(aid)||ids.has(rec().links[aid]))delete rec().links[aid]});audit('Excluir em massa',`${s.count} lançamentos excluídos`,before,null);selectedRows.clear();saveState('Lançamentos excluídos.')}
 function splitForecast(id){const r=rec().forecast.find(x=>x.id===id);if(!r)return;const parts=Number(prompt('Em quantas partes deseja dividir?',2));if(!parts||parts<2||parts>24)return;pushUndo('dividir previsão');const before=deep(r),base=Math.floor((r.amount/parts)*100)/100,arr=[];let used=0;for(let i=1;i<=parts;i++){const c=deep(r);c.id=uid('F');c.amount=i===parts?Math.round((r.amount-used)*100)/100:base;used+=c.amount;c.description=`${r.description} · Parte ${i}/${parts}`;arr.push(c)}rec().forecast=rec().forecast.filter(x=>x.id!==r.id).concat(arr);const linked=Object.keys(rec().links||{}).filter(aid=>rec().links[aid]===r.id);linked.forEach((aid,i)=>rec().links[aid]=arr[i%arr.length].id);audit('Dividir previsão',`Previsão dividida em ${parts} partes`,before,arr);saveState(`Previsão dividida em ${parts} partes.`);$('#modal').classList.remove('open')}
@@ -1785,6 +1881,7 @@ async function openAdminPanel(){
         <div class="adminActions">
           <button class="primary" id="admImportForecast">Importar previsto</button>
           <button id="admImportActual">Importar pagamentos</button>
+          <button id="admImportOpen">Importar em aberto</button>
         </div>
       </div>
       <div class="adminCard">
@@ -1820,6 +1917,7 @@ async function openAdminPanel(){
   $('#admLogout')?.addEventListener('click',adminSignOut);
   $('#admImportForecast')?.addEventListener('click',()=>$('#forecastFile')?.click());
   $('#admImportActual')?.addEventListener('click',()=>$('#actualFile')?.click());
+  $('#admImportOpen')?.addEventListener('click',()=>$('#openFile')?.click());
   $('#admSaveMonth')?.addEventListener('click',()=>saveMonthToSupabase(false));
   $('#admCloseMonth')?.addEventListener('click',()=>saveMonthToSupabase(true));
   $('#admReopen')?.addEventListener('click',reopenMonth);
@@ -1847,7 +1945,7 @@ function openCatalog(){
 function toast(msg){$('#footer').textContent=msg+' · '+new Date().toLocaleTimeString('pt-BR')}
 
 function emptyMonthRecord(){
-  return {forecast:[],actual:[],links:{},catalog:{categories:[],costCenters:[]},auditLog:[],updatedAt:null,closedAt:null};
+  return {forecast:[],actual:[],open:[],links:{},openLinks:{},catalog:{categories:[],costCenters:[]},auditLog:[],updatedAt:null,closedAt:null};
 }
 function normalizeMonthRecord(r){
   const out={...emptyMonthRecord(),...(r||{})};
@@ -1885,7 +1983,9 @@ async function loadHistoricalMonthsFromSupabase(){
         if(!local || remoteUpdated>=localUpdated)state[m]=normalizeMonthRecord({
           forecast:row.forecast||[],
           actual:row.actual||[],
+          open:row.open||[],
           links:meta.links||{},
+          openLinks:meta.openLinks||{},
           catalog:meta.catalog||{categories:[],costCenters:[]},
           auditLog:meta.auditLog||[],
           updatedAt:row.updated_at||null,
@@ -1953,7 +2053,8 @@ async function saveSupabase(){
    const {data:{session:s}}=await db.auth.getSession();session=s;
    if(!session){const email=prompt('E-mail do administrador:');const password=prompt('Senha:');if(!email||!password)return;const res=await db.auth.signInWithPassword({email,password});if(res.error)throw res.error;session=res.data.session}
    const m=$('#month').value,r=rec();
-   const payload={competence:m,forecast:r.forecast,actual:r.actual,metadata:{links:r.links||{},catalog:r.catalog||{},auditLog:r.auditLog||[],dashboard_version:'premium-merge-v10'},updated_at:new Date().toISOString(),updated_by:session.user.id};
+   const payload={competence:m,forecast:r.forecast,actual:r.actual,metadata:{links:r.links||{},
+        openLinks:r.openLinks||{},catalog:r.catalog||{},auditLog:r.auditLog||[],dashboard_version:'premium-merge-v10'},updated_at:new Date().toISOString(),updated_by:session.user.id};
    const {error}=await db.from('financial_months').upsert(payload,{onConflict:'competence'});if(error)throw error;toast('Competência salva no Supabase.');
  }catch(e){toast('Erro Supabase: '+e.message)}
 }
@@ -1967,6 +2068,7 @@ $$('#nav button[data-view]').forEach(b=>b.onclick=()=>{
 });
 $('#forecastFile').onchange=async e=>{const file=e.target.files?.[0];if(!file)return;try{await importWorkbook(file,'forecast')}catch(err){console.error(err);toast('Erro ao importar previsto: '+err.message)}finally{e.target.value=''}};
 $('#actualFile').onchange=async e=>{const file=e.target.files?.[0];if(!file)return;try{await importWorkbook(file,'actual')}catch(err){console.error(err);toast('Erro ao importar pagamentos: '+err.message)}finally{e.target.value=''}};
+$('#openFile').onchange=async e=>{const file=e.target.files?.[0];if(!file)return;try{await importWorkbook(file,'open')}catch(err){console.error(err);toast('Erro ao importar contas em aberto: '+err.message)}finally{e.target.value=''}};
 $('#month').onchange=()=>{selectedRows.clear();render()};$('#closeModal').onclick=()=>$('#modal').classList.remove('open');$('#modal').onclick=e=>{if(e.target===$('#modal'))$('#modal').classList.remove('open')};
 $('#undoBtn').onclick=undoLast; $('#adminBtn')?.addEventListener('click',openAdminPanel);$('#auditBtn').onclick=openAuditLog;populateMonths();render();setTimeout(loadHistoricalMonthsFromSupabase,250);
 </script>
