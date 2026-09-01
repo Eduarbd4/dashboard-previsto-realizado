@@ -479,11 +479,49 @@ th,.premiumTable th{font-size:9.5px}.premiumTable td{font-size:11.5px}
 .editValueNotice{grid-column:1/-1;background:#f0f8f6;border:1px solid #cbe1dc;border-radius:10px;padding:12px 14px;color:#315f56;font-size:11px;line-height:1.55}
 .editValueNotice b{color:#123f36}
 
+/* Menu lateral recolhível */
+.shell{transition:grid-template-columns .24s ease}
+aside{min-width:0;width:100%;transition:transform .24s ease,opacity .18s ease,padding .24s ease;will-change:transform}
+.shell.sidebarCollapsed{grid-template-columns:0 minmax(0,1fr)}
+.shell.sidebarCollapsed aside{width:0;padding-left:0;padding-right:0;border:0;transform:translateX(-100%);opacity:0;pointer-events:none;visibility:hidden}
+.topbarStart{display:flex;align-items:center;gap:14px;min-width:0}
+.menuToggle{display:inline-flex;align-items:center;gap:9px;border:1px solid #dfe2e5;background:#fff;color:#25282b;border-radius:9px;padding:9px 11px;font-size:11px;font-weight:750;white-space:nowrap}
+.menuToggle:hover{background:#f6f7f8;border-color:#c8ccd0}
+.menuIcon{width:16px;height:12px;position:relative;display:inline-block;border-top:2px solid currentColor;border-bottom:2px solid currentColor}
+.menuIcon:after{content:"";position:absolute;left:0;right:0;top:4px;border-top:2px solid currentColor}
+
+/* Painel administrativo executivo */
+.adminPanel{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.adminOverview{grid-column:1/-1;background:linear-gradient(135deg,#0b0b0c,#24262a);color:#fff;border-radius:16px;padding:22px 23px}
+.adminOverviewTop{display:flex;align-items:flex-start;justify-content:space-between;gap:18px}
+.adminOverview h3{font-size:20px;letter-spacing:-.025em;margin:0 0 5px}.adminOverview p{font-size:11px;line-height:1.6;color:#c4c7ca;margin:0}
+.adminConnection{display:inline-flex;align-items:center;gap:7px;border:1px solid #444;background:#292b2e;border-radius:999px;padding:7px 10px;font-size:9.5px;font-weight:800;white-space:nowrap}
+.adminConnection:before{content:"";width:7px;height:7px;border-radius:50%;background:#aaa}.adminConnection.connected:before{background:#3dd39c}
+.adminStats{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:18px;padding-top:17px;border-top:1px solid #3a3c40}
+.adminStat{background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:11px 12px}
+.adminStat small{display:block;color:#9fa4a9;font-size:8px;text-transform:uppercase;letter-spacing:.07em;font-weight:800}.adminStat strong{display:block;color:#fff;font-size:15px;margin-top:4px}
+.adminCard{padding:18px;border-radius:14px;border-color:#e2e5e8;box-shadow:0 8px 22px rgba(0,0,0,.035)}
+.adminCard.wide{grid-column:1/-1}
+.adminCardHead{display:flex;align-items:flex-start;gap:11px;margin-bottom:8px}
+.adminStep{width:26px;height:26px;flex:0 0 26px;display:flex;align-items:center;justify-content:center;border-radius:8px;background:#111;color:#fff;font-size:9px;font-weight:850}
+.adminCard h4{font-size:13px;margin:2px 0 3px;color:#1f2225}.adminCard p{font-size:10.5px;line-height:1.6;color:#70757a}
+.adminGrid{gap:11px}.adminGrid label{font-size:9px}.adminGrid input,.adminGrid select{font-size:11px;padding:10px 11px}
+.adminActions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:14px}
+.adminActions.cols3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.adminActions button{min-height:42px;padding:10px 11px;border-radius:9px;font-size:10.5px;font-weight:750;text-align:center;line-height:1.35}
+.adminActions button:only-child{grid-column:1/-1}
+.adminActions .primary{background:#111;color:#fff;border-color:#111}.adminActions button:hover{border-color:#999;background:#f7f7f7}.adminActions .primary:hover{background:#272727;color:#fff}
+.adminMonths{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}.adminMonth{border:1px solid #e1e4e7;background:#f7f8f9;border-radius:999px;padding:6px 9px;font-size:9.5px;color:#444}
+.adminStatusLine{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:8px}.adminStatusBadge{display:inline-flex;border:1px solid #dfe2e5;border-radius:999px;padding:5px 8px;font-size:9px;font-weight:800;background:#f7f8f9}.adminStatusBadge.open{color:#8a5c0a;background:#fff7e8;border-color:#eed29d}.adminStatusBadge.closed{color:#fff;background:#111;border-color:#111}
+
 @media(max-width:1200px){.execKpis{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:850px){
  .shell{grid-template-columns:1fr}.content{padding:18px 14px 30px}.topbar{height:auto}
  .execKpis{grid-template-columns:1fr 1fr}.executiveHeader h2{font-size:25px}
  .executiveHeader p{font-size:12px}.sourcePositionGrid{grid-template-columns:1fr 1fr}
+ .shell.sidebarCollapsed{grid-template-columns:1fr}.shell.sidebarCollapsed aside{display:none}
+ .topbarStart{width:100%}.menuToggleText{display:none}.adminPanel{grid-template-columns:1fr}.adminOverview,.adminCard.wide{grid-column:auto}
+ .adminOverviewTop{display:grid}.adminStats{grid-template-columns:1fr 1fr}.adminActions.cols3{grid-template-columns:1fr 1fr}
 }
 
 </style>
@@ -517,7 +555,10 @@ th,.premiumTable th{font-size:9.5px}.premiumTable td{font-size:11.5px}
 </aside>
 <main>
   <div class="topbar">
-    <div class="pageTitle"><h1 id="pageTitle">Visão Executiva</h1><p id="pageSub">Fechamento financeiro para diretoria</p></div>
+    <div class="topbarStart">
+      <button class="menuToggle noPrint" id="sidebarToggle" type="button" aria-expanded="true" title="Recolher ou mostrar o menu lateral"><span class="menuIcon" aria-hidden="true"></span><span class="menuToggleText" id="sidebarToggleText">Ocultar menu</span></button>
+      <div class="pageTitle"><h1 id="pageTitle">Visão Executiva</h1><p id="pageSub">Fechamento financeiro para diretoria</p></div>
+    </div>
     <div class="toolbar noPrint">
       <select id="month" title="Competência"></select>
       <button class="primary" id="adminBtn">ADM</button>
@@ -543,6 +584,7 @@ const SEED={"2026-08":{"forecast":[{"id":"P1-F-2","source":"forecast","date":"20
 const SUPABASE_URL="https://tohgvkvkvajqxhtvbija.supabase.co";
 const SUPABASE_ANON_KEY="sb_publishable_ZLue4j1oo6ULkFIWVhkwNQ_iLkQHgah";
 const STORAGE_KEY='danese_previsto_realizado_bank_v1';
+const SIDEBAR_KEY='danese_sidebar_collapsed_v1';
 const AUTHORITATIVE_OPEN_2026_08=[{"id":"open-auth-2026-08-1","source":"open","date":"2026-08-16","party":"Não informado","description":"PREVISÃO - Impostos Flagship - DAR ICMS","amount":0.01,"paidAmount":0.0,"category":"2.06.003 ICMS ST sobre Vendas","costCenter":"Flagship","status":"Atrasado","excluded":false,"manualType":"automatic","raw":{}},{"id":"open-auth-2026-08-2","source":"open","date":"2026-08-16","party":"Não informado","description":"Impostos Brasília Shopping - DAR ICMS","amount":15642.14,"paidAmount":0.0,"category":"2.06.003 ICMS ST sobre Vendas","costCenter":"Brasília Shopping","status":"Atrasado","excluded":false,"manualType":"automatic","raw":{}},{"id":"open-auth-2026-08-3","source":"open","date":"2026-08-16","party":"Não informado","description":"Impostos Lago Sul - DAR ICMS","amount":5793.84,"paidAmount":0.0,"category":"2.06.003 ICMS ST sobre Vendas","costCenter":"Lago Sul","status":"Atrasado","excluded":false,"manualType":"automatic","raw":{}},{"id":"open-auth-2026-08-4","source":"open","date":"2026-08-16","party":"Não informado","description":"Impostos E-Commerce - DAR ICMS","amount":40512.01,"paidAmount":0.0,"category":"2.06.003 ICMS ST sobre Vendas","costCenter":"E-Commerce","status":"Atrasado","excluded":false,"manualType":"automatic","raw":{}},{"id":"open-auth-2026-08-5","source":"open","date":"2026-08-16","party":"Não informado","description":"Impostos Mané Mercado - DAR ICMS","amount":2308.25,"paidAmount":0.0,"category":"2.06.003 ICMS ST sobre Vendas","costCenter":"E-Commerce","status":"Atrasado","excluded":false,"manualType":"automatic","raw":{}},{"id":"open-auth-2026-08-6","source":"open","date":"2026-08-16","party":"Não informado","description":"Impostos ParkShopping - DAR ICMS","amount":6039.1,"paidAmount":0.0,"category":"2.06.003 ICMS ST sobre Vendas","costCenter":"E-Commerce","status":"Atrasado","excluded":false,"manualType":"automatic","raw":{}},{"id":"open-auth-2026-08-7","source":"open","date":"2026-08-30","party":"Linx Sistemas","description":"LINX - Licença Mensal Microvix - Flagship","amount":1128.7,"paidAmount":0.0,"category":"2.10.001 Licença de Uso de Software","costCenter":"Flagship","status":"Atrasado","excluded":false,"manualType":"automatic","raw":{}},{"id":"open-auth-2026-08-8","source":"open","date":"2026-08-30","party":"Linx Sistemas","description":"LINX - Licença Mensal Microvix - Brasília Shopping","amount":931.34,"paidAmount":0.0,"category":"2.10.001 Licença de Uso de Software","costCenter":"Brasília Shopping","status":"Atrasado","excluded":false,"manualType":"automatic","raw":{}},{"id":"open-auth-2026-08-9","source":"open","date":"2026-08-30","party":"Linx Sistemas","description":"LINX - Licença Mensal Microvix - Lago Sul FALTA NF","amount":973.02,"paidAmount":0.0,"category":"2.10.001 Licença de Uso de Software","costCenter":"Lago Sul","status":"Atrasado","excluded":false,"manualType":"automatic","raw":{}},{"id":"open-auth-2026-08-10","source":"open","date":"2026-08-30","party":"Linx Sistemas","description":"LINX - Licença Mensal Microvix + API Site - E-commerce | Não terá NF","amount":915.98,"paidAmount":0.0,"category":"2.10.001 Licença de Uso de Software","costCenter":"E-Commerce","status":"Atrasado","excluded":false,"manualType":"automatic","raw":{}},{"id":"open-auth-2026-08-11","source":"open","date":"2026-08-30","party":"Linx Sistemas","description":"LINX - Licença Mensal Microvix - ParkShopping FALTA NF","amount":629.18,"paidAmount":0.0,"category":"2.10.001 Licença de Uso de Software","costCenter":"Park Shopping","status":"Atrasado","excluded":false,"manualType":"automatic","raw":{}},{"id":"open-auth-2026-08-12","source":"open","date":"2026-08-30","party":"Linx Sistemas","description":"LINX - Licença Mensal Microvix - Mané Mercado | Não terá NF","amount":604.66,"paidAmount":0.0,"category":"2.10.001 Licença de Uso de Software","costCenter":"Mané Mercado","status":"Atrasado","excluded":false,"manualType":"automatic","raw":{}}];
 let state=loadState(), view='executive', charts=[];
 let db=null, session=null;
@@ -586,6 +628,22 @@ function queueCloudSave(){
   cloudSaveTimer=setTimeout(async()=>{try{const {data:{session:active}}=await db.auth.getSession();if(active){session=active;await saveMonthToSupabase(false)}}catch(e){console.warn('Salvamento automático:',e)}},700);
 }
 function saveState(msg='Alterações salvas.'){invalidateAnalytics();localStorage.setItem(STORAGE_KEY,JSON.stringify(state));render();if(msg)toast(msg);queueCloudSave()}
+
+function setSidebarCollapsed(collapsed,persist=true){
+  const shell=document.querySelector('.shell'),button=$('#sidebarToggle'),label=$('#sidebarToggleText');
+  if(!shell||!button)return;
+  shell.classList.toggle('sidebarCollapsed',collapsed);
+  button.setAttribute('aria-expanded',String(!collapsed));
+  button.title=collapsed?'Mostrar menu lateral':'Ocultar menu lateral';
+  if(label)label.textContent=collapsed?'Mostrar menu':'Ocultar menu';
+  if(persist)localStorage.setItem(SIDEBAR_KEY,collapsed?'1':'0');
+  setTimeout(()=>window.dispatchEvent(new Event('resize')),260);
+}
+function initSidebarToggle(){
+  const button=$('#sidebarToggle');if(!button)return;
+  setSidebarCollapsed(localStorage.getItem(SIDEBAR_KEY)==='1',false);
+  button.addEventListener('click',()=>setSidebarCollapsed(!document.querySelector('.shell')?.classList.contains('sidebarCollapsed')));
+}
 
 function monthRecord(month=null){
   const m=month||$('#month')?.value;
@@ -2538,26 +2596,37 @@ async function openAdminPanel(){
   $('#modalSub').textContent='Um único painel para administrar dados, competências, fechamento e cadastros.';
   $('#modalBody').innerHTML=`
     <div class="adminPanel">
-      <div class="adminCard">
-        <h4>Acesso administrativo</h4>
-        <p>${currentUser?`Administrador conectado como <b>${esc(currentUser.email||'administrador')}</b>.`:'Entre com seu usuário administrador.'}</p>
-        ${!currentUser?`<div class="adminGrid" style="margin-top:10px"><label>E-mail<input id="admEmail" type="email"></label><label>Senha<input id="admPass" type="password"></label></div>`:''}
-        <div class="adminActions">${!currentUser?`<button class="primary" id="admLogin">Entrar</button>`:`<button id="admLogout">Sair</button>`}</div>
+      <section class="adminOverview">
+        <div class="adminOverviewTop">
+          <div><h3>Central administrativa</h3><p>Importação, fechamento, edição e conciliação organizados em um único lugar.</p></div>
+          <span class="adminConnection ${currentUser?'connected':''}">${currentUser?'Administrador conectado':'Acesso não realizado'}</span>
+        </div>
+        <div class="adminStats">
+          <div class="adminStat"><small>Competência</small><strong>${esc(monthText(m))}</strong></div>
+          <div class="adminStat"><small>Status</small><strong>${r.closedAt?'Fechada':'Aberta'}</strong></div>
+          <div class="adminStat"><small>Previsões</small><strong>${r.forecast.length}</strong></div>
+          <div class="adminStat"><small>Pagamentos</small><strong>${r.actual.length}</strong></div>
+          <div class="adminStat"><small>Em aberto</small><strong>${(r.open||[]).length}</strong></div>
+        </div>
+      </section>
+
+      <div class="adminCard wide">
+        <div class="adminCardHead"><span class="adminStep">A</span><div><h4>Acesso administrativo</h4><p>${currentUser?`Conectado como <b>${esc(currentUser.email||'administrador')}</b>.`:'Entre com seu usuário para salvar e sincronizar as alterações.'}</p></div></div>
+        ${!currentUser?`<div class="adminGrid"><label>E-mail<input id="admEmail" type="email" autocomplete="username" placeholder="E-mail do administrador"></label><label>Senha<input id="admPass" type="password" autocomplete="current-password" placeholder="Senha"></label></div>`:''}
+        <div class="adminActions">${!currentUser?`<button class="primary" id="admLogin">Entrar no painel</button>`:`<button id="admLogout">Sair do painel</button>`}</div>
       </div>
 
-
       <div class="adminCard">
-        <h4>Importação de dados</h4>
-        <p>Importe o previsto da competência e atualize os pagamentos realizados. Outros meses permanecem salvos.</p>
-        <div class="adminActions">
+        <div class="adminCardHead"><span class="adminStep">1</span><div><h4>Importar dados</h4><p>Atualize cada base separadamente. As outras competências permanecem salvas.</p></div></div>
+        <div class="adminActions cols3">
           <button class="primary" id="admImportForecast">Importar previsto</button>
           <button id="admImportActual">Importar pagamentos</button>
           <button id="admImportOpen">Importar em aberto</button>
         </div>
       </div>
       <div class="adminCard">
-        <h4>Competência atual · ${esc(monthText(m))}</h4>
-        <p>Status: <b>${r.closedAt?'Fechada':'Aberta'}</b>${r.closedAt?` · fechamento salvo em ${new Date(r.closedAt).toLocaleString('pt-BR')}`:''}.</p>
+        <div class="adminCardHead"><span class="adminStep">2</span><div><h4>Competência atual</h4><p>${esc(monthText(m))}${r.closedAt?` · fechamento salvo em ${new Date(r.closedAt).toLocaleString('pt-BR')}`:''}</p></div></div>
+        <div class="adminStatusLine"><span class="adminStatusBadge ${r.closedAt?'closed':'open'}">${r.closedAt?'Fechada':'Aberta'}</span><span class="subtle">Escolha entre salvar, fechar ou reabrir a competência.</span></div>
         <div class="adminActions">
           <button class="primary" id="admSaveMonth">Salvar competência</button>
           <button id="admSaveAll">Salvar todas as competências</button>
@@ -2567,10 +2636,9 @@ async function openAdminPanel(){
         </div>
       </div>
 
-      <div class="adminCard">
-        <h4>Classificação e conciliação</h4>
-        <p>Gerencie categorias, centros de custo, vínculos e classificações sem alterar código.</p>
-        <div class="adminActions">
+      <div class="adminCard wide">
+        <div class="adminCardHead"><span class="adminStep">3</span><div><h4>Organizar e conciliar</h4><p>Edite cadastros, faça vínculos e confira a conciliação sem alterar código.</p></div></div>
+        <div class="adminActions cols3">
           <button class="primary" id="admFinancialChain">Vincular previsto → em aberto → pago</button>
           <button id="admCatalog">Categorias e centros de custo</button>
           <button id="admBulk">Editar selecionados</button>
@@ -2578,9 +2646,9 @@ async function openAdminPanel(){
         </div>
       </div>
 
-      <div class="adminCard">
-        <h4>Histórico de competências</h4>
-        <p>${months.length?months.map(monthText).join(' · '):'Nenhuma competência disponível.'}</p>
+      <div class="adminCard wide">
+        <div class="adminCardHead"><span class="adminStep">4</span><div><h4>Histórico de competências</h4><p>Meses disponíveis no painel.</p></div></div>
+        <div class="adminMonths">${months.length?months.map(x=>`<span class="adminMonth">${esc(monthText(x))}</span>`).join(''):'<span class="subtle">Nenhuma competência disponível.</span>'}</div>
         <div class="adminActions"><button id="admLoadHistory">Atualizar histórico</button></div>
       </div>
     </div>`;
@@ -2845,7 +2913,7 @@ $('#forecastFile').onchange=async e=>{const file=e.target.files?.[0];if(!file)re
 $('#actualFile').onchange=async e=>{const file=e.target.files?.[0];if(!file)return;try{await importWorkbook(file,'actual')}catch(err){console.error(err);toast('Erro ao importar pagamentos: '+err.message)}finally{e.target.value=''}};
 $('#openFile').onchange=async e=>{const file=e.target.files?.[0];if(!file)return;try{await importWorkbook(file,'open')}catch(err){console.error(err);toast('Erro ao importar contas em aberto: '+err.message)}finally{e.target.value=''}};
 $('#month').onchange=()=>{selectedRows.clear();render()};$('#closeModal').onclick=()=>$('#modal').classList.remove('open');$('#modal').onclick=e=>{if(e.target===$('#modal'))$('#modal').classList.remove('open')};
-$('#undoBtn').onclick=undoLast; $('#adminBtn')?.addEventListener('click',openAdminPanel);$('#auditBtn').onclick=openAuditLog;seedAuthoritativeOpenAugust();populateMonths();render();setTimeout(async()=>{await loadHistoricalMonthsFromSupabase();startRealtimeSync()},250);
+$('#undoBtn').onclick=undoLast; $('#adminBtn')?.addEventListener('click',openAdminPanel);$('#auditBtn').onclick=openAuditLog;initSidebarToggle();seedAuthoritativeOpenAugust();populateMonths();render();setTimeout(async()=>{await loadHistoricalMonthsFromSupabase();startRealtimeSync()},250);
 </script>
 </body>
 </html>
