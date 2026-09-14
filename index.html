@@ -2967,5 +2967,410 @@ $('#openFile').onchange=async e=>{const file=e.target.files?.[0];if(!file)return
 $('#month').onchange=()=>{selectedRows.clear();render()};$('#closeModal').onclick=()=>$('#modal').classList.remove('open');$('#modal').onclick=e=>{if(e.target===$('#modal'))$('#modal').classList.remove('open')};
 $('#undoBtn').onclick=undoLast; $('#adminBtn')?.addEventListener('click',openAdminPanel);$('#auditBtn').onclick=openAuditLog;initSidebarToggle();seedAuthoritativeOpenAugust();populateMonths();render();setTimeout(async()=>{await loadHistoricalMonthsFromSupabase();startRealtimeSync()},250);
 </script>
+   <script>
+/* =========================================================
+   CORREÇÃO — FILTROS + BAIXA AUTOMÁTICA DE CONTAS
+   ========================================================= */
+
+const preservedFilters = {
+  q: '',
+  source: 'all',
+  group: 'all',
+  category: 'all'
+};
+
+function saveCurrentFilters() {
+  preservedFilters.q = document.querySelector('#fq')?.value || '';
+  preservedFilters.source = document.querySelector('#fs')?.value || 'all';
+  preservedFilters.group = document.querySelector('#fg')?.value || 'all';
+  preservedFilters.category = document.querySelector('#fc')?.value || 'all';
+}
+
+function restoreCurrentFilters() {
+  const values = {
+    fq: preservedFilters.q,
+    fs: preservedFilters.source,
+    fg: preservedFilters.group,
+    fc: preservedFilters.category
+  };
+
+  Object.entries(values).forEach(([id, value]) => {
+    const field = document.querySelector('#' + id);
+
+    if (field && [...field.options || []].some(option => option.value === value)) {
+      field.value = value;
+    } else if (field && id === 'fq') {
+      field.value = value;
+    }
+  });
+}
+
+/* Preserva os filtros quando a tela for redesenhada */
+document.addEventListener('click', event => {
+  if (event.target.closest('#applyFilters')) {
+    saveCurrentFilters();
+    setTimeout(restoreCurrentFilters, 0);
+  }
+
+  if (event.target.closest('#clearFilters')) {
+    preservedFilters.q = '';
+    preservedFilters.source = 'all';
+    preservedFilters.group = 'all';
+    preservedFilters.category = 'all';
+    setTimeout(restoreCurrentFilters, 0);
+  }
+}, true);
+
+document.addEventListener('keydown', event => {
+  if (event.key === 'Enter' && event.target.closest('.filterbar')) {
+    event.preventDefault();
+    saveCurrentFilters();
+
+    const button = document.querySelector('#applyFilters');
+
+    if (button) button.click();
+  }
+});
+
+/* Normalização mais segura para conciliar fornecedores */
+function settlementText(value) {
+  return String(value || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toUpperCase()
+    .replace(/\b(LTDA|ME|EPP|SA|S A|PAGAMENTO|PIX|TED|BOLETO)\b/g, ' ')
+    .replace(/[^A-Z0-9]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function settlementTokens(value) {
+  return [...new Set(
+    settlementText(value)
+      .split(' ')
+      .filter(token => token.length >= 3)
+  )];
+}
+
+function settlementSimilarity(first, second) {
+  const a = settlementTokens(first);
+  const b = new Set(settlementTokens(second));
+
+  if (!a.length) return 0;
+
+  return a.filter(token => b.has(token)).length / a.length;
+}
+
+function settlementDateDistance(first, second) {
+  if (!first || !second) return 9999;
+
+  const a = new Date(first + 'T12:00:00');
+  const b = new Date(second + 'T12:00:00');
+
+  if (isNaN(a) || isNaN(b)) return 9999;
+
+  return Math.abs(a - b) / 86400000;
+}
+
+function allPaidEntries() {
+  const entries = [];
+
+  Object.entries(state || {}).forEach(([competence, record]) => {
+    (record.actual || []).forEach(actual => {
+      if (!actual.excluded && isPaidActual(actual)) {
+        entries.push({ actual, competence });
+      }
+    });
+  });
+
+  return entries;
+}
+
+function allUsedPayments() {
+  const used = new Set();
+
+  Object.values(state || {}).forEach(record => {
+    Object.values(record.settlementLinks || {}).forEach(actualId => {
+      used.add(actualId);
+    });
+  });
+
+  return used;
+}
+
+function scoreOpenAgainstPayment(open, actual) {
+  const openParty = settlementText(open.party);
+  const actualParty = settlementText(actual.party);
+
+  const partyExact =
+    openParty &&
+    actualParty &&
+    openParty !== 'NAO INFORMADO' &&
+    actualParty !== 'NAO INFORMADO' &&
+    openParty === actualParty;
+
+  const partyContains =
+    openParty &&
+    actualParty &&
+    (
+      openParty.includes(actualParty) ||
+      actualParty.includes(openParty)
+    );
+
+  const descriptionSimilarity = settlementSimilarity(
+    `${open.party || ''} ${open.description || ''}`,
+    `${actual.party || ''} ${actual.description || ''}`
+  );
+
+  const openValue = Math.abs(Number(open.amount || 0));
+  const paidValue = Math.abs(Number(actual.amount || 0));
+  const valueDifference = Math.abs(openValue - paidValue);
+  const valueTolerance = Math.max(0.05, openValue * 0.005);
+  const sameValue = valueDifference <= valueTolerance;
+
+  const openDate = open.dueDate || open.date;
+  const paidReferenceDate = actual.dueDate || actual.date;
+  const days = settlementDateDistance(openDate, paidReferenceDate);
+
+  let score = 0;
+
+  if (partyExact) score += 10;
+  else if (partyContains) score += 7;
+
+  if (sameValue) score += 10;
+  else if (valueDifference <= Math.max(2, openValue * 0.02)) score += 4;
+
+  score += descriptionSimilarity * 8;
+
+  if (days === 0) score += 6;
+  else if (days <= 7) score += 4;
+  else if (days <= 31) score += 2;
+  else if (days <= 62) score += 1;
+
+  if (
+    settlementText(open.category) &&
+    settlementText(open.category) === settlementText(actual.category)
+  ) {
+    score += 2;
+  }
+
+  /*
+   * Para fornecedores identificados, como LIX, fornecedor + valor
+   * podem confirmar a baixa mesmo que a descrição ou a data mudem.
+   */
+  const safeMatch =
+    sameValue &&
+    (
+      partyExact ||
+      partyContains ||
+      descriptionSimilarity >= 0.65
+    );
+
+  return {
+    score,
+    safeMatch,
+    partyExact,
+    partyContains,
+    sameValue,
+    descriptionSimilarity,
+    days
+  };
+}
+
+/* Substitui a conciliação excessivamente rígida */
+autoSettleOpenForRecord = function(record) {
+  record.openLinks ||= {};
+  record.settlementLinks ||= {};
+  record.links ||= {};
+
+  const usedPayments = allUsedPayments();
+  const payments = allPaidEntries();
+
+  for (const open of (record.open || []).filter(item =>
+    !item.excluded && !record.settlementLinks[item.id]
+  )) {
+    const ranked = payments
+      .filter(({ actual }) => !usedPayments.has(actual.id))
+      .map(item => ({
+        ...item,
+        match: scoreOpenAgainstPayment(open, item.actual)
+      }))
+      .filter(item => item.match.safeMatch && item.match.score >= 18)
+      .sort((a, b) => b.match.score - a.match.score);
+
+    const best = ranked[0];
+    const second = ranked[1];
+
+    if (!best) continue;
+
+    /*
+     * Evita baixa automática quando dois pagamentos forem
+     * praticamente idênticos e não houver segurança suficiente.
+     */
+    if (
+      second &&
+      best.match.score - second.match.score < 1 &&
+      !best.match.partyExact
+    ) {
+      continue;
+    }
+
+    const actual = best.actual;
+
+    if (!record.openLinks[open.id]) {
+      const forecast = [...(record.forecast || [])]
+        .filter(item => !isExcluded(item))
+        .map(item => ({
+          item,
+          score: openMatchScore(open, item)
+        }))
+        .sort((a, b) => b.score - a.score)[0];
+
+      if (forecast?.score >= 4) {
+        record.openLinks[open.id] = forecast.item.id;
+      }
+    }
+
+    if (record.openLinks[open.id]) {
+      record.links[actual.id] = record.openLinks[open.id];
+    }
+
+    open.statusBeforeSettlement =
+      open.statusBeforeSettlement || open.status || 'Em aberto';
+
+    open.status = 'Quitado';
+    open.paidAmount = Number(actual.amount || 0);
+    open.settledAt = actual.date;
+    open.settledCompetence = best.competence;
+
+    record.settlementLinks[open.id] = actual.id;
+    usedPayments.add(actual.id);
+  }
+};
+
+function autoSettleEveryMonth() {
+  Object.entries(state || {}).forEach(([competence, record]) => {
+    if (!record) return;
+
+    record = normalizeMonthRecord(record);
+    autoSettleOpenForRecord(record);
+    refreshOfficialPosition(record, competence);
+  });
+
+  invalidateAnalytics();
+
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  } catch (error) {
+    console.warn('Não foi possível salvar a conciliação:', error);
+  }
+}
+
+/* Permite que o resumo encontre pagamentos feitos em outro mês */
+openCommitmentSummary = function() {
+  const record = rec();
+  const allOpen = (record.open || []).filter(item => !item.excluded);
+
+  const actualById = new Map();
+
+  Object.values(state || {}).forEach(monthRecord => {
+    (monthRecord.actual || []).forEach(actual => {
+      actualById.set(actual.id, actual);
+    });
+  });
+
+  const settled = allOpen
+    .map(open => ({
+      open,
+      actual: actualById.get(record.settlementLinks?.[open.id]),
+      forecast:
+        (record.forecast || []).find(
+          forecast => forecast.id === record.openLinks?.[open.id]
+        ) || null
+    }))
+    .filter(item => item.actual);
+
+  const open = allOpen.filter(item => {
+    const actualId = record.settlementLinks?.[item.id];
+    return !actualId || !actualById.has(actualId);
+  });
+
+  const reconciled = reconcileOpen();
+  const activeIds = new Set(open.map(item => item.id));
+
+  const matches = reconciled.matches.filter(item =>
+    activeIds.has(item.open.id)
+  );
+
+  const unmatched = reconciled.unmatched.filter(item =>
+    activeIds.has(item.id)
+  );
+
+  const total = open.reduce(
+    (sum, item) => sum + Number(item.amount || 0),
+    0
+  );
+
+  const fitted = matches.reduce(
+    (sum, item) => sum + Number(item.open.amount || 0),
+    0
+  );
+
+  const unmatchedTotal = unmatched.reduce(
+    (sum, item) => sum + Number(item.amount || 0),
+    0
+  );
+
+  return {
+    open,
+    total,
+    fitted,
+    unmatched: unmatchedTotal,
+    settled,
+    settledTotal: settled.reduce(
+      (sum, item) => sum + Number(item.actual.amount || 0),
+      0
+    ),
+    matches,
+    unmatchedRows: unmatched
+  };
+};
+
+/* Executa a baixa em todos os meses após qualquer importação */
+const originalImportWorkbookWithSettlementFix = importWorkbook;
+
+importWorkbook = async function(file, source) {
+  await originalImportWorkbookWithSettlementFix(file, source);
+
+  autoSettleEveryMonth();
+
+  if (typeof render === 'function') {
+    render();
+    setTimeout(restoreCurrentFilters, 0);
+  }
+
+  if (typeof queueCloudSave === 'function') {
+    queueCloudSave();
+  }
+
+  if (typeof toast === 'function') {
+    toast(
+      source === 'actual'
+        ? 'Pagamentos importados e contas em aberto atualizadas automaticamente.'
+        : 'Importação concluída e conciliação atualizada.'
+    );
+  }
+};
+
+/* Corrige dados já salvos, sem precisar importar novamente */
+setTimeout(() => {
+  autoSettleEveryMonth();
+
+  if (typeof render === 'function') {
+    render();
+    setTimeout(restoreCurrentFilters, 0);
+  }
+}, 500);
+</script>
 </body>
 </html>
